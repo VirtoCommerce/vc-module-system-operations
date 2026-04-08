@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "blades": {
+      "hello-world": {
+        "title": "Hello world blade"
+      }
+    }
+  },
+  "permissions": {
+    "system-operations:access": "Open SystemOperations menu",
+    "system-operations:create": "Create SystemOperations related data",
+    "system-operations:read": "View SystemOperations related data",
+    "system-operations:update": "Update SystemOperations related data",
+    "system-operations:delete": "Delete SystemOperations related data"
+  },
+  "settings": {
+    "SystemOperations": {
+      "Enabled": {
+        "title": "SystemOperations Enabled",
+        "description": "SystemOperations Enabled setting"
+      }
+    }
+  }
+}
