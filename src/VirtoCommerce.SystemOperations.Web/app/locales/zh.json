@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "系统操作",
+    "subtitle": "平台维护和诊断工具。每个操作都包含功能说明及使用场景。"
+  },
+  "sections": {
+    "maintenance": "维护",
+    "data": "数据",
+    "diagnostics": "诊断与导出"
+  },
+  "resetCache": {
+    "title": "重置缓存",
+    "description": "清除平台所有内存缓存。缓存的设置、目录数据和其他计算值将在下次访问时从数据库重新加载。",
+    "scenario": "在直接修改数据库、更新配置后，或当缓存数据看起来已过期时使用。",
+    "action": "重置缓存",
+    "loading": "正在重置...",
+    "confirmTitle": "重置缓存",
+    "confirmMessage": "确定要重置所有平台缓存吗？在缓存重建期间，性能可能会暂时受到影响。",
+    "successTitle": "重置缓存",
+    "successMessage": "平台缓存已成功重置。"
+  },
+  "restart": {
+    "title": "重启平台",
+    "description": "安全地重启平台应用程序。所有活跃的用户会话将被中断，后台任务将暂停，直到重启完成。",
+    "scenario": "在安装或更新模块后、应用需要重启的配置更改后，或解决平台问题时使用。",
+    "action": "重启平台",
+    "loading": "正在重启...",
+    "confirmTitle": "重启平台",
+    "confirmMessage": "确定要重启平台吗？所有活跃会话将被中断，后台任务将被暂停。",
+    "successTitle": "重启平台",
+    "successMessage": "平台已成功重启。",
+    "timeoutError": "平台未在预期时间内响应，请手动检查状态。"
+  },
+  "sampleData": {
+    "title": "安装示例数据",
+    "description": "发现并安装示例数据包（演示目录、客户、订单）到平台中，用于评估和测试。",
+    "scenario": "在为演示、开发测试或评估平台功能搭建新环境时使用。请避免在生产环境中使用。",
+    "discoverAction": "发现数据包",
+    "installAction": "安装",
+    "noPackages": "没有可用的示例数据包",
+    "confirmTitle": "安装示例数据",
+    "confirmMessage": "安装 {name}？这将向您的平台添加演示内容。",
+    "successTitle": "安装示例数据",
+    "successMessage": "示例数据导入已启动。请查看推送通知以了解进度。",
+    "discoverError": "发现数据包失败。",
+    "installError": "安装示例数据失败。"
+  },
+  "backup": {
+    "title": "导出平台数据",
+    "description": "创建平台数据备份，包括选定的模块、设置、安全性等，作为可下载的ZIP文件。",
+    "scenario": "在重大更新、环境迁移之前使用，或作为常规备份策略。",
+    "action": "开始导出",
+    "loading": "正在导出...",
+    "selectAll": "全选",
+    "unselectAll": "取消全选",
+    "platformEntries": "平台条目",
+    "security": "安全",
+    "binaryData": "二进制数据",
+    "settings": "设置",
+    "dynamicProperties": "动态属性",
+    "modules": "模块",
+    "noModules": "没有可导出的模块",
+    "progress": "进度",
+    "completed": "导出完成",
+    "downloadFile": "下载备份",
+    "error": "导出失败。",
+    "cancel": "取消"
+  },
+  "restore": {
+    "title": "导入平台数据",
+    "description": "从之前导出的ZIP备份文件恢复平台数据。",
+    "scenario": "用于从备份恢复、在环境之间迁移数据或复制平台配置。",
+    "uploadPrompt": "将.zip备份文件拖到此处或点击选择",
+    "uploadError": "无效文件。请上传.zip备份文件。",
+    "manifestInfo": "备份信息",
+    "author": "作者",
+    "created": "创建时间",
+    "platformVersion": "平台版本",
+    "action": "开始导入",
+    "loading": "正在导入...",
+    "selectAll": "全选",
+    "unselectAll": "取消全选",
+    "platformEntries": "平台条目",
+    "security": "安全",
+    "binaryData": "二进制数据",
+    "settings": "设置",
+    "dynamicProperties": "动态属性",
+    "modules": "模块",
+    "noModules": "备份中未找到模块",
+    "progress": "进度",
+    "completed": "导入完成",
+    "error": "导入失败。",
+    "cancel": "取消"
+  },
+  "downloadManifest": {
+    "title": "下载清单",
+    "description": "以 JSON 格式下载完整的平台诊断信息，包括平台版本、许可证详情、已安装模块、操作系统信息和 .NET 运行时版本。",
+    "scenario": "在提交支持工单、记录环境配置或对比不同环境时使用。",
+    "action": "下载 vc-platform-info.json",
+    "error": "下载清单失败。"
+  },
+  "downloadPackage": {
+    "title": "下载包 JSON",
+    "description": "下载 vc-package.json 文件，其中列出了所有已安装模块及其版本和模块来源。此文件可用于在其他环境中复制相同的模块集。",
+    "scenario": "在克隆环境、设置 CI/CD 管道或记录部署模块配置时使用。",
+    "action": "下载 vc-package.json",
+    "error": "下载包失败。"
+  },
+  "moduleSequence": {
+    "title": "模块加载顺序",
+    "description": "显示所有已安装模块按依赖关系解析后的加载顺序。模块按照平台启动时初始化的确切顺序显示。",
+    "scenario": "在调试模块初始化失败、分析依赖关系链或排查启动错误时使用。",
+    "showAction": "显示加载顺序",
+    "hideAction": "隐藏加载顺序",
+    "error": "加载模块顺序失败。"
+  },
+  "dialog": {
+    "yes": "是",
+    "no": "否",
+    "ok": "确定"
+  },
+  "errors": {
+    "permissionDenied": "您没有执行此操作的权限。",
+    "unexpected": "发生了意外错误。"
+  }
+}

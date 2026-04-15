@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "Systemoperasjoner",
+    "subtitle": "Vedlikeholds- og diagnoseverktøy for plattformen. Hver handling inkluderer en beskrivelse av hva den gjør og når den bør brukes."
+  },
+  "sections": {
+    "maintenance": "Vedlikehold",
+    "data": "Data",
+    "diagnostics": "Diagnostikk og eksport"
+  },
+  "resetCache": {
+    "title": "Tilbakestill hurtigbuffer",
+    "description": "Tømmer alle plattformens hurtigbuffere i minnet. Bufrede innstillinger, katalogdata og andre beregnede verdier vil bli lastet på nytt fra databasen ved neste tilgang.",
+    "scenario": "Bruk etter direkte databaseendringer, konfigurasjonsoppdateringer eller når bufrede data ser ut til å være utdaterte.",
+    "action": "Tilbakestill hurtigbuffer",
+    "loading": "Tilbakestiller...",
+    "confirmTitle": "Tilbakestill hurtigbuffer",
+    "confirmMessage": "Er du sikker på at du vil tilbakestille alle plattformens hurtigbuffere? Dette kan midlertidig påvirke ytelsen mens hurtigbufre bygges opp på nytt.",
+    "successTitle": "Tilbakestill hurtigbuffer",
+    "successMessage": "Plattformens hurtigbuffer er tilbakestilt."
+  },
+  "restart": {
+    "title": "Start plattformen på nytt",
+    "description": "Starter plattformapplikasjonen på nytt på en kontrollert måte. Alle aktive brukerøkter vil bli avbrutt og bakgrunnsjobber vil bli satt på pause til omstarten er fullført.",
+    "scenario": "Bruk etter installasjon eller oppdatering av moduler, ved konfigurasjonsendringer som krever omstart, eller for å løse plattformproblemer.",
+    "action": "Start plattformen på nytt",
+    "loading": "Starter på nytt...",
+    "confirmTitle": "Start plattformen på nytt",
+    "confirmMessage": "Er du sikker på at du vil starte plattformen på nytt? Alle aktive økter vil bli avbrutt og bakgrunnsjobber satt på pause.",
+    "successTitle": "Start plattformen på nytt",
+    "successMessage": "Plattformen er startet på nytt.",
+    "timeoutError": "Plattformen svarte ikke innen forventet tid. Vennligst sjekk manuelt."
+  },
+  "sampleData": {
+    "title": "Installer eksempeldata",
+    "description": "Oppdager og installerer eksempeldatapakker (demokatalog, kunder, bestillinger) i plattformen for evaluerings- og testformål.",
+    "scenario": "Bruk ved oppsett av et nytt miljø for demoer, utviklingstesting eller evaluering av plattformens funksjoner. Unngå bruk i produksjonsmiljøer.",
+    "discoverAction": "Oppdag pakker",
+    "installAction": "Installer",
+    "noPackages": "Ingen eksempeldatapakker tilgjengelig",
+    "confirmTitle": "Installer eksempeldata",
+    "confirmMessage": "Installere \"{name}\"? Dette vil legge til demoinnhold i plattformen din.",
+    "successTitle": "Installer eksempeldata",
+    "successMessage": "Import av eksempeldata er startet. Sjekk push-varslene for fremdrift.",
+    "discoverError": "Kunne ikke oppdage pakker.",
+    "installError": "Kunne ikke installere eksempeldata."
+  },
+  "backup": {
+    "title": "Eksporter plattformdata",
+    "description": "Oppretter en sikkerhetskopi av plattformdata som en nedlastbar ZIP-fil.",
+    "scenario": "Bruk for store oppdateringer, miljomigrasjoner eller som regelmessig sikkerhetskopi.",
+    "action": "Start eksport",
+    "loading": "Eksporterer...",
+    "selectAll": "Velg alle",
+    "unselectAll": "Fjern alle valg",
+    "platformEntries": "Plattformoppforinger",
+    "security": "Sikkerhet",
+    "binaryData": "Binaerdata",
+    "settings": "Innstillinger",
+    "dynamicProperties": "Dynamiske egenskaper",
+    "modules": "Moduler",
+    "noModules": "Ingen moduler tilgjengelig for eksport",
+    "progress": "Fremdrift",
+    "completed": "Eksport fullfort",
+    "downloadFile": "Last ned sikkerhetskopi",
+    "error": "Eksport mislyktes.",
+    "cancel": "Avbryt"
+  },
+  "restore": {
+    "title": "Importer plattformdata",
+    "description": "Gjenoppretter plattformdata fra en tidligere eksportert ZIP-fil.",
+    "scenario": "For gjenoppretting, datamigrering eller replikering av konfigurasjon.",
+    "uploadPrompt": "Dra en .zip-fil hit eller klikk for a velge",
+    "uploadError": "Ugyldig fil. Last opp en .zip-sikkerhetskopifil.",
+    "manifestInfo": "Sikkerhetskopi-info",
+    "author": "Forfatter",
+    "created": "Opprettet",
+    "platformVersion": "Plattformversjon",
+    "action": "Start import",
+    "loading": "Importerer...",
+    "selectAll": "Velg alle",
+    "unselectAll": "Fjern alle valg",
+    "platformEntries": "Plattformoppforinger",
+    "security": "Sikkerhet",
+    "binaryData": "Binaerdata",
+    "settings": "Innstillinger",
+    "dynamicProperties": "Dynamiske egenskaper",
+    "modules": "Moduler",
+    "noModules": "Ingen moduler funnet i sikkerhetskopien",
+    "progress": "Fremdrift",
+    "completed": "Import fullfort",
+    "error": "Import mislyktes.",
+    "cancel": "Avbryt"
+  },
+  "downloadManifest": {
+    "title": "Last ned manifest",
+    "description": "Laster ned fullstendig diagnostikkinformasjon for plattformen som JSON, inkludert plattformversjon, lisensdetaljer, installerte moduler, OS-informasjon og .NET-kjøretidsversjon.",
+    "scenario": "Bruk ved opprettelse av supportsaker, dokumentasjon av miljøkonfigurasjon eller sammenligning av miljøer.",
+    "action": "Last ned vc-platform-info.json",
+    "error": "Kunne ikke laste ned manifestet."
+  },
+  "downloadPackage": {
+    "title": "Last ned pakke-JSON",
+    "description": "Laster ned en vc-package.json-fil som lister alle installerte moduler med versjoner og modulkilder. Denne filen kan brukes til å replikere det samme modulsettets i et annet miljø.",
+    "scenario": "Bruk ved kloning av et miljø, oppsett av CI/CD-pipelines eller dokumentasjon av modulsammensetningen for utrulling.",
+    "action": "Last ned vc-package.json",
+    "error": "Kunne ikke laste ned pakken."
+  },
+  "moduleSequence": {
+    "title": "Modullasterekkefølge",
+    "description": "Viser den avhengighetsoppløste lasterekkefølgen for alle installerte moduler. Moduler vises i den nøyaktige rekkefølgen de initialiseres under plattformoppstart.",
+    "scenario": "Bruk ved feilsøking av modulinitialiseringsfeil, forståelse av avhengighetskjeder eller feilsøking av oppstartsproblemer.",
+    "showAction": "Vis lasterekkefølge",
+    "hideAction": "Skjul lasterekkefølge",
+    "error": "Kunne ikke laste modullasterekkefølgen."
+  },
+  "dialog": {
+    "yes": "Ja",
+    "no": "Nei",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Du har ikke tillatelse til å utføre denne handlingen.",
+    "unexpected": "En uventet feil oppstod."
+  }
+}

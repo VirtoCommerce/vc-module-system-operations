@@ -6,7 +6,7 @@
     <NoWarn>NU1608</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="8.0.0">
+    <PackageReference Include="coverlet.collector" Version="8.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -18,8 +18,6 @@
     <PackageReference Include="xunit.v3" Version="3.2.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\VirtoCommerce.SystemOperations.Core\VirtoCommerce.SystemOperations.Core.csproj" />
-    <ProjectReference Include="..\..\src\VirtoCommerce.SystemOperations.Data\VirtoCommerce.SystemOperations.Data.csproj" />
     <ProjectReference Include="..\..\src\VirtoCommerce.SystemOperations.Web\VirtoCommerce.SystemOperations.Web.csproj" />
   </ItemGroup>
 </Project>

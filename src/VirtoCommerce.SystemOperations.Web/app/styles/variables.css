@@ -1,0 +1,32 @@
+:root {
+  /* VirtoCommerce platform design tokens (from _constants.sass) */
+  --vc-font: 'Roboto', sans-serif;
+  --vc-base: #43b0e6;
+  --vc-base-hover: #319ED4;
+  --vc-white: #fff;
+  --vc-warning: #FFBB0D;
+  --vc-success: #87B563;
+  --vc-error: #FF4A4A;
+  --vc-confirm: #465769;
+  --vc-header-h: 42px;
+  --vc-body-fs: 13px;
+  --vc-body-lh: 21px;
+  --vc-btn-fs: 12px;
+  --vc-outline-hover-bg: #F2F8FD;
+  --vc-outline-hover-text: #319ED4;
+  --vc-modal-w: 516px;
+  --vc-modal-min-h: 150px;
+  --vc-modal-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+  --vc-modal-radius: 2px;
+
+  /* App-specific tokens */
+  --color-bg: #F5F7FA;
+  --color-card-bg: #fff;
+  --color-border: #E1E8ED;
+  --color-text: #2C3E50;
+  --color-text-secondary: #5D6D7E;
+  --color-muted: #7F8C8D;
+  --color-scenario-bg: #F0F4F8;
+  --card-radius: 8px;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}

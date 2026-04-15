@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "Systemoperationen",
+    "subtitle": "Plattformwartung und Diagnosetools. Jede Aktion enthält eine Beschreibung ihrer Funktion und wann sie verwendet werden sollte."
+  },
+  "sections": {
+    "maintenance": "Wartung",
+    "data": "Daten",
+    "diagnostics": "Diagnose & Export"
+  },
+  "resetCache": {
+    "title": "Cache zurücksetzen",
+    "description": "Leert alle In-Memory-Caches der Plattform. Zwischengespeicherte Einstellungen, Katalogdaten und andere berechnete Werte werden beim nächsten Zugriff erneut aus der Datenbank geladen.",
+    "scenario": "Verwenden Sie diese Funktion nach direkten Datenbankänderungen, Konfigurationsaktualisierungen oder wenn zwischengespeicherte Daten veraltet erscheinen.",
+    "action": "Cache zurücksetzen",
+    "loading": "Wird zurückgesetzt...",
+    "confirmTitle": "Cache zurücksetzen",
+    "confirmMessage": "Möchten Sie wirklich alle Plattform-Caches zurücksetzen? Dies kann die Leistung vorübergehend beeinträchtigen, während die Caches neu aufgebaut werden.",
+    "successTitle": "Cache zurücksetzen",
+    "successMessage": "Der Plattform-Cache wurde erfolgreich zurückgesetzt."
+  },
+  "restart": {
+    "title": "Plattform neu starten",
+    "description": "Startet die Plattformanwendung ordnungsgemäß neu. Alle aktiven Benutzersitzungen werden unterbrochen und Hintergrundaufträge werden bis zum Abschluss des Neustarts pausiert.",
+    "scenario": "Verwenden Sie diese Funktion nach der Installation oder Aktualisierung von Modulen, nach Konfigurationsänderungen, die einen Neustart erfordern, oder zur Behebung von Plattformproblemen.",
+    "action": "Plattform neu starten",
+    "loading": "Wird neu gestartet...",
+    "confirmTitle": "Plattform neu starten",
+    "confirmMessage": "Möchten Sie die Plattform wirklich neu starten? Alle aktiven Sitzungen werden unterbrochen und Hintergrundaufträge pausiert.",
+    "successTitle": "Plattform neu starten",
+    "successMessage": "Die Plattform wurde erfolgreich neu gestartet.",
+    "timeoutError": "Die Plattform hat nicht innerhalb der erwarteten Zeit geantwortet. Bitte überprüfen Sie den Status manuell."
+  },
+  "sampleData": {
+    "title": "Beispieldaten installieren",
+    "description": "Erkennt und installiert Beispieldatenpakete (Demokatalog, Kunden, Bestellungen) in die Plattform für Evaluierungs- und Testzwecke.",
+    "scenario": "Verwenden Sie diese Funktion beim Einrichten einer neuen Umgebung für Demos, Entwicklungstests oder zur Bewertung der Plattformfunktionen. Vermeiden Sie die Verwendung in Produktionsumgebungen.",
+    "discoverAction": "Pakete erkennen",
+    "installAction": "Installieren",
+    "noPackages": "Keine Beispieldatenpakete verfügbar",
+    "confirmTitle": "Beispieldaten installieren",
+    "confirmMessage": "\"{name}\" installieren? Dies fügt Demoinhalte zu Ihrer Plattform hinzu.",
+    "successTitle": "Beispieldaten installieren",
+    "successMessage": "Der Import der Beispieldaten wurde gestartet. Überprüfen Sie den Fortschritt in den Push-Benachrichtigungen.",
+    "discoverError": "Pakete konnten nicht erkannt werden.",
+    "installError": "Beispieldaten konnten nicht installiert werden."
+  },
+  "backup": {
+    "title": "Plattformdaten exportieren",
+    "description": "Erstellt eine Sicherung der Plattformdaten einschliesslich ausgewaehlter Module, Einstellungen, Sicherheit, dynamischer Eigenschaften und binaerer Assets als herunterladbare ZIP-Datei.",
+    "scenario": "Verwenden Sie dies vor groesseren Updates, Umgebungsmigrationen oder als regelmaessige Sicherungsstrategie.",
+    "action": "Export starten",
+    "loading": "Wird exportiert...",
+    "selectAll": "Alle auswaehlen",
+    "unselectAll": "Alle abwaehlen",
+    "platformEntries": "Plattformeintraege",
+    "security": "Sicherheit",
+    "binaryData": "Binaerdaten",
+    "settings": "Einstellungen",
+    "dynamicProperties": "Dynamische Eigenschaften",
+    "modules": "Module",
+    "noModules": "Keine Module zum Exportieren verfuegbar",
+    "progress": "Fortschritt",
+    "completed": "Export abgeschlossen",
+    "downloadFile": "Sicherung herunterladen",
+    "error": "Export fehlgeschlagen.",
+    "cancel": "Abbrechen"
+  },
+  "restore": {
+    "title": "Plattformdaten importieren",
+    "description": "Stellt Plattformdaten aus einer zuvor exportierten ZIP-Sicherungsdatei wieder her.",
+    "scenario": "Verwenden Sie dies zur Wiederherstellung aus einer Sicherung, zur Datenmigration zwischen Umgebungen oder zur Replikation der Plattformkonfiguration.",
+    "uploadPrompt": "ZIP-Sicherungsdatei hierher ziehen oder klicken zum Auswaehlen",
+    "uploadError": "Ungueltige Datei. Bitte laden Sie eine ZIP-Sicherungsdatei hoch.",
+    "manifestInfo": "Sicherungsinfo",
+    "author": "Autor",
+    "created": "Erstellt",
+    "platformVersion": "Plattformversion",
+    "action": "Import starten",
+    "loading": "Wird importiert...",
+    "selectAll": "Alle auswaehlen",
+    "unselectAll": "Alle abwaehlen",
+    "platformEntries": "Plattformeintraege",
+    "security": "Sicherheit",
+    "binaryData": "Binaerdaten",
+    "settings": "Einstellungen",
+    "dynamicProperties": "Dynamische Eigenschaften",
+    "modules": "Module",
+    "noModules": "Keine Module in der Sicherung gefunden",
+    "progress": "Fortschritt",
+    "completed": "Import abgeschlossen",
+    "error": "Import fehlgeschlagen.",
+    "cancel": "Abbrechen"
+  },
+  "downloadManifest": {
+    "title": "Manifest herunterladen",
+    "description": "Lädt vollständige Plattform-Diagnoseinformationen als JSON herunter, einschließlich Plattformversion, Lizenzdetails, installierter Module, Betriebssysteminformationen und .NET-Laufzeitversion.",
+    "scenario": "Verwenden Sie diese Funktion beim Erstellen von Support-Tickets, zur Dokumentation der Umgebungskonfiguration oder zum Vergleich von Umgebungen.",
+    "action": "vc-platform-info.json herunterladen",
+    "error": "Manifest konnte nicht heruntergeladen werden."
+  },
+  "downloadPackage": {
+    "title": "Paket-JSON herunterladen",
+    "description": "Lädt eine vc-package.json-Datei herunter, die alle installierten Module mit Versionen und Modulquellen auflistet. Diese Datei kann verwendet werden, um denselben Modulsatz in einer anderen Umgebung zu replizieren.",
+    "scenario": "Verwenden Sie diese Funktion beim Klonen einer Umgebung, beim Einrichten von CI/CD-Pipelines oder zur Dokumentation des Modulstapels für die Bereitstellung.",
+    "action": "vc-package.json herunterladen",
+    "error": "Paket konnte nicht heruntergeladen werden."
+  },
+  "moduleSequence": {
+    "title": "Modul-Ladereihenfolge",
+    "description": "Zeigt die abhängigkeitsaufgelöste Ladereihenfolge aller installierten Module an. Module werden in der exakten Reihenfolge angezeigt, in der sie beim Plattformstart initialisiert werden.",
+    "scenario": "Verwenden Sie diese Funktion zur Fehlersuche bei Modulinitialisierungsfehlern, zum Verständnis von Abhängigkeitsketten oder zur Fehlerbehebung bei Startproblemen.",
+    "showAction": "Ladereihenfolge anzeigen",
+    "hideAction": "Ladereihenfolge ausblenden",
+    "error": "Modul-Ladereihenfolge konnte nicht geladen werden."
+  },
+  "dialog": {
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+  }
+}

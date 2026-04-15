@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "Operacje systemowe",
+    "subtitle": "Narzędzia do konserwacji i diagnostyki platformy. Każda akcja zawiera opis jej działania i sytuacji, w których należy jej użyć."
+  },
+  "sections": {
+    "maintenance": "Konserwacja",
+    "data": "Dane",
+    "diagnostics": "Diagnostyka i eksport"
+  },
+  "resetCache": {
+    "title": "Resetuj pamięć podręczną",
+    "description": "Czyści całą pamięć podręczną platformy. Zbuforowane ustawienia, dane katalogowe i inne obliczone wartości zostaną ponownie załadowane z bazy danych przy następnym dostępie.",
+    "scenario": "Użyj po bezpośrednich zmianach w bazie danych, aktualizacjach konfiguracji lub gdy dane w pamięci podręcznej wydają się nieaktualne.",
+    "action": "Resetuj pamięć podręczną",
+    "loading": "Resetowanie...",
+    "confirmTitle": "Resetuj pamięć podręczną",
+    "confirmMessage": "Czy na pewno chcesz zresetować całą pamięć podręczną platformy? Może to tymczasowo wpłynąć na wydajność podczas odbudowy pamięci podręcznej.",
+    "successTitle": "Resetuj pamięć podręczną",
+    "successMessage": "Pamięć podręczna platformy została pomyślnie zresetowana."
+  },
+  "restart": {
+    "title": "Uruchom ponownie platformę",
+    "description": "Bezpiecznie restartuje aplikację platformy. Wszystkie aktywne sesje użytkowników zostaną przerwane, a zadania w tle zostaną wstrzymane do zakończenia restartu.",
+    "scenario": "Użyj po instalacji lub aktualizacji modułów, zastosowaniu zmian konfiguracji wymagających restartu lub rozwiązywaniu problemów z platformą.",
+    "action": "Uruchom ponownie platformę",
+    "loading": "Ponowne uruchamianie...",
+    "confirmTitle": "Uruchom ponownie platformę",
+    "confirmMessage": "Czy na pewno chcesz ponownie uruchomić platformę? Wszystkie aktywne sesje zostaną przerwane, a zadania w tle wstrzymane.",
+    "successTitle": "Uruchom ponownie platformę",
+    "successMessage": "Platforma została pomyślnie uruchomiona ponownie.",
+    "timeoutError": "Platforma nie odpowiedziała w oczekiwanym czasie. Sprawdź stan ręcznie."
+  },
+  "sampleData": {
+    "title": "Zainstaluj dane przykładowe",
+    "description": "Wykrywa i instaluje pakiety danych przykładowych (katalog demonstracyjny, klienci, zamówienia) na platformie w celach ewaluacyjnych i testowych.",
+    "scenario": "Użyj podczas konfiguracji nowego środowiska do demonstracji, testów deweloperskich lub oceny możliwości platformy. Unikaj stosowania w środowiskach produkcyjnych.",
+    "discoverAction": "Wykryj pakiety",
+    "installAction": "Zainstaluj",
+    "noPackages": "Brak dostępnych pakietów danych przykładowych",
+    "confirmTitle": "Zainstaluj dane przykładowe",
+    "confirmMessage": "Zainstalować \"{name}\"? Spowoduje to dodanie treści demonstracyjnych do platformy.",
+    "successTitle": "Zainstaluj dane przykładowe",
+    "successMessage": "Import danych przykładowych został rozpoczęty. Sprawdź powiadomienia push, aby śledzić postęp.",
+    "discoverError": "Nie udało się wykryć pakietów.",
+    "installError": "Nie udało się zainstalować danych przykładowych."
+  },
+  "backup": {
+    "title": "Eksportuj dane platformy",
+    "description": "Tworzy kopie zapasowa danych platformy jako plik ZIP do pobrania.",
+    "scenario": "Uzyj przed aktualizacjami, migracjami srodowisk lub jako regularna kopie zapasowa.",
+    "action": "Rozpocznij eksport",
+    "loading": "Eksportowanie...",
+    "selectAll": "Zaznacz wszystko",
+    "unselectAll": "Odznacz wszystko",
+    "platformEntries": "Wpisy platformy",
+    "security": "Zabezpieczenia",
+    "binaryData": "Dane binarne",
+    "settings": "Ustawienia",
+    "dynamicProperties": "Wlasciwosci dynamiczne",
+    "modules": "Moduly",
+    "noModules": "Brak modulow do eksportu",
+    "progress": "Postep",
+    "completed": "Eksport zakonczony",
+    "downloadFile": "Pobierz kopie zapasowa",
+    "error": "Eksport nie powiodl sie.",
+    "cancel": "Anuluj"
+  },
+  "restore": {
+    "title": "Importuj dane platformy",
+    "description": "Przywraca dane platformy z pliku ZIP kopii zapasowej.",
+    "scenario": "Do przywracania z kopii, migracji danych lub replikacji konfiguracji.",
+    "uploadPrompt": "Przeciagnij plik .zip tutaj lub kliknij, aby wybrac",
+    "uploadError": "Nieprawidlowy plik. Zaladuj plik .zip kopii zapasowej.",
+    "manifestInfo": "Informacje o kopii zapasowej",
+    "author": "Autor",
+    "created": "Utworzono",
+    "platformVersion": "Wersja platformy",
+    "action": "Rozpocznij import",
+    "loading": "Importowanie...",
+    "selectAll": "Zaznacz wszystko",
+    "unselectAll": "Odznacz wszystko",
+    "platformEntries": "Wpisy platformy",
+    "security": "Zabezpieczenia",
+    "binaryData": "Dane binarne",
+    "settings": "Ustawienia",
+    "dynamicProperties": "Wlasciwosci dynamiczne",
+    "modules": "Moduly",
+    "noModules": "Nie znaleziono modulow w kopii",
+    "progress": "Postep",
+    "completed": "Import zakonczony",
+    "error": "Import nie powiodl sie.",
+    "cancel": "Anuluj"
+  },
+  "downloadManifest": {
+    "title": "Pobierz manifest",
+    "description": "Pobiera pełne informacje diagnostyczne platformy w formacie JSON, w tym wersję platformy, szczegóły licencji, zainstalowane moduły, informacje o systemie operacyjnym i wersję środowiska .NET.",
+    "scenario": "Użyj podczas tworzenia zgłoszeń serwisowych, dokumentowania konfiguracji środowiska lub porównywania środowisk.",
+    "action": "Pobierz vc-platform-info.json",
+    "error": "Nie udało się pobrać manifestu."
+  },
+  "downloadPackage": {
+    "title": "Pobierz pakiet JSON",
+    "description": "Pobiera plik vc-package.json zawierający listę wszystkich zainstalowanych modułów z wersjami i źródłami modułów. Plik ten może służyć do replikacji tego samego zestawu modułów w innym środowisku.",
+    "scenario": "Użyj podczas klonowania środowiska, konfiguracji potoków CI/CD lub dokumentowania zestawu modułów do wdrożenia.",
+    "action": "Pobierz vc-package.json",
+    "error": "Nie udało się pobrać pakietu."
+  },
+  "moduleSequence": {
+    "title": "Kolejność ładowania modułów",
+    "description": "Wyświetla kolejność ładowania wszystkich zainstalowanych modułów z uwzględnieniem zależności. Moduły są pokazywane w dokładnej kolejności, w jakiej są inicjalizowane podczas uruchamiania platformy.",
+    "scenario": "Użyj podczas debugowania błędów inicjalizacji modułów, analizy łańcuchów zależności lub rozwiązywania problemów z uruchamianiem.",
+    "showAction": "Pokaż kolejność ładowania",
+    "hideAction": "Ukryj kolejność ładowania",
+    "error": "Nie udało się załadować kolejności modułów."
+  },
+  "dialog": {
+    "yes": "Tak",
+    "no": "Nie",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Nie masz uprawnień do wykonania tej akcji.",
+    "unexpected": "Wystąpił nieoczekiwany błąd."
+  }
+}

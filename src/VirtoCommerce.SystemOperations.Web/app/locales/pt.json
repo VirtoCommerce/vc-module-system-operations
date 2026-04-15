@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "Operações do sistema",
+    "subtitle": "Ferramentas de manutenção e diagnóstico da plataforma. Cada ação inclui uma descrição do que faz e quando utilizá-la."
+  },
+  "sections": {
+    "maintenance": "Manutenção",
+    "data": "Dados",
+    "diagnostics": "Diagnóstico e exportação"
+  },
+  "resetCache": {
+    "title": "Redefinir cache",
+    "description": "Limpa todos os caches em memória da plataforma. Configurações em cache, dados do catálogo e outros valores calculados serão recarregados do banco de dados no próximo acesso.",
+    "scenario": "Use após alterações diretas no banco de dados, atualizações de configuração ou quando os dados em cache parecerem desatualizados.",
+    "action": "Redefinir cache",
+    "loading": "Redefinindo...",
+    "confirmTitle": "Redefinir cache",
+    "confirmMessage": "Tem certeza de que deseja redefinir todos os caches da plataforma? Isso pode afetar temporariamente o desempenho enquanto os caches são reconstruídos.",
+    "successTitle": "Redefinir cache",
+    "successMessage": "O cache da plataforma foi redefinido com sucesso."
+  },
+  "restart": {
+    "title": "Reiniciar plataforma",
+    "description": "Reinicia a aplicação da plataforma de forma controlada. Todas as sessões de utilizador ativas serão interrompidas e as tarefas em segundo plano serão pausadas até que o reinício seja concluído.",
+    "scenario": "Use após instalar ou atualizar módulos, aplicar alterações de configuração que exijam reinício ou resolver problemas da plataforma.",
+    "action": "Reiniciar plataforma",
+    "loading": "Reiniciando...",
+    "confirmTitle": "Reiniciar plataforma",
+    "confirmMessage": "Tem certeza de que deseja reiniciar a plataforma? Todas as sessões ativas serão interrompidas e as tarefas em segundo plano pausadas.",
+    "successTitle": "Reiniciar plataforma",
+    "successMessage": "A plataforma foi reiniciada com sucesso.",
+    "timeoutError": "A plataforma não respondeu dentro do tempo esperado. Por favor, verifique manualmente."
+  },
+  "sampleData": {
+    "title": "Instalar dados de exemplo",
+    "description": "Descobre e instala pacotes de dados de exemplo (catálogo de demonstração, clientes, pedidos) na plataforma para fins de avaliação e testes.",
+    "scenario": "Use ao configurar um novo ambiente para demonstrações, testes de desenvolvimento ou avaliação das capacidades da plataforma. Evite em ambientes de produção.",
+    "discoverAction": "Descobrir pacotes",
+    "installAction": "Instalar",
+    "noPackages": "Nenhum pacote de dados de exemplo disponível",
+    "confirmTitle": "Instalar dados de exemplo",
+    "confirmMessage": "Instalar \"{name}\"? Isso adicionará conteúdo de demonstração à sua plataforma.",
+    "successTitle": "Instalar dados de exemplo",
+    "successMessage": "A importação dos dados de exemplo foi iniciada. Verifique as notificações push para acompanhar o progresso.",
+    "discoverError": "Falha ao descobrir pacotes.",
+    "installError": "Falha ao instalar dados de exemplo."
+  },
+  "backup": {
+    "title": "Exportar dados da plataforma",
+    "description": "Cria um backup dos dados da plataforma como arquivo ZIP para download.",
+    "scenario": "Use antes de atualizacoes, migracoes de ambiente ou como backup regular.",
+    "action": "Iniciar exportacao",
+    "loading": "Exportando...",
+    "selectAll": "Selecionar tudo",
+    "unselectAll": "Desmarcar tudo",
+    "platformEntries": "Entradas da plataforma",
+    "security": "Seguranca",
+    "binaryData": "Dados binarios",
+    "settings": "Configuracoes",
+    "dynamicProperties": "Propriedades dinamicas",
+    "modules": "Modulos",
+    "noModules": "Nenhum modulo disponivel para exportacao",
+    "progress": "Progresso",
+    "completed": "Exportacao concluida",
+    "downloadFile": "Baixar backup",
+    "error": "Falha na exportacao.",
+    "cancel": "Cancelar"
+  },
+  "restore": {
+    "title": "Importar dados da plataforma",
+    "description": "Restaura dados a partir de um arquivo ZIP de backup previamente exportado.",
+    "scenario": "Para restaurar de backup, migrar dados ou replicar a configuracao.",
+    "uploadPrompt": "Arraste um arquivo .zip aqui ou clique para selecionar",
+    "uploadError": "Arquivo invalido. Envie um arquivo .zip de backup.",
+    "manifestInfo": "Info do backup",
+    "author": "Autor",
+    "created": "Criado",
+    "platformVersion": "Versao da plataforma",
+    "action": "Iniciar importacao",
+    "loading": "Importando...",
+    "selectAll": "Selecionar tudo",
+    "unselectAll": "Desmarcar tudo",
+    "platformEntries": "Entradas da plataforma",
+    "security": "Seguranca",
+    "binaryData": "Dados binarios",
+    "settings": "Configuracoes",
+    "dynamicProperties": "Propriedades dinamicas",
+    "modules": "Modulos",
+    "noModules": "Nenhum modulo encontrado no backup",
+    "progress": "Progresso",
+    "completed": "Importacao concluida",
+    "error": "Falha na importacao.",
+    "cancel": "Cancelar"
+  },
+  "downloadManifest": {
+    "title": "Baixar manifesto",
+    "description": "Baixa informações de diagnóstico completas da plataforma em formato JSON, incluindo versão da plataforma, detalhes da licença, módulos instalados, informações do sistema operacional e versão do runtime .NET.",
+    "scenario": "Use ao criar tickets de suporte, documentar a configuração do ambiente ou comparar ambientes.",
+    "action": "Baixar vc-platform-info.json",
+    "error": "Falha ao baixar o manifesto."
+  },
+  "downloadPackage": {
+    "title": "Baixar pacote JSON",
+    "description": "Baixa um arquivo vc-package.json listando todos os módulos instalados com versões e fontes dos módulos. Este arquivo pode ser usado para replicar o mesmo conjunto de módulos em outro ambiente.",
+    "scenario": "Use ao clonar um ambiente, configurar pipelines de CI/CD ou documentar o conjunto de módulos para implantação.",
+    "action": "Baixar vc-package.json",
+    "error": "Falha ao baixar o pacote."
+  },
+  "moduleSequence": {
+    "title": "Sequência de carregamento de módulos",
+    "description": "Exibe a ordem de carregamento de todos os módulos instalados, resolvida por dependências. Os módulos são mostrados na sequência exata em que são inicializados durante a inicialização da plataforma.",
+    "scenario": "Use ao depurar falhas de inicialização de módulos, entender cadeias de dependências ou solucionar erros de inicialização.",
+    "showAction": "Mostrar ordem de carregamento",
+    "hideAction": "Ocultar ordem de carregamento",
+    "error": "Falha ao carregar a sequência de módulos."
+  },
+  "dialog": {
+    "yes": "Sim",
+    "no": "Não",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Você não tem permissão para realizar esta ação.",
+    "unexpected": "Ocorreu um erro inesperado."
+  }
+}

@@ -1,22 +1,21 @@
 {
-  "name": "vc-module",
-  "version": "1.0.0",
+  "name": "vc-module-system-operations",
+  "version": "3.1000.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "webpack:dev": "webpack --mode=development",
-    "webpack:watch": "webpack --watch --mode=development",
-    "webpack:build": "webpack --mode=production"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "webpack:build": "vue-tsc --noEmit && vite build",
+    "type-check": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^4.0.0",
-    "css-loader": "^6.5.1",
-    "html-loader": "^5.1.0",
-    "mini-css-extract-plugin": "^2.5.1",
-    "ngtemplate-loader": "^2.1.0",
-    "webpack": "^5.96.1",
-    "webpack-cli": "^4.10.0"
-  },
-  "webpack": {
-    "stats": "verbose"
+    "@vitejs/plugin-vue": "^5.2.3",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3",
+    "vue-tsc": "^2.2.10"
   }
 }

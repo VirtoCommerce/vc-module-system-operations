@@ -1,0 +1,126 @@
+{
+  "page": {
+    "title": "Järjestelmätoiminnot",
+    "subtitle": "Alustan ylläpito- ja diagnostiikkatyökalut. Jokainen toiminto sisältää kuvauksen sen toiminnasta ja käyttötilanteista."
+  },
+  "sections": {
+    "maintenance": "Ylläpito",
+    "data": "Tiedot",
+    "diagnostics": "Diagnostiikka ja vienti"
+  },
+  "resetCache": {
+    "title": "Tyhjennä välimuisti",
+    "description": "Tyhjentää kaikki alustan muistissa olevat välimuistit. Välimuistissa olevat asetukset, katalogitiedot ja muut lasketut arvot ladataan tietokannasta uudelleen seuraavalla käyttökerralla.",
+    "scenario": "Käytä suorien tietokantamuutosten, konfiguraatiopäivitysten jälkeen tai kun välimuistissa olevat tiedot vaikuttavat vanhentuneilta.",
+    "action": "Tyhjennä välimuisti",
+    "loading": "Tyhjennetään...",
+    "confirmTitle": "Tyhjennä välimuisti",
+    "confirmMessage": "Haluatko varmasti tyhjentää kaikki alustan välimuistit? Tämä voi tilapäisesti vaikuttaa suorituskykyyn välimuistien uudelleenrakennuksen aikana.",
+    "successTitle": "Tyhjennä välimuisti",
+    "successMessage": "Alustan välimuisti on tyhjennetty onnistuneesti."
+  },
+  "restart": {
+    "title": "Käynnistä alusta uudelleen",
+    "description": "Käynnistää alustasovelluksen hallitusti uudelleen. Kaikki aktiiviset käyttäjäistunnot keskeytetään ja taustatyöt pysäytetään, kunnes uudelleenkäynnistys on valmis.",
+    "scenario": "Käytä moduulien asennuksen tai päivityksen jälkeen, uudelleenkäynnistystä vaativien konfiguraatiomuutosten yhteydessä tai alustaongelmien ratkaisemiseksi.",
+    "action": "Käynnistä alusta uudelleen",
+    "loading": "Käynnistetään uudelleen...",
+    "confirmTitle": "Käynnistä alusta uudelleen",
+    "confirmMessage": "Haluatko varmasti käynnistää alustan uudelleen? Kaikki aktiiviset istunnot keskeytetään ja taustatyöt pysäytetään.",
+    "successTitle": "Käynnistä alusta uudelleen",
+    "successMessage": "Alusta on käynnistetty uudelleen onnistuneesti.",
+    "timeoutError": "Alusta ei vastannut odotetussa ajassa. Tarkista tila manuaalisesti."
+  },
+  "sampleData": {
+    "title": "Asenna esimerkkitiedot",
+    "description": "Etsii ja asentaa esimerkkitietopaketteja (demokatalogi, asiakkaat, tilaukset) alustaan arviointi- ja testauskäyttöön.",
+    "scenario": "Käytä uuden ympäristön pystyttämiseen demoihin, kehitystestaukseen tai alustan ominaisuuksien arviointiin. Vältä käyttöä tuotantoympäristöissä.",
+    "discoverAction": "Etsi paketteja",
+    "installAction": "Asenna",
+    "noPackages": "Esimerkkitietopaketteja ei ole saatavilla",
+    "confirmTitle": "Asenna esimerkkitiedot",
+    "confirmMessage": "Asennetaanko \"{name}\"? Tämä lisää demosisältöä alustaasi.",
+    "successTitle": "Asenna esimerkkitiedot",
+    "successMessage": "Esimerkkitietojen tuonti on aloitettu. Seuraa edistymistä push-ilmoituksista.",
+    "discoverError": "Pakettien etsiminen epäonnistui.",
+    "installError": "Esimerkkitietojen asennus epäonnistui."
+  },
+  "backup": {
+    "title": "Vie alustan tiedot",
+    "description": "Luo varmuuskopion alustan tiedoista ladattavana ZIP-tiedostona.",
+    "scenario": "Kayta ennen suuria paivityksia, ymparistosiirtoja tai saannollisena varmuuskopiointina.",
+    "action": "Aloita vienti",
+    "loading": "Viedaan...",
+    "selectAll": "Valitse kaikki",
+    "unselectAll": "Poista valinnat",
+    "platformEntries": "Alustan tietueet",
+    "security": "Tietoturva",
+    "binaryData": "Binaaridata",
+    "settings": "Asetukset",
+    "dynamicProperties": "Dynaamiset ominaisuudet",
+    "modules": "Moduulit",
+    "noModules": "Ei vietavia moduuleita",
+    "progress": "Edistyminen",
+    "completed": "Vienti valmis",
+    "downloadFile": "Lataa varmuuskopio",
+    "error": "Vienti epaonnistui.",
+    "cancel": "Peruuta"
+  },
+  "restore": {
+    "title": "Tuo alustan tiedot",
+    "description": "Palauttaa tiedot aiemmin viedysta ZIP-varmuuskopiotiedostosta.",
+    "scenario": "Kayta varmuuskopiosta palauttamiseen, tietojen siirtoon tai konfiguraation kopiointiin.",
+    "uploadPrompt": "Raahaa .zip-tiedosto tahan tai napsauta valitaksesi",
+    "uploadError": "Virheellinen tiedosto. Lataa .zip-varmuuskopiotiedosto.",
+    "manifestInfo": "Varmuuskopion tiedot",
+    "author": "Tekija",
+    "created": "Luotu",
+    "platformVersion": "Alustaversio",
+    "action": "Aloita tuonti",
+    "loading": "Tuodaan...",
+    "selectAll": "Valitse kaikki",
+    "unselectAll": "Poista valinnat",
+    "platformEntries": "Alustan tietueet",
+    "security": "Tietoturva",
+    "binaryData": "Binaaridata",
+    "settings": "Asetukset",
+    "dynamicProperties": "Dynaamiset ominaisuudet",
+    "modules": "Moduulit",
+    "noModules": "Varmuuskopiosta ei loytynyt moduuleita",
+    "progress": "Edistyminen",
+    "completed": "Tuonti valmis",
+    "error": "Tuonti epaonnistui.",
+    "cancel": "Peruuta"
+  },
+  "downloadManifest": {
+    "title": "Lataa manifesti",
+    "description": "Lataa alustan täydelliset diagnostiikkatiedot JSON-muodossa, mukaan lukien alustan versio, lisenssitiedot, asennetut moduulit, käyttöjärjestelmätiedot ja .NET-ajonaikaversio.",
+    "scenario": "Käytä tukipyyntöjen luomiseen, ympäristökonfiguraation dokumentointiin tai ympäristöjen vertailuun.",
+    "action": "Lataa vc-platform-info.json",
+    "error": "Manifestin lataaminen epäonnistui."
+  },
+  "downloadPackage": {
+    "title": "Lataa paketti-JSON",
+    "description": "Lataa vc-package.json-tiedoston, joka listaa kaikki asennetut moduulit versioineen ja moduulilähteineen. Tätä tiedostoa voidaan käyttää saman moduulikokonaisuuden replikoimiseen toisessa ympäristössä.",
+    "scenario": "Käytä ympäristön kloonaamiseen, CI/CD-putkien pystyttämiseen tai moduulikokonaisuuden dokumentointiin käyttöönottoa varten.",
+    "action": "Lataa vc-package.json",
+    "error": "Paketin lataaminen epäonnistui."
+  },
+  "moduleSequence": {
+    "title": "Moduulien latausjärjestys",
+    "description": "Näyttää kaikkien asennettujen moduulien riippuvuuksien mukaan ratkaistun latausjärjestyksen. Moduulit näytetään täsmälleen siinä järjestyksessä, jossa ne alustetaan alustan käynnistyksen aikana.",
+    "scenario": "Käytä moduulien alustusvirheiden vianetsintään, riippuvuusketjujen ymmärtämiseen tai käynnistysongelmien ratkaisemiseen.",
+    "showAction": "Näytä latausjärjestys",
+    "hideAction": "Piilota latausjärjestys",
+    "error": "Moduulien latausjärjestyksen lataaminen epäonnistui."
+  },
+  "dialog": {
+    "yes": "Kyllä",
+    "no": "Ei",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Sinulla ei ole oikeutta suorittaa tätä toimintoa.",
+    "unexpected": "Odottamaton virhe tapahtui."
+  }
+}

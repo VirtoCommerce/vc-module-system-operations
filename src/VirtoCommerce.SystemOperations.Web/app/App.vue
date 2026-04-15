@@ -1,0 +1,186 @@
+<script setup lang="ts">
+import { provide, ref } from 'vue';
+import { useDialog, DialogKey } from './composables/useDialog';
+import { useI18n, I18nKey } from './composables/useI18n';
+import { useOperations } from './composables/useOperations';
+import { useSystemInfo } from './composables/useSystemInfo';
+import { ApiError } from './composables/useApi';
+import VcDialog from './components/VcDialog.vue';
+import SectionGroup from './components/SectionGroup.vue';
+import OperationCard from './components/OperationCard.vue';
+import ModuleLoadSequence from './components/ModuleLoadSequence.vue';
+import SampleDataPackages from './components/SampleDataPackages.vue';
+import PlatformBackup from './components/PlatformBackup.vue';
+import PlatformRestore from './components/PlatformRestore.vue';
+
+const i18n = useI18n();
+const { t } = i18n;
+provide(I18nKey, i18n);
+
+const dialog = useDialog();
+provide(DialogKey, dialog);
+
+const { resetCache, restartPlatform, isResetting, isRestarting, resetError, restartError } =
+  useOperations(dialog, t);
+
+const { downloadManifest, downloadPackage } = useSystemInfo();
+
+const isDownloadingManifest = ref(false);
+const isDownloadingPackage = ref(false);
+const manifestError = ref('');
+const packageError = ref('');
+
+async function handleDownloadManifest() {
+  manifestError.value = '';
+  isDownloadingManifest.value = true;
+  try {
+    await downloadManifest();
+  } catch (err) {
+    manifestError.value = err instanceof ApiError ? err.message : t('downloadManifest.error');
+  } finally {
+    isDownloadingManifest.value = false;
+  }
+}
+
+async function handleDownloadPackage() {
+  packageError.value = '';
+  isDownloadingPackage.value = true;
+  try {
+    await downloadPackage();
+  } catch (err) {
+    packageError.value = err instanceof ApiError ? err.message : t('downloadPackage.error');
+  } finally {
+    isDownloadingPackage.value = false;
+  }
+}
+</script>
+
+<template>
+  <div class="page-header">
+    <h1>{{ t('page.title') }}</h1>
+    <p>{{ t('page.subtitle') }}</p>
+  </div>
+
+  <!-- Maintenance -->
+  <SectionGroup :title="t('sections.maintenance')">
+    <OperationCard
+      icon="fas fa-eraser"
+      icon-color="orange"
+      :title="t('resetCache.title')"
+      permission="cache:reset"
+      :description="t('resetCache.description')"
+      :scenario="t('resetCache.scenario')"
+      variant="warning"
+    >
+      <div class="op-card__actions">
+        <button class="btn btn--warning" :disabled="isResetting" @click="resetCache">
+          <i :class="isResetting ? 'fas fa-spinner fa-spin' : 'fas fa-eraser'"></i>
+          {{ isResetting ? t('resetCache.loading') : t('resetCache.action') }}
+        </button>
+      </div>
+      <div v-if="resetError" class="op-card__error">{{ resetError }}</div>
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-bolt"
+      icon-color="red"
+      :title="t('restart.title')"
+      permission="platform:module:manage"
+      :description="t('restart.description')"
+      :scenario="t('restart.scenario')"
+      variant="danger"
+    >
+      <div class="op-card__actions">
+        <button class="btn btn--danger" :disabled="isRestarting" @click="restartPlatform">
+          <i :class="isRestarting ? 'fas fa-spinner fa-spin' : 'fas fa-bolt'"></i>
+          {{ isRestarting ? t('restart.loading') : t('restart.action') }}
+        </button>
+      </div>
+      <div v-if="restartError" class="op-card__error">{{ restartError }}</div>
+    </OperationCard>
+  </SectionGroup>
+
+  <!-- Data -->
+  <SectionGroup :title="t('sections.data')">
+    <OperationCard
+      icon="fas fa-database"
+      icon-color="green"
+      :title="t('sampleData.title')"
+      permission="platform:import"
+      :description="t('sampleData.description')"
+      :scenario="t('sampleData.scenario')"
+    >
+      <SampleDataPackages />
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-upload"
+      icon-color="blue"
+      :title="t('backup.title')"
+      permission="platform:export"
+      :description="t('backup.description')"
+      :scenario="t('backup.scenario')"
+    >
+      <PlatformBackup />
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-download"
+      icon-color="purple"
+      :title="t('restore.title')"
+      permission="platform:import"
+      :description="t('restore.description')"
+      :scenario="t('restore.scenario')"
+    >
+      <PlatformRestore />
+    </OperationCard>
+  </SectionGroup>
+
+  <!-- Diagnostics & Export -->
+  <SectionGroup :title="t('sections.diagnostics')">
+    <OperationCard
+      icon="fas fa-download"
+      icon-color="blue"
+      :title="t('downloadManifest.title')"
+      :description="t('downloadManifest.description')"
+      :scenario="t('downloadManifest.scenario')"
+    >
+      <div class="op-card__actions">
+        <button class="btn btn--primary" :disabled="isDownloadingManifest" @click="handleDownloadManifest">
+          <i :class="isDownloadingManifest ? 'fas fa-spinner fa-spin' : 'fas fa-download'"></i>
+          {{ t('downloadManifest.action') }}
+        </button>
+      </div>
+      <div v-if="manifestError" class="op-card__error">{{ manifestError }}</div>
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-file-code"
+      icon-color="blue"
+      :title="t('downloadPackage.title')"
+      :description="t('downloadPackage.description')"
+      :scenario="t('downloadPackage.scenario')"
+    >
+      <div class="op-card__actions">
+        <button class="btn btn--primary" :disabled="isDownloadingPackage" @click="handleDownloadPackage">
+          <i :class="isDownloadingPackage ? 'fas fa-spinner fa-spin' : 'fas fa-file-code'"></i>
+          {{ t('downloadPackage.action') }}
+        </button>
+      </div>
+      <div v-if="packageError" class="op-card__error">{{ packageError }}</div>
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-sort-numeric-down"
+      icon-color="purple"
+      :title="t('moduleSequence.title')"
+      permission="platform:module:manage"
+      :description="t('moduleSequence.description')"
+      :scenario="t('moduleSequence.scenario')"
+    >
+      <ModuleLoadSequence />
+    </OperationCard>
+  </SectionGroup>
+
+  <VcDialog />
+</template>
