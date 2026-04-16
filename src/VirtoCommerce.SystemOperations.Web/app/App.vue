@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue';
+import { provide, ref, computed, onMounted } from 'vue';
 import { useDialog, DialogKey } from './composables/useDialog';
 import { useI18n, I18nKey } from './composables/useI18n';
 import { useOperations } from './composables/useOperations';
@@ -26,6 +26,56 @@ const { resetCache, restartPlatform, isResetting, isRestarting, resetError, rest
   useOperations(dialog, t);
 
 const { downloadPackage } = useSystemInfo();
+
+// Theme: 'system' | 'light' | 'dark'
+const THEME_KEY = 'vc-system-operations-theme';
+type ThemeMode = 'system' | 'light' | 'dark';
+const themeMode = ref<ThemeMode>('system');
+
+function getSystemDark(): boolean {
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
+}
+
+function applyTheme(mode: ThemeMode) {
+  themeMode.value = mode;
+  const dark = mode === 'dark' || (mode === 'system' && getSystemDark());
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  try { localStorage.setItem(THEME_KEY, mode); } catch { /* ignore */ }
+}
+
+function cycleTheme() {
+  const order: ThemeMode[] = ['system', 'light', 'dark'];
+  const next = order[(order.indexOf(themeMode.value) + 1) % order.length];
+  applyTheme(next);
+}
+
+const themeIcon = computed(() => {
+  if (themeMode.value === 'system') return 'fas fa-desktop';
+  if (themeMode.value === 'dark') return 'fas fa-moon';
+  return 'fas fa-sun';
+});
+
+const themeTooltip = computed(() => {
+  if (themeMode.value === 'system') return t('theme.system');
+  if (themeMode.value === 'dark') return t('theme.dark');
+  return t('theme.light');
+});
+
+onMounted(() => {
+  try {
+    const stored = localStorage.getItem(THEME_KEY) as ThemeMode | null;
+    if (stored === 'light' || stored === 'dark' || stored === 'system') {
+      applyTheme(stored);
+    } else {
+      applyTheme('system');
+    }
+  } catch { applyTheme('system'); }
+
+  // Listen for OS theme changes when in system mode
+  window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (themeMode.value === 'system') applyTheme('system');
+  });
+});
 
 const isDownloadingPackage = ref(false);
 const packageError = ref('');
@@ -65,7 +115,12 @@ async function handleDownloadPackage() {
 
 <template>
   <div class="page-header">
-    <h1>{{ t('page.title') }}</h1>
+    <div class="page-header__row">
+      <h1>{{ t('page.title') }}</h1>
+      <button class="theme-toggle" :title="themeTooltip" @click="cycleTheme">
+        <i :class="themeIcon"></i>
+      </button>
+    </div>
     <p>{{ t('page.subtitle') }}</p>
   </div>
 

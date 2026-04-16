@@ -150,5 +150,10 @@
   },
   "devTools": {
     "title": "Kehitystyokalut"
+  },
+  "theme": {
+    "system": "Teema: Jarjestelma (auto)",
+    "light": "Teema: Vaalea",
+    "dark": "Teema: Tumma"
   }
 }

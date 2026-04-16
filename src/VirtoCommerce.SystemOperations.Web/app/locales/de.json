@@ -150,5 +150,10 @@
   },
   "devTools": {
     "title": "Entwicklerwerkzeuge"
+  },
+  "theme": {
+    "system": "Thema: System (auto)",
+    "light": "Thema: Hell",
+    "dark": "Thema: Dunkel"
   }
 }

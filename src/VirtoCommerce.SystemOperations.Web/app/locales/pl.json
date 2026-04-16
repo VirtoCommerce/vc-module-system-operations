@@ -150,5 +150,10 @@
   },
   "devTools": {
     "title": "Narzedzia programistyczne"
+  },
+  "theme": {
+    "system": "Motyw: Systemowy (auto)",
+    "light": "Motyw: Jasny",
+    "dark": "Motyw: Ciemny"
   }
 }

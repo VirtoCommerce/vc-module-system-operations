@@ -19,7 +19,7 @@
   --vc-modal-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
   --vc-modal-radius: 2px;
 
-  /* App-specific tokens */
+  /* App-specific tokens — Light theme (default) */
   --color-bg: #F5F7FA;
   --color-card-bg: #fff;
   --color-border: #E1E8ED;
@@ -29,4 +29,20 @@
   --color-scenario-bg: #F0F4F8;
   --card-radius: 8px;
   --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-bg: #1a1d23;
+  --color-card-bg: #22262e;
+  --color-border: #363b44;
+  --color-text: #e1e4e8;
+  --color-text-secondary: #a0a8b4;
+  --color-muted: #8b929e;
+  --color-scenario-bg: #2a2e36;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  --vc-white: #22262e;
+  --vc-outline-hover-bg: #2a3040;
+  --vc-modal-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4);
 }

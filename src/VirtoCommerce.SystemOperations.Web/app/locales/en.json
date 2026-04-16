@@ -142,6 +142,11 @@
   "devTools": {
     "title": "Developer Tools"
   },
+  "theme": {
+    "system": "Theme: System (auto)",
+    "light": "Theme: Light",
+    "dark": "Theme: Dark"
+  },
   "dialog": {
     "yes": "Yes",
     "no": "No",

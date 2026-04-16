@@ -150,5 +150,10 @@
   },
   "devTools": {
     "title": "Utviklerverktoy"
+  },
+  "theme": {
+    "system": "Tema: System (auto)",
+    "light": "Tema: Lyst",
+    "dark": "Tema: Morkt"
   }
 }
