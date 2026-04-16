@@ -2,7 +2,7 @@
 import { ref, inject, computed } from 'vue';
 import { useApi, ApiError } from '../composables/useApi';
 import { I18nKey } from '../composables/useI18n';
-import type { ExportManifest, ExportImportNotification } from '../types';
+import type { ExportManifest, ExportImportNotification, PushNotificationSearchResult } from '../types';
 
 const { t } = inject(I18nKey)!;
 const { get, post } = useApi();
@@ -22,7 +22,9 @@ const handleSettings = ref(true);
 const handleDynamicProperties = ref(true);
 
 const progressPercent = computed(() => {
-  if (!notification.value || !notification.value.totalCount) return 0;
+  if (!notification.value) return 0;
+  if (notification.value.finished) return 100;
+  if (!notification.value.totalCount) return 0;
   return Math.round((notification.value.processedCount / notification.value.totalCount) * 100);
 });
 
@@ -110,6 +112,7 @@ async function startImport() {
 
   try {
     notification.value = await post<ExportImportNotification>('/api/platform/import', {
+      exportManifest: manifest.value,
       fileUrl: fileUrl.value,
       handleSecurity: handleSecurity.value,
       handleBinaryData: handleBinaryData.value,
@@ -128,19 +131,28 @@ async function startImport() {
 }
 
 async function pollProgress() {
+  const notificationId = notification.value?.id;
+  if (!notificationId) return;
+
   const maxAttempts = 600;
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise((r) => setTimeout(r, 2000));
-    try {
-      const updated = await get<ExportImportNotification>(
-        `/api/platform/pushnotifications/${notification.value!.id}`,
-      );
-      notification.value = updated;
+    if (!notification.value || notification.value.id !== notificationId) return;
 
-      if (updated.finished) {
+    try {
+      const res = await post<PushNotificationSearchResult>(
+        '/api/platform/pushnotifications',
+        { ids: [notificationId] },
+      );
+      const evt = res?.notifyEvents?.[0] as Partial<ExportImportNotification> | undefined;
+      if (evt) {
+        notification.value = { ...notification.value, ...evt } as ExportImportNotification;
+      }
+
+      if (notification.value.finished) {
         isImporting.value = false;
-        if (updated.errorCount > 0) {
-          error.value = updated.errors.join('\n');
+        if ((notification.value.errorCount ?? 0) > 0) {
+          error.value = (notification.value.errors ?? []).join('\n');
         }
         return;
       }

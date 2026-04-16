@@ -2,7 +2,7 @@
 import { ref, inject, computed } from 'vue';
 import { useApi, ApiError } from '../composables/useApi';
 import { I18nKey } from '../composables/useI18n';
-import type { ExportManifest, ExportImportNotification } from '../types';
+import type { ExportManifest, ExportImportNotification, PushNotificationSearchResult } from '../types';
 
 const { t } = inject(I18nKey)!;
 const { get, post } = useApi();
@@ -19,7 +19,9 @@ const handleSettings = ref(true);
 const handleDynamicProperties = ref(true);
 
 const progressPercent = computed(() => {
-  if (!notification.value || !notification.value.totalCount) return 0;
+  if (!notification.value) return 0;
+  if (notification.value.finished) return 100;
+  if (!notification.value.totalCount) return 0;
   return Math.round((notification.value.processedCount / notification.value.totalCount) * 100);
 });
 
@@ -39,6 +41,10 @@ async function loadManifest() {
 }
 
 function toggleAll(checked: boolean) {
+  handleSecurity.value = checked;
+  handleBinaryData.value = checked;
+  handleSettings.value = checked;
+  handleDynamicProperties.value = checked;
   manifest.value?.modules.forEach((m) => (m.isChecked = checked));
 }
 
@@ -53,6 +59,7 @@ async function startExport() {
 
   try {
     notification.value = await post<ExportImportNotification>('/api/platform/export', {
+      exportManifest: manifest.value,
       handleSecurity: handleSecurity.value,
       handleBinaryData: handleBinaryData.value,
       handleSettings: handleSettings.value,
@@ -71,21 +78,28 @@ async function startExport() {
 }
 
 async function pollProgress() {
-  // Poll push notification endpoint for progress updates
+  const notificationId = notification.value?.id;
+  if (!notificationId) return;
+
   const maxAttempts = 600; // 10 minutes max
   for (let i = 0; i < maxAttempts; i++) {
     await new Promise((r) => setTimeout(r, 2000));
-    try {
-      // Re-fetch the notification to get updated progress
-      const updated = await get<ExportImportNotification>(
-        `/api/platform/pushnotifications/${notification.value!.id}`,
-      );
-      notification.value = updated;
+    if (!notification.value || notification.value.id !== notificationId) return;
 
-      if (updated.finished) {
+    try {
+      const res = await post<PushNotificationSearchResult>(
+        '/api/platform/pushnotifications',
+        { ids: [notificationId] },
+      );
+      const evt = res?.notifyEvents?.[0] as Partial<ExportImportNotification> | undefined;
+      if (evt) {
+        notification.value = { ...notification.value, ...evt } as ExportImportNotification;
+      }
+
+      if (notification.value.finished) {
         isExporting.value = false;
-        if (updated.errorCount > 0) {
-          error.value = updated.errors.join('\n');
+        if ((notification.value.errorCount ?? 0) > 0) {
+          error.value = (notification.value.errors ?? []).join('\n');
         }
         return;
       }
@@ -133,6 +147,12 @@ function reset() {
   <!-- Step 2: Configure export -->
   <div v-if="manifest && !notification" class="expand-section visible">
     <div class="export-config">
+      <div class="export-config__toolbar">
+        <button class="btn-link" @click="toggleAll(true)">{{ t('backup.selectAll') }}</button>
+        <span class="btn-link-sep">|</span>
+        <button class="btn-link" @click="toggleAll(false)">{{ t('backup.unselectAll') }}</button>
+      </div>
+
       <div class="export-config__section">
         <div class="export-config__label">{{ t('backup.platformEntries') }}</div>
         <label class="export-config__checkbox">
@@ -150,14 +170,7 @@ function reset() {
       </div>
 
       <div class="export-config__section">
-        <div class="export-config__label">
-          {{ t('backup.modules') }}
-          <span class="export-config__actions">
-            <button class="btn-link" @click="toggleAll(true)">{{ t('backup.selectAll') }}</button>
-            <span class="btn-link-sep">|</span>
-            <button class="btn-link" @click="toggleAll(false)">{{ t('backup.unselectAll') }}</button>
-          </span>
-        </div>
+        <div class="export-config__label">{{ t('backup.modules') }}</div>
         <div v-if="manifest.modules.length === 0" class="export-config__empty">
           {{ t('backup.noModules') }}
         </div>
@@ -189,8 +202,8 @@ function reset() {
         {{ notification.description || (isCompleted ? t('backup.completed') : t('backup.loading')) }}
       </div>
 
-      <div v-if="isCompleted && notification.downloadUrl" class="progress-section__download">
-        <a :href="notification.downloadUrl" class="btn btn--primary" download>
+      <div v-if="isCompleted" class="progress-section__download">
+        <a v-if="notification.downloadUrl" :href="'/' + notification.downloadUrl" class="btn btn--primary" download>
           <i class="fas fa-download"></i>
           {{ t('backup.downloadFile') }}
         </a>

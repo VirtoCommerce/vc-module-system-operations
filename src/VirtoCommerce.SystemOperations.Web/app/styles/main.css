@@ -289,6 +289,14 @@ body {
   margin-bottom: 12px;
 }
 
+.export-config__toolbar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
 .export-config__section {
   margin-bottom: 12px;
 }

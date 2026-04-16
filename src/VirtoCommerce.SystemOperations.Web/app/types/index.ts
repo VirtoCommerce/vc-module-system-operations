@@ -64,6 +64,34 @@ export interface UploadedAsset {
   size: number;
 }
 
+export type SampleDataState = 'Undefined' | 'Processing' | 'Completed';
+
+export interface ObjectSettingEntry {
+  name: string;
+  value: unknown;
+  valueType?: string;
+  values?: unknown[];
+  defaultValue?: unknown;
+  [key: string]: unknown;
+}
+
+export interface PushNotification {
+  id: string;
+  notifyType?: string;
+  title?: string;
+  description?: string;
+  created?: string;
+  finished?: string | null;
+  isNew?: boolean;
+  [key: string]: unknown;
+}
+
+export interface PushNotificationSearchResult {
+  totalCount: number;
+  newCount: number;
+  notifyEvents: PushNotification[];
+}
+
 export type DialogType = 'warning' | 'success' | 'error';
 
 export interface DialogState {

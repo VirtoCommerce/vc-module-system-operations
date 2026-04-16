@@ -10,7 +10,9 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 
 - **Reset Cache** — Clear all platform in-memory caches. Useful after direct database changes or configuration updates.
 - **Restart Platform** — Gracefully restart the application with automatic polling until the platform is back online.
-- **Install Sample Data** — Discover and install sample data packages for demos, development, or evaluation environments.
+- **Install Sample Data** — Discover and install sample data packages for demos, development, or evaluation environments. Includes pre-flight state check, automatic state reset for repeat installs, inline progress bar with live status from the Hangfire job, and cancel support.
+- **Export Platform Data** — Create a full platform backup with module/entry selection (Select All / Unselect All), real-time progress streaming, cancel support, and a download link on completion.
+- **Import Platform Data** — Restore platform data from a previously exported ZIP backup with module/entry selection, real-time progress streaming, and cancel support.
 - **Download Manifest** — Export complete platform diagnostic information (version, license, modules, OS, .NET runtime) as `vc-platform-info.json`.
 - **Download Package JSON** — Export `vc-package.json` with all installed modules and versions for environment replication.
 - **Module Load Sequence** — View the dependency-resolved loading order of all installed modules.
@@ -26,9 +28,20 @@ This module has no backend services, no database, and no custom API endpoints. I
 | Reset Cache | `POST /api/platform-cache/reset` |
 | Restart Platform | `POST /api/platform/modules/restart` |
 | Discover Sample Data | `GET /api/platform/sampledata/discover` |
+| Sample Data State | `GET /api/platform/sampledata/state` |
 | Import Sample Data | `POST /api/platform/sampledata/import` |
+| Reset Sample Data State | `POST /api/platform/settings` |
+| Export Platform Data | `POST /api/platform/export` |
+| Import Platform Data | `POST /api/platform/import` |
+| Export Manifest | `GET /api/platform/export/manifest/new` |
+| Load Import Manifest | `GET /api/platform/export/manifest/load` |
+| Upload Backup File | `POST /api/assets/localstorage` |
+| Cancel Job | `POST /api/platform/exortimport/tasks/{jobId}/cancel` |
+| Poll Progress | `POST /api/platform/pushnotifications` |
 | Download Manifest | `GET /api/platform/diagnostics/systeminfo` |
 | Module Load Sequence | `GET /api/platform/modules/loading-order` |
+
+Long-running operations (Export, Import, Sample Data Install) use Hangfire background jobs on the platform side. Progress is tracked by polling the push notification search endpoint (`POST /api/platform/pushnotifications` with `{ ids: [notificationId] }`) every 2 seconds until the notification's `finished` field is set.
 
 The UI is a Vue.js 3 + TypeScript + Vite application, served via the platform's `<apps>` mechanism and registered as a Developer Tool via `IDeveloperToolRegistrar`. The app supports 13 languages matching the platform's localization.
 
@@ -92,7 +105,9 @@ src/VirtoCommerce.SystemOperations.Web/
             VcDialog.vue            — Platform-styled modal dialog
             SectionGroup.vue        — Section with title + cards grid
             ModuleLoadSequence.vue  — Expandable module load order list
-            SampleDataPackages.vue  — Sample data discovery + installation
+            SampleDataPackages.vue  — Sample data discovery + install with progress
+            PlatformBackup.vue      — Export with manifest config + progress polling
+            PlatformRestore.vue     — Import with file upload, manifest config + progress
         composables/
             useApi.ts               — fetch() wrapper with error handling
             useDialog.ts            — Promise-based dialog state (provide/inject)
@@ -130,10 +145,17 @@ The page is built from two building blocks: **sections** (grouping headers with 
 └────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Data") ───────────────────────────────┐
-│  ┌─ OperationCard  ──────────────────────────┐              │
-│  │  Install Sample Data                      │              │
-│  │  [slot: <SampleDataPackages />]           │              │
-│  └───────────────────────────────────────────┘              │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
+│  │  Sample Data     │  │  Export Data     │  │  Import │  │
+│  │  [SampleData…]   │  │  [Backup…]      │  │  [Rest…]│  │
+│  └──────────────────┘  └─────────────────┘  └─────────┘  │
+└─────────────────────────────────────────────────────────────┘
+
+┌─ SectionGroup (title="Diagnostics & Export") ───────────────┐
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
+│  │  Manifest        │  │  Package JSON   │  │  Module │  │
+│  │  [download]      │  │  [download]     │  │  [list] │  │
+│  └──────────────────┘  └─────────────────┘  └─────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
