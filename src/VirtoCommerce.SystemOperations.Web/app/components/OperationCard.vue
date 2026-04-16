@@ -4,8 +4,8 @@ defineProps<{
   iconColor: 'blue' | 'red' | 'orange' | 'green' | 'purple';
   title: string;
   permission?: string;
-  description: string;
-  scenario: string;
+  description?: string;
+  scenario?: string;
   variant?: 'danger' | 'warning';
 }>();
 </script>
@@ -21,8 +21,8 @@ defineProps<{
         <div v-if="permission" class="op-card__permission">{{ permission }}</div>
       </div>
     </div>
-    <div class="op-card__description">{{ description }}</div>
-    <div class="op-card__scenario">
+    <div v-if="description" class="op-card__description">{{ description }}</div>
+    <div v-if="scenario" class="op-card__scenario">
       <i class="fas fa-lightbulb op-card__scenario-icon"></i>
       <span class="op-card__scenario-text">{{ scenario }}</span>
     </div>

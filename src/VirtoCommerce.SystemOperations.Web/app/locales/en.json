@@ -102,19 +102,32 @@
     "error": "Import failed.",
     "cancel": "Cancel"
   },
-  "downloadManifest": {
-    "title": "Download Manifest",
-    "description": "Downloads complete platform diagnostic information as JSON, including platform version, license details, installed modules, OS info, and .NET runtime version.",
-    "scenario": "Use when filing support tickets, documenting environment configuration, or comparing environments side by side.",
-    "action": "Download vc-platform-info.json",
-    "error": "Failed to download manifest."
-  },
   "downloadPackage": {
     "title": "Download Package JSON",
     "description": "Downloads a vc-package.json file listing all installed modules with versions and module sources. This file can be used to replicate the same module set on another environment.",
     "scenario": "Use when cloning an environment, setting up CI/CD pipelines, or documenting the module stack for deployment.",
-    "action": "Download vc-package.json",
+    "action": "Download",
+    "restoreHint": "Restore modules from this file:",
     "error": "Failed to download package."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "Displays key platform details: version, license, environment mode, database provider, and runtime. Quick overview for support and diagnostics.",
+    "scenario": "Use when filing support tickets, verifying deployment configuration, or sharing environment details with the team.",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
   },
   "moduleSequence": {
     "title": "Module Load Sequence",
@@ -122,7 +135,12 @@
     "scenario": "Use when debugging module initialization failures, understanding dependency chains, or troubleshooting startup errors.",
     "showAction": "Show Load Order",
     "hideAction": "Hide Load Order",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
     "error": "Failed to load module sequence."
+  },
+  "devTools": {
+    "title": "Developer Tools"
   },
   "dialog": {
     "yes": "Yes",

@@ -8,14 +8,15 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 
 ## Key Features
 
+- **Developer Tools Navigation** — Dynamic section listing all registered developer tools from the platform, with automatic icon/color assignment per tool type (Health, Hangfire, Swagger, GraphQL, etc.). Click opens in the same iframe, Ctrl+click opens in a new tab. External tools open in a new tab automatically.
+- **Platform Information** — Auto-loaded on page open. Displays platform version, environment mode, database provider, runtime, and license details. Includes Copy to Clipboard and Download as `vc-platform-info.json`.
 - **Reset Cache** — Clear all platform in-memory caches. Useful after direct database changes or configuration updates.
 - **Restart Platform** — Gracefully restart the application with automatic polling until the platform is back online.
 - **Install Sample Data** — Discover and install sample data packages for demos, development, or evaluation environments. Includes pre-flight state check, automatic state reset for repeat installs, inline progress bar with live status from the Hangfire job, and cancel support.
 - **Export Platform Data** — Create a full platform backup with module/entry selection (Select All / Unselect All), real-time progress streaming, cancel support, and a download link on completion.
 - **Import Platform Data** — Restore platform data from a previously exported ZIP backup with module/entry selection, real-time progress streaming, and cancel support.
-- **Download Manifest** — Export complete platform diagnostic information (version, license, modules, OS, .NET runtime) as `vc-platform-info.json`.
-- **Download Package JSON** — Export `vc-package.json` with all installed modules and versions for environment replication.
-- **Module Load Sequence** — View the dependency-resolved loading order of all installed modules.
+- **Download Package JSON** — Export `vc-package.json` with all installed modules and versions for environment replication. Includes a ready-to-copy `vc-build Install` command for restoring modules from the downloaded file.
+- **Module Load Sequence** — View the dependency-resolved loading order of all installed modules with Copy to Clipboard support.
 
 Each operation includes a clear description of what it does, when to use it, and appropriate confirmation dialogs for destructive actions.
 
@@ -25,6 +26,8 @@ This module has no backend services, no database, and no custom API endpoints. I
 
 | Operation | API Endpoint |
 |-----------|-------------|
+| Developer Tools | `GET /api/platform/developer-tools` |
+| Platform Information | `GET /api/platform/diagnostics/systeminfo` |
 | Reset Cache | `POST /api/platform-cache/reset` |
 | Restart Platform | `POST /api/platform/modules/restart` |
 | Discover Sample Data | `GET /api/platform/sampledata/discover` |
@@ -38,7 +41,6 @@ This module has no backend services, no database, and no custom API endpoints. I
 | Upload Backup File | `POST /api/assets/localstorage` |
 | Cancel Job | `POST /api/platform/exortimport/tasks/{jobId}/cancel` |
 | Poll Progress | `POST /api/platform/pushnotifications` |
-| Download Manifest | `GET /api/platform/diagnostics/systeminfo` |
 | Module Load Sequence | `GET /api/platform/modules/loading-order` |
 
 Long-running operations (Export, Import, Sample Data Install) use Hangfire background jobs on the platform side. Progress is tracked by polling the push notification search endpoint (`POST /api/platform/pushnotifications` with `{ ids: [notificationId] }`) every 2 seconds until the notification's `finished` field is set.
@@ -108,6 +110,8 @@ src/VirtoCommerce.SystemOperations.Web/
             SampleDataPackages.vue  — Sample data discovery + install with progress
             PlatformBackup.vue      — Export with manifest config + progress polling
             PlatformRestore.vue     — Import with file upload, manifest config + progress
+            PlatformInfo.vue        — Platform info display with copy/download
+            DevToolsNav.vue         — Dynamic dev tools section from platform API
         composables/
             useApi.ts               — fetch() wrapper with error handling
             useDialog.ts            — Promise-based dialog state (provide/inject)
@@ -137,11 +141,18 @@ The page is built from two building blocks: **sections** (grouping headers with 
 │  Platform maintenance and diagnostic tools...              │
 └────────────────────────────────────────────────────────────┘
 
+┌─ DevToolsNav (title="Developer Tools") ────────────────────┐
+│  ┌─ widget ──┐  ┌─ widget ──┐  ┌─ widget ──┐              │
+│  │ Hangfire  │  │ Swagger   │  │ GraphQL  │  ...          │
+│  │ [link →]  │  │ [link →]  │  │ [link →] │              │
+│  └───────────┘  └───────────┘  └──────────┘              │
+└────────────────────────────────────────────────────────────┘
+
 ┌─ SectionGroup (title="Maintenance") ───────────────────────┐
-│  ┌─ OperationCard  ──┐  ┌─ OperationCard  ──┐              │
-│  │  Reset Cache      │  │  Restart Platform │              │
-│  │  [slot: button]   │  │  [slot: button]   │              │
-│  └───────────────────┘  └───────────────────┘              │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
+│  │  Platform Info   │  │  Reset Cache    │  │ Restart │  │
+│  │  [PlatformInfo]  │  │  [button]       │  │ [btn]   │  │
+│  └──────────────────┘  └─────────────────┘  └─────────┘  │
 └────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Data") ───────────────────────────────┐
@@ -152,10 +163,10 @@ The page is built from two building blocks: **sections** (grouping headers with 
 └─────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Diagnostics & Export") ───────────────┐
-│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
-│  │  Manifest        │  │  Package JSON   │  │  Module │  │
-│  │  [download]      │  │  [download]     │  │  [list] │  │
-│  └──────────────────┘  └─────────────────┘  └─────────┘  │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──────────────┐    │
+│  │  Package JSON   │  │  Module Load Sequence        │    │
+│  │  [download]     │  │  [list]                      │    │
+│  └─────────────────┘  └──────────────────────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -298,8 +309,8 @@ npm run build  # Production build
 | `icon` | `string` | yes | Font Awesome class (e.g. `fas fa-bolt`) |
 | `icon-color` | `'blue' \| 'red' \| 'orange' \| 'green' \| 'purple'` | yes | Icon background color |
 | `title` | `string` | yes | Card heading |
-| `description` | `string` | yes | What the operation does |
-| `scenario` | `string` | yes | When/why to use it |
+| `description` | `string` | no | What the operation does (hidden if omitted) |
+| `scenario` | `string` | no | When/why to use it (hidden if omitted) |
 | `permission` | `string` | no | Permission badge shown under title |
 | `variant` | `'danger' \| 'warning'` | no | Card hover color for destructive actions |
 

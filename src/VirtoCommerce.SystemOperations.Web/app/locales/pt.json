@@ -102,19 +102,13 @@
     "error": "Falha na importacao.",
     "cancel": "Cancelar"
   },
-  "downloadManifest": {
-    "title": "Baixar manifesto",
-    "description": "Baixa informações de diagnóstico completas da plataforma em formato JSON, incluindo versão da plataforma, detalhes da licença, módulos instalados, informações do sistema operacional e versão do runtime .NET.",
-    "scenario": "Use ao criar tickets de suporte, documentar a configuração do ambiente ou comparar ambientes.",
-    "action": "Baixar vc-platform-info.json",
-    "error": "Falha ao baixar o manifesto."
-  },
   "downloadPackage": {
     "title": "Baixar pacote JSON",
     "description": "Baixa um arquivo vc-package.json listando todos os módulos instalados com versões e fontes dos módulos. Este arquivo pode ser usado para replicar o mesmo conjunto de módulos em outro ambiente.",
     "scenario": "Use ao clonar um ambiente, configurar pipelines de CI/CD ou documentar o conjunto de módulos para implantação.",
-    "action": "Baixar vc-package.json",
-    "error": "Falha ao baixar o pacote."
+    "action": "Baixar",
+    "error": "Falha ao baixar o pacote.",
+    "restoreHint": "Restaurar modulos a partir deste arquivo:"
   },
   "moduleSequence": {
     "title": "Sequência de carregamento de módulos",
@@ -122,7 +116,9 @@
     "scenario": "Use ao depurar falhas de inicialização de módulos, entender cadeias de dependências ou solucionar erros de inicialização.",
     "showAction": "Mostrar ordem de carregamento",
     "hideAction": "Ocultar ordem de carregamento",
-    "error": "Falha ao carregar a sequência de módulos."
+    "error": "Falha ao carregar a sequência de módulos.",
+    "copy": "Copiar para a area de transferencia",
+    "copied": "Copiado!"
   },
   "dialog": {
     "yes": "Sim",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Você não tem permissão para realizar esta ação.",
     "unexpected": "Ocorreu um erro inesperado."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Ferramentas de desenvolvimento"
   }
 }

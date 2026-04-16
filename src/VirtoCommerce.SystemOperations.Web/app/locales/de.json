@@ -102,19 +102,13 @@
     "error": "Import fehlgeschlagen.",
     "cancel": "Abbrechen"
   },
-  "downloadManifest": {
-    "title": "Manifest herunterladen",
-    "description": "Lädt vollständige Plattform-Diagnoseinformationen als JSON herunter, einschließlich Plattformversion, Lizenzdetails, installierter Module, Betriebssysteminformationen und .NET-Laufzeitversion.",
-    "scenario": "Verwenden Sie diese Funktion beim Erstellen von Support-Tickets, zur Dokumentation der Umgebungskonfiguration oder zum Vergleich von Umgebungen.",
-    "action": "vc-platform-info.json herunterladen",
-    "error": "Manifest konnte nicht heruntergeladen werden."
-  },
   "downloadPackage": {
     "title": "Paket-JSON herunterladen",
     "description": "Lädt eine vc-package.json-Datei herunter, die alle installierten Module mit Versionen und Modulquellen auflistet. Diese Datei kann verwendet werden, um denselben Modulsatz in einer anderen Umgebung zu replizieren.",
     "scenario": "Verwenden Sie diese Funktion beim Klonen einer Umgebung, beim Einrichten von CI/CD-Pipelines oder zur Dokumentation des Modulstapels für die Bereitstellung.",
-    "action": "vc-package.json herunterladen",
-    "error": "Paket konnte nicht heruntergeladen werden."
+    "action": "Herunterladen",
+    "error": "Paket konnte nicht heruntergeladen werden.",
+    "restoreHint": "Module aus dieser Datei wiederherstellen:"
   },
   "moduleSequence": {
     "title": "Modul-Ladereihenfolge",
@@ -122,7 +116,9 @@
     "scenario": "Verwenden Sie diese Funktion zur Fehlersuche bei Modulinitialisierungsfehlern, zum Verständnis von Abhängigkeitsketten oder zur Fehlerbehebung bei Startproblemen.",
     "showAction": "Ladereihenfolge anzeigen",
     "hideAction": "Ladereihenfolge ausblenden",
-    "error": "Modul-Ladereihenfolge konnte nicht geladen werden."
+    "error": "Modul-Ladereihenfolge konnte nicht geladen werden.",
+    "copy": "In Zwischenablage kopieren",
+    "copied": "Kopiert!"
   },
   "dialog": {
     "yes": "Ja",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
     "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Entwicklerwerkzeuge"
   }
 }

@@ -11,6 +11,7 @@ const isVisible = ref(false);
 const isLoading = ref(false);
 const isLoaded = ref(false);
 const error = ref('');
+const copied = ref(false);
 
 async function toggle() {
   error.value = '';
@@ -31,6 +32,24 @@ async function toggle() {
     isLoading.value = false;
   }
 }
+
+async function copyToClipboard() {
+  const text = modules.value.map((name, i) => `${i + 1}. ${name}`).join('\n');
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  copied.value = true;
+  setTimeout(() => { copied.value = false; }, 2000);
+}
 </script>
 
 <template>
@@ -38,6 +57,10 @@ async function toggle() {
     <button class="btn btn--outline" :disabled="isLoading" @click="toggle">
       <i :class="isLoading ? 'fas fa-spinner fa-spin' : 'fas fa-eye'"></i>
       {{ isVisible ? t('moduleSequence.hideAction') : t('moduleSequence.showAction') }}
+    </button>
+    <button v-if="isVisible" class="btn btn--outline" @click="copyToClipboard">
+      <i :class="copied ? 'fas fa-check' : 'fas fa-copy'"></i>
+      {{ copied ? t('moduleSequence.copied') : t('moduleSequence.copy') }}
     </button>
   </div>
 

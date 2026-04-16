@@ -102,19 +102,13 @@
     "error": "インポートに失敗しました。",
     "cancel": "キャンセル"
   },
-  "downloadManifest": {
-    "title": "マニフェストをダウンロード",
-    "description": "プラットフォームバージョン、ライセンス詳細、インストール済みモジュール、OS情報、.NETランタイムバージョンを含む、プラットフォームの完全な診断情報をJSON形式でダウンロードします。",
-    "scenario": "サポートチケットの作成、環境設定の文書化、または環境の比較を行う際に使用してください。",
-    "action": "vc-platform-info.json をダウンロード",
-    "error": "マニフェストのダウンロードに失敗しました。"
-  },
   "downloadPackage": {
     "title": "パッケージJSONをダウンロード",
     "description": "インストール済みのすべてのモジュールとそのバージョン、モジュールソースを一覧にしたvc-package.jsonファイルをダウンロードします。このファイルを使用して、別の環境で同じモジュール構成を再現できます。",
     "scenario": "環境のクローン作成、CI/CDパイプラインの設定、またはデプロイ用のモジュール構成の文書化に使用してください。",
-    "action": "vc-package.json をダウンロード",
-    "error": "パッケージのダウンロードに失敗しました。"
+    "action": "ダウンロード",
+    "error": "パッケージのダウンロードに失敗しました。",
+    "restoreHint": "このファイルからモジュールを復元:"
   },
   "moduleSequence": {
     "title": "モジュール読み込み順序",
@@ -122,7 +116,9 @@
     "scenario": "モジュール初期化エラーのデバッグ、依存関係チェーンの理解、または起動時のエラーのトラブルシューティングに使用してください。",
     "showAction": "読み込み順序を表示",
     "hideAction": "読み込み順序を非表示",
-    "error": "モジュール読み込み順序の取得に失敗しました。"
+    "error": "モジュール読み込み順序の取得に失敗しました。",
+    "copy": "クリップボードにコピー",
+    "copied": "コピーしました！"
   },
   "dialog": {
     "yes": "はい",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "この操作を実行する権限がありません。",
     "unexpected": "予期しないエラーが発生しました。"
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "開発者ツール"
   }
 }

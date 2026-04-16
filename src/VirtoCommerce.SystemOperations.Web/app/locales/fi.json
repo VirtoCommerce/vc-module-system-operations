@@ -102,19 +102,13 @@
     "error": "Tuonti epaonnistui.",
     "cancel": "Peruuta"
   },
-  "downloadManifest": {
-    "title": "Lataa manifesti",
-    "description": "Lataa alustan täydelliset diagnostiikkatiedot JSON-muodossa, mukaan lukien alustan versio, lisenssitiedot, asennetut moduulit, käyttöjärjestelmätiedot ja .NET-ajonaikaversio.",
-    "scenario": "Käytä tukipyyntöjen luomiseen, ympäristökonfiguraation dokumentointiin tai ympäristöjen vertailuun.",
-    "action": "Lataa vc-platform-info.json",
-    "error": "Manifestin lataaminen epäonnistui."
-  },
   "downloadPackage": {
     "title": "Lataa paketti-JSON",
     "description": "Lataa vc-package.json-tiedoston, joka listaa kaikki asennetut moduulit versioineen ja moduulilähteineen. Tätä tiedostoa voidaan käyttää saman moduulikokonaisuuden replikoimiseen toisessa ympäristössä.",
     "scenario": "Käytä ympäristön kloonaamiseen, CI/CD-putkien pystyttämiseen tai moduulikokonaisuuden dokumentointiin käyttöönottoa varten.",
-    "action": "Lataa vc-package.json",
-    "error": "Paketin lataaminen epäonnistui."
+    "action": "Lataa",
+    "error": "Paketin lataaminen epäonnistui.",
+    "restoreHint": "Palauta moduulit tasta tiedostosta:"
   },
   "moduleSequence": {
     "title": "Moduulien latausjärjestys",
@@ -122,7 +116,9 @@
     "scenario": "Käytä moduulien alustusvirheiden vianetsintään, riippuvuusketjujen ymmärtämiseen tai käynnistysongelmien ratkaisemiseen.",
     "showAction": "Näytä latausjärjestys",
     "hideAction": "Piilota latausjärjestys",
-    "error": "Moduulien latausjärjestyksen lataaminen epäonnistui."
+    "error": "Moduulien latausjärjestyksen lataaminen epäonnistui.",
+    "copy": "Kopioi leikepoydale",
+    "copied": "Kopioitu!"
   },
   "dialog": {
     "yes": "Kyllä",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Sinulla ei ole oikeutta suorittaa tätä toimintoa.",
     "unexpected": "Odottamaton virhe tapahtui."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Kehitystyokalut"
   }
 }

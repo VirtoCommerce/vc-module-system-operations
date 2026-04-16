@@ -102,19 +102,13 @@
     "error": "Echec de l'import.",
     "cancel": "Annuler"
   },
-  "downloadManifest": {
-    "title": "Télécharger le manifeste",
-    "description": "Télécharge les informations de diagnostic complètes de la plateforme au format JSON, incluant la version de la plateforme, les détails de licence, les modules installés, les informations du système d'exploitation et la version du runtime .NET.",
-    "scenario": "À utiliser lors de la création de tickets de support, la documentation de la configuration de l'environnement ou la comparaison d'environnements.",
-    "action": "Télécharger vc-platform-info.json",
-    "error": "Échec du téléchargement du manifeste."
-  },
   "downloadPackage": {
     "title": "Télécharger le paquet JSON",
     "description": "Télécharge un fichier vc-package.json listant tous les modules installés avec leurs versions et sources. Ce fichier peut être utilisé pour répliquer le même ensemble de modules sur un autre environnement.",
     "scenario": "À utiliser lors du clonage d'un environnement, de la configuration de pipelines CI/CD ou de la documentation de l'ensemble des modules pour le déploiement.",
-    "action": "Télécharger vc-package.json",
-    "error": "Échec du téléchargement du paquet."
+    "action": "Télécharger",
+    "error": "Échec du téléchargement du paquet.",
+    "restoreHint": "Restaurer les modules depuis ce fichier :"
   },
   "moduleSequence": {
     "title": "Séquence de chargement des modules",
@@ -122,7 +116,9 @@
     "scenario": "À utiliser pour déboguer les échecs d'initialisation de modules, comprendre les chaînes de dépendances ou résoudre les erreurs de démarrage.",
     "showAction": "Afficher l'ordre de chargement",
     "hideAction": "Masquer l'ordre de chargement",
-    "error": "Échec du chargement de la séquence des modules."
+    "error": "Échec du chargement de la séquence des modules.",
+    "copy": "Copier dans le presse-papiers",
+    "copied": "Copie !"
   },
   "dialog": {
     "yes": "Oui",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action.",
     "unexpected": "Une erreur inattendue s'est produite."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Outils de developpement"
   }
 }

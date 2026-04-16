@@ -102,19 +102,13 @@
     "error": "Import nie powiodl sie.",
     "cancel": "Anuluj"
   },
-  "downloadManifest": {
-    "title": "Pobierz manifest",
-    "description": "Pobiera pełne informacje diagnostyczne platformy w formacie JSON, w tym wersję platformy, szczegóły licencji, zainstalowane moduły, informacje o systemie operacyjnym i wersję środowiska .NET.",
-    "scenario": "Użyj podczas tworzenia zgłoszeń serwisowych, dokumentowania konfiguracji środowiska lub porównywania środowisk.",
-    "action": "Pobierz vc-platform-info.json",
-    "error": "Nie udało się pobrać manifestu."
-  },
   "downloadPackage": {
     "title": "Pobierz pakiet JSON",
     "description": "Pobiera plik vc-package.json zawierający listę wszystkich zainstalowanych modułów z wersjami i źródłami modułów. Plik ten może służyć do replikacji tego samego zestawu modułów w innym środowisku.",
     "scenario": "Użyj podczas klonowania środowiska, konfiguracji potoków CI/CD lub dokumentowania zestawu modułów do wdrożenia.",
-    "action": "Pobierz vc-package.json",
-    "error": "Nie udało się pobrać pakietu."
+    "action": "Pobierz",
+    "error": "Nie udało się pobrać pakietu.",
+    "restoreHint": "Przywroc moduly z tego pliku:"
   },
   "moduleSequence": {
     "title": "Kolejność ładowania modułów",
@@ -122,7 +116,9 @@
     "scenario": "Użyj podczas debugowania błędów inicjalizacji modułów, analizy łańcuchów zależności lub rozwiązywania problemów z uruchamianiem.",
     "showAction": "Pokaż kolejność ładowania",
     "hideAction": "Ukryj kolejność ładowania",
-    "error": "Nie udało się załadować kolejności modułów."
+    "error": "Nie udało się załadować kolejności modułów.",
+    "copy": "Kopiuj do schowka",
+    "copied": "Skopiowano!"
   },
   "dialog": {
     "yes": "Tak",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Nie masz uprawnień do wykonania tej akcji.",
     "unexpected": "Wystąpił nieoczekiwany błąd."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Narzedzia programistyczne"
   }
 }

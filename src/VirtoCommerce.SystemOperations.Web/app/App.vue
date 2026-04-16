@@ -12,6 +12,8 @@ import ModuleLoadSequence from './components/ModuleLoadSequence.vue';
 import SampleDataPackages from './components/SampleDataPackages.vue';
 import PlatformBackup from './components/PlatformBackup.vue';
 import PlatformRestore from './components/PlatformRestore.vue';
+import PlatformInfo from './components/PlatformInfo.vue';
+import DevToolsNav from './components/DevToolsNav.vue';
 
 const i18n = useI18n();
 const { t } = i18n;
@@ -23,23 +25,29 @@ provide(DialogKey, dialog);
 const { resetCache, restartPlatform, isResetting, isRestarting, resetError, restartError } =
   useOperations(dialog, t);
 
-const { downloadManifest, downloadPackage } = useSystemInfo();
+const { downloadPackage } = useSystemInfo();
 
-const isDownloadingManifest = ref(false);
 const isDownloadingPackage = ref(false);
-const manifestError = ref('');
 const packageError = ref('');
+const commandCopied = ref(false);
 
-async function handleDownloadManifest() {
-  manifestError.value = '';
-  isDownloadingManifest.value = true;
+const vcBuildCommand = 'vc-build Install -PackageManifestPath vc-package.json -ProbingPath platform/app_data/modules -DiscoveryPath platform/modules';
+
+async function copyCommand() {
   try {
-    await downloadManifest();
-  } catch (err) {
-    manifestError.value = err instanceof ApiError ? err.message : t('downloadManifest.error');
-  } finally {
-    isDownloadingManifest.value = false;
+    await navigator.clipboard.writeText(vcBuildCommand);
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = vcBuildCommand;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
   }
+  commandCopied.value = true;
+  setTimeout(() => { commandCopied.value = false; }, 2000);
 }
 
 async function handleDownloadPackage() {
@@ -61,8 +69,19 @@ async function handleDownloadPackage() {
     <p>{{ t('page.subtitle') }}</p>
   </div>
 
+  <!-- Dev Tools -->
+  <DevToolsNav />
+
   <!-- Maintenance -->
   <SectionGroup :title="t('sections.maintenance')">
+    <OperationCard
+      icon="fas fa-info-circle"
+      icon-color="blue"
+      :title="t('platformInfo.title')"
+    >
+      <PlatformInfo />
+    </OperationCard>
+
     <OperationCard
       icon="fas fa-eraser"
       icon-color="orange"
@@ -139,22 +158,6 @@ async function handleDownloadPackage() {
   <!-- Diagnostics & Export -->
   <SectionGroup :title="t('sections.diagnostics')">
     <OperationCard
-      icon="fas fa-download"
-      icon-color="blue"
-      :title="t('downloadManifest.title')"
-      :description="t('downloadManifest.description')"
-      :scenario="t('downloadManifest.scenario')"
-    >
-      <div class="op-card__actions">
-        <button class="btn btn--primary" :disabled="isDownloadingManifest" @click="handleDownloadManifest">
-          <i :class="isDownloadingManifest ? 'fas fa-spinner fa-spin' : 'fas fa-download'"></i>
-          {{ t('downloadManifest.action') }}
-        </button>
-      </div>
-      <div v-if="manifestError" class="op-card__error">{{ manifestError }}</div>
-    </OperationCard>
-
-    <OperationCard
       icon="fas fa-file-code"
       icon-color="blue"
       :title="t('downloadPackage.title')"
@@ -166,6 +169,15 @@ async function handleDownloadPackage() {
           <i :class="isDownloadingPackage ? 'fas fa-spinner fa-spin' : 'fas fa-file-code'"></i>
           {{ t('downloadPackage.action') }}
         </button>
+      </div>
+      <div class="code-hint">
+        <div class="code-hint__label">{{ t('downloadPackage.restoreHint') }}</div>
+        <div class="code-hint__block">
+          <code class="code-hint__code">vc-build Install -PackageManifestPath vc-package.json -ProbingPath platform/app_data/modules -DiscoveryPath platform/modules</code>
+          <button class="code-hint__copy" :title="t('platformInfo.copy')" @click="copyCommand">
+            <i :class="commandCopied ? 'fas fa-check' : 'fas fa-copy'"></i>
+          </button>
+        </div>
       </div>
       <div v-if="packageError" class="op-card__error">{{ packageError }}</div>
     </OperationCard>

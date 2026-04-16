@@ -4,9 +4,23 @@ export interface ModuleInfo {
   owners: string[];
 }
 
+export interface LicenseInfo {
+  type: string;
+  customerName: string;
+  customerEmail: string;
+  expirationDate: string | null;
+}
+
 export interface SystemInfo {
   platformVersion: string;
   installedModules: ModuleInfo[];
+  license: LicenseInfo | null;
+  databaseProvider: string;
+  environmentName: string;
+  version: string;
+  is64BitOperatingSystem: boolean;
+  is64BitProcess: boolean;
+  runtimeIdentifier: string;
   [key: string]: unknown;
 }
 

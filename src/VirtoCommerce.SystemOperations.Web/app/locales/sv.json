@@ -102,19 +102,13 @@
     "error": "Import misslyckades.",
     "cancel": "Avbryt"
   },
-  "downloadManifest": {
-    "title": "Ladda ner manifest",
-    "description": "Laddar ner fullständig diagnostikinformation om plattformen som JSON, inklusive plattformsversion, licensinformation, installerade moduler, OS-information och .NET-körtidsversion.",
-    "scenario": "Använd vid skapande av supportärenden, dokumentation av miljökonfiguration eller jämförelse av miljöer.",
-    "action": "Ladda ner vc-platform-info.json",
-    "error": "Kunde inte ladda ner manifestet."
-  },
   "downloadPackage": {
     "title": "Ladda ner paket-JSON",
     "description": "Laddar ner en vc-package.json-fil som listar alla installerade moduler med versioner och modulkällor. Filen kan användas för att replikera samma moduluppsättning i en annan miljö.",
     "scenario": "Använd vid kloning av en miljö, uppsättning av CI/CD-pipelines eller dokumentation av moduluppsättningen för driftsättning.",
-    "action": "Ladda ner vc-package.json",
-    "error": "Kunde inte ladda ner paketet."
+    "action": "Ladda ner",
+    "error": "Kunde inte ladda ner paketet.",
+    "restoreHint": "Aterstall moduler fran denna fil:"
   },
   "moduleSequence": {
     "title": "Modulladdningsordning",
@@ -122,7 +116,9 @@
     "scenario": "Använd vid felsökning av modulinitieringsfel, förståelse av beroendekedjor eller felsökning av uppstartsproblem.",
     "showAction": "Visa laddningsordning",
     "hideAction": "Dölj laddningsordning",
-    "error": "Kunde inte ladda modulladdningsordningen."
+    "error": "Kunde inte ladda modulladdningsordningen.",
+    "copy": "Kopiera till urklipp",
+    "copied": "Kopierat!"
   },
   "dialog": {
     "yes": "Ja",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Du har inte behörighet att utföra denna åtgärd.",
     "unexpected": "Ett oväntat fel inträffade."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Utvecklarverktyg"
   }
 }

@@ -31,6 +31,63 @@ body {
   color: var(--color-muted);
 }
 
+/* Dev Tools widgets */
+.devtools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.devtool-widget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--vc-font);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  text-align: left;
+  text-decoration: none;
+}
+
+.devtool-widget:hover {
+  border-color: var(--vc-success);
+  box-shadow: var(--card-shadow);
+}
+
+.devtool-widget__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.devtool-widget__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.devtool-widget__permission {
+  font-size: 10px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.devtool-widget__arrow {
+  font-size: 11px;
+  color: var(--color-muted);
+  flex-shrink: 0;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.devtool-widget:hover .devtool-widget__arrow {
+  color: var(--vc-success);
+  transform: translateX(2px);
+}
+
 /* Section */
 .section {
   margin-bottom: 28px;
@@ -198,11 +255,61 @@ body {
   cursor: not-allowed;
 }
 
+/* Code hint */
+.code-hint {
+  margin-top: 12px;
+}
+
+.code-hint__label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+.code-hint__block {
+  display: flex;
+  align-items: stretch;
+  background: var(--color-scenario-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.code-hint__code {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-text);
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.code-hint__copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  background: none;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  cursor: pointer;
+  color: var(--color-muted);
+  font-size: 13px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.code-hint__copy:hover {
+  color: var(--vc-base);
+  background: var(--vc-outline-hover-bg);
+}
+
 /* Expandable section */
 .expand-section {
   margin-top: 12px;
-  border-top: 1px solid var(--color-border);
-  padding-top: 12px;
 }
 
 .expand-enter-active,

@@ -102,19 +102,13 @@
     "error": "Importazione fallita.",
     "cancel": "Annulla"
   },
-  "downloadManifest": {
-    "title": "Scarica manifesto",
-    "description": "Scarica le informazioni diagnostiche complete della piattaforma in formato JSON, inclusi versione della piattaforma, dettagli della licenza, moduli installati, informazioni sul sistema operativo e versione del runtime .NET.",
-    "scenario": "Da utilizzare per la creazione di ticket di supporto, la documentazione della configurazione dell'ambiente o il confronto tra ambienti.",
-    "action": "Scarica vc-platform-info.json",
-    "error": "Impossibile scaricare il manifesto."
-  },
   "downloadPackage": {
     "title": "Scarica pacchetto JSON",
     "description": "Scarica un file vc-package.json che elenca tutti i moduli installati con versioni e sorgenti. Questo file può essere utilizzato per replicare lo stesso set di moduli in un altro ambiente.",
     "scenario": "Da utilizzare per clonare un ambiente, configurare pipeline CI/CD o documentare lo stack dei moduli per il deployment.",
-    "action": "Scarica vc-package.json",
-    "error": "Impossibile scaricare il pacchetto."
+    "action": "Scarica",
+    "error": "Impossibile scaricare il pacchetto.",
+    "restoreHint": "Ripristina i moduli da questo file:"
   },
   "moduleSequence": {
     "title": "Sequenza di caricamento moduli",
@@ -122,7 +116,9 @@
     "scenario": "Da utilizzare per il debug di errori di inizializzazione dei moduli, la comprensione delle catene di dipendenze o la risoluzione di errori di avvio.",
     "showAction": "Mostra ordine di caricamento",
     "hideAction": "Nascondi ordine di caricamento",
-    "error": "Impossibile caricare la sequenza dei moduli."
+    "error": "Impossibile caricare la sequenza dei moduli.",
+    "copy": "Copia negli appunti",
+    "copied": "Copiato!"
   },
   "dialog": {
     "yes": "Sì",
@@ -132,5 +128,27 @@
   "errors": {
     "permissionDenied": "Non hai i permessi per eseguire questa azione.",
     "unexpected": "Si è verificato un errore imprevisto."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "",
+    "scenario": "",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "devTools": {
+    "title": "Strumenti per sviluppatori"
   }
 }
