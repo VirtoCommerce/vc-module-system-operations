@@ -20,6 +20,17 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 
 Each operation includes a clear description of what it does, when to use it, and appropriate confirmation dialogs for destructive actions.
 
+## Screenshots
+
+### Light Theme
+
+<img width="1910" height="1717" alt="image" src="https://github.com/user-attachments/assets/75caab31-251f-4e6f-98bb-b3c80abccf62" />
+
+### Dart Theme
+
+<img width="1910" height="1717" alt="image" src="https://github.com/user-attachments/assets/6f4a5210-84b3-49e2-8f27-063b3952c795" />
+
+
 ## Architecture
 
 This module has no backend services, no database, and no custom API endpoints. It calls existing platform APIs directly from the browser:
@@ -142,31 +153,31 @@ The page is built from two building blocks: **sections** (grouping headers with 
 └────────────────────────────────────────────────────────────┘
 
 ┌─ DevToolsNav (title="Developer Tools") ────────────────────┐
-│  ┌─ widget ──┐  ┌─ widget ──┐  ┌─ widget ──┐              │
-│  │ Hangfire  │  │ Swagger   │  │ GraphQL  │  ...          │
-│  │ [link →]  │  │ [link →]  │  │ [link →] │              │
-│  └───────────┘  └───────────┘  └──────────┘              │
+│  ┌─ widget ──┐  ┌─ widget ──┐  ┌─ widget ─┐                │
+│  │ Hangfire  │  │ Swagger   │  │ GraphQL  │  ...           │
+│  │ [link →]  │  │ [link →]  │  │ [link →] │                │
+│  └───────────┘  └───────────┘  └──────────┘                │
 └────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Maintenance") ───────────────────────┐
-│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
-│  │  Platform Info   │  │  Reset Cache    │  │ Restart │  │
-│  │  [PlatformInfo]  │  │  [button]       │  │ [btn]   │  │
-│  └──────────────────┘  └─────────────────┘  └─────────┘  │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ─┐  ┌─ Card ──┐    │
+│  │  Platform Info   │  │  Reset Cache    │  │ Restart │    │
+│  │  [PlatformInfo]  │  │  [button]       │  │ [btn]   │    │
+│  └──────────────────┘  └─────────────────┘  └─────────┘    │
 └────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Data") ───────────────────────────────┐
-│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐  │
-│  │  Sample Data     │  │  Export Data     │  │  Import │  │
-│  │  [SampleData…]   │  │  [Backup…]      │  │  [Rest…]│  │
-│  └──────────────────┘  └─────────────────┘  └─────────┘  │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──┐  ┌─ Card ──┐    │
+│  │  Sample Data     │  │  Export Data     │  │  Import │    │
+│  │  [SampleData…]   │  │  [Backup…]       │  │  [Rest…]│    │
+│  └──────────────────┘  └──────────────────┘  └─────────┘    │
 └─────────────────────────────────────────────────────────────┘
 
 ┌─ SectionGroup (title="Diagnostics & Export") ───────────────┐
-│  ┌─ OperationCard ──┐  ┌─ OperationCard ──────────────┐    │
-│  │  Package JSON   │  │  Module Load Sequence        │    │
-│  │  [download]     │  │  [list]                      │    │
-│  └─────────────────┘  └──────────────────────────────┘    │
+│  ┌─ OperationCard ──┐  ┌─ OperationCard ──────────────┐     │
+│  │  Package JSON    │  │  Module Load Sequence        │     │
+│  │  [download]      │  │  [list]                      │     │
+│  └──────────────────┘  └──────────────────────────────┘     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
