@@ -98,7 +98,13 @@ async function uploadFile(file: File) {
 }
 
 function toggleAll(checked: boolean) {
-  manifest.value?.modules.forEach((m) => (m.isChecked = checked));
+  if (!manifest.value) return;
+  // Only toggle entries the manifest actually contains
+  if (manifest.value.handleSecurity) handleSecurity.value = checked;
+  if (manifest.value.handleBinaryData) handleBinaryData.value = checked;
+  if (manifest.value.handleSettings) handleSettings.value = checked;
+  if (manifest.value.handleDynamicProperties) handleDynamicProperties.value = checked;
+  manifest.value.modules.forEach((m) => (m.isChecked = checked));
 }
 
 async function startImport() {
@@ -233,6 +239,12 @@ function reset() {
     </div>
 
     <div class="export-config">
+      <div class="export-config__toolbar">
+        <button class="btn-link" @click="toggleAll(true)">{{ t('restore.selectAll') }}</button>
+        <span class="btn-link-sep">|</span>
+        <button class="btn-link" @click="toggleAll(false)">{{ t('restore.unselectAll') }}</button>
+      </div>
+
       <div class="export-config__section">
         <div class="export-config__label">{{ t('restore.platformEntries') }}</div>
         <label class="export-config__checkbox">
@@ -250,14 +262,7 @@ function reset() {
       </div>
 
       <div class="export-config__section">
-        <div class="export-config__label">
-          {{ t('restore.modules') }}
-          <span class="export-config__actions">
-            <button class="btn-link" @click="toggleAll(true)">{{ t('restore.selectAll') }}</button>
-            <span class="btn-link-sep">|</span>
-            <button class="btn-link" @click="toggleAll(false)">{{ t('restore.unselectAll') }}</button>
-          </span>
-        </div>
+        <div class="export-config__label">{{ t('restore.modules') }}</div>
         <div v-if="manifest.modules.length === 0" class="export-config__empty">
           {{ t('restore.noModules') }}
         </div>
@@ -307,5 +312,5 @@ function reset() {
     </div>
   </div>
 
-  <div v-if="error" class="op-card__error" style="white-space: pre-wrap;">{{ error }}</div>
+  <div v-if="error" class="op-card__error">{{ error }}</div>
 </template>
