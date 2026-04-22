@@ -337,3 +337,7 @@ ASALocalRun/
 .nuke
 dist/
 **/Properties/launchSettings.json
+
+# SystemOperations App
+**/Content/system-operations/**
+

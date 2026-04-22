@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "Järjestelmätoiminnot",
+    "subtitle": "Alustan ylläpito- ja diagnostiikkatyökalut. Jokainen toiminto sisältää kuvauksen sen toiminnasta ja käyttötilanteista."
+  },
+  "sections": {
+    "maintenance": "Ylläpito",
+    "data": "Tiedot",
+    "diagnostics": "Diagnostiikka ja vienti"
+  },
+  "resetCache": {
+    "title": "Tyhjennä välimuisti",
+    "description": "Tyhjentää kaikki alustan muistissa olevat välimuistit. Välimuistissa olevat asetukset, katalogitiedot ja muut lasketut arvot ladataan tietokannasta uudelleen seuraavalla käyttökerralla.",
+    "scenario": "Käytä suorien tietokantamuutosten, konfiguraatiopäivitysten jälkeen tai kun välimuistissa olevat tiedot vaikuttavat vanhentuneilta.",
+    "action": "Tyhjennä välimuisti",
+    "loading": "Tyhjennetään...",
+    "confirmTitle": "Tyhjennä välimuisti",
+    "confirmMessage": "Haluatko varmasti tyhjentää kaikki alustan välimuistit? Tämä voi tilapäisesti vaikuttaa suorituskykyyn välimuistien uudelleenrakennuksen aikana.",
+    "successTitle": "Tyhjennä välimuisti",
+    "successMessage": "Alustan välimuisti on tyhjennetty onnistuneesti."
+  },
+  "restart": {
+    "title": "Käynnistä alusta uudelleen",
+    "description": "Käynnistää alustasovelluksen hallitusti uudelleen. Kaikki aktiiviset käyttäjäistunnot keskeytetään ja taustatyöt pysäytetään, kunnes uudelleenkäynnistys on valmis.",
+    "scenario": "Käytä moduulien asennuksen tai päivityksen jälkeen, uudelleenkäynnistystä vaativien konfiguraatiomuutosten yhteydessä tai alustaongelmien ratkaisemiseksi.",
+    "action": "Käynnistä alusta uudelleen",
+    "loading": "Käynnistetään uudelleen...",
+    "confirmTitle": "Käynnistä alusta uudelleen",
+    "confirmMessage": "Haluatko varmasti käynnistää alustan uudelleen? Kaikki aktiiviset istunnot keskeytetään ja taustatyöt pysäytetään.",
+    "successTitle": "Käynnistä alusta uudelleen",
+    "successMessage": "Alusta on käynnistetty uudelleen onnistuneesti.",
+    "timeoutError": "Alusta ei vastannut odotetussa ajassa. Tarkista tila manuaalisesti."
+  },
+  "sampleData": {
+    "title": "Asenna esimerkkitiedot",
+    "description": "Etsii ja asentaa esimerkkitietopaketteja (demokatalogi, asiakkaat, tilaukset) alustaan arviointi- ja testauskäyttöön.",
+    "scenario": "Käytä uuden ympäristön pystyttämiseen demoihin, kehitystestaukseen tai alustan ominaisuuksien arviointiin. Vältä käyttöä tuotantoympäristöissä.",
+    "discoverAction": "Etsi paketteja",
+    "installAction": "Asenna",
+    "cancelAction": "Peruuta",
+    "installAnother": "Asenna toinen paketti",
+    "noPackages": "Esimerkkitietopaketteja ei ole saatavilla",
+    "confirmTitle": "Asenna esimerkkitiedot",
+    "confirmMessage": "Asennetaanko \"{name}\"? Tämä lisää demosisältöä alustaasi.",
+    "reinstallMessage": "Esimerkkitiedot \"{name}\" on jo asennettu tälle alustalle. Asennetaanko uudelleen ja korvataanko olemassa olevat tiedot?",
+    "processingTitle": "Asennus käynnissä",
+    "processingMessage": "Esimerkkitietojen asennus on jo käynnissä. Odota sen valmistumista ennen uuden aloittamista.",
+    "progressTitle": "Asennuksen edistyminen",
+    "starting": "Asennusta aloitetaan...",
+    "completed": "Asennus valmistui onnistuneesti.",
+    "discoverError": "Pakettien etsiminen epäonnistui.",
+    "installError": "Esimerkkitietojen asennus epäonnistui.",
+    "stateError": "Esimerkkitietojen nykyisen tilan tarkistus epäonnistui.",
+    "resetStateError": "Esimerkkitietojen tilan nollaus epäonnistui. Uudelleenasennus edellyttää 'platform:setting:update'-oikeutta.",
+    "notStartedError": "Alusta ei käynnistänyt tuontityötä. Esimerkkitietojen tila voi olla jumissa — kokeile käynnistää alusta uudelleen.",
+    "pollTimeoutError": "Tuonti kestää odotettua kauemmin. Tarkista edistyminen alustan push-ilmoituksista."
+  },
+  "backup": {
+    "title": "Vie alustan tiedot",
+    "description": "Luo varmuuskopion alustan tiedoista ladattavana ZIP-tiedostona.",
+    "scenario": "Kayta ennen suuria paivityksia, ymparistosiirtoja tai saannollisena varmuuskopiointina.",
+    "action": "Aloita vienti",
+    "loading": "Viedaan...",
+    "selectAll": "Valitse kaikki",
+    "unselectAll": "Poista valinnat",
+    "platformEntries": "Alustan tietueet",
+    "security": "Tietoturva",
+    "binaryData": "Binaaridata",
+    "settings": "Asetukset",
+    "dynamicProperties": "Dynaamiset ominaisuudet",
+    "modules": "Moduulit",
+    "noModules": "Ei vietavia moduuleita",
+    "progress": "Edistyminen",
+    "completed": "Vienti valmis",
+    "downloadFile": "Lataa varmuuskopio",
+    "error": "Vienti epaonnistui.",
+    "cancel": "Peruuta"
+  },
+  "restore": {
+    "title": "Tuo alustan tiedot",
+    "description": "Palauttaa tiedot aiemmin viedysta ZIP-varmuuskopiotiedostosta.",
+    "scenario": "Kayta varmuuskopiosta palauttamiseen, tietojen siirtoon tai konfiguraation kopiointiin.",
+    "uploadPrompt": "Raahaa .zip-tiedosto tahan tai napsauta valitaksesi",
+    "uploadError": "Virheellinen tiedosto. Lataa .zip-varmuuskopiotiedosto.",
+    "manifestInfo": "Varmuuskopion tiedot",
+    "author": "Tekija",
+    "created": "Luotu",
+    "platformVersion": "Alustaversio",
+    "action": "Aloita tuonti",
+    "loading": "Tuodaan...",
+    "selectAll": "Valitse kaikki",
+    "unselectAll": "Poista valinnat",
+    "platformEntries": "Alustan tietueet",
+    "security": "Tietoturva",
+    "binaryData": "Binaaridata",
+    "settings": "Asetukset",
+    "dynamicProperties": "Dynaamiset ominaisuudet",
+    "modules": "Moduulit",
+    "noModules": "Varmuuskopiosta ei loytynyt moduuleita",
+    "progress": "Edistyminen",
+    "completed": "Tuonti valmis",
+    "error": "Tuonti epaonnistui.",
+    "cancel": "Peruuta"
+  },
+  "downloadPackage": {
+    "title": "Lataa paketti-JSON",
+    "description": "Lataa vc-package.json-tiedoston, joka listaa kaikki asennetut moduulit versioineen ja moduulilähteineen. Tätä tiedostoa voidaan käyttää saman moduulikokonaisuuden replikoimiseen toisessa ympäristössä.",
+    "scenario": "Käytä ympäristön kloonaamiseen, CI/CD-putkien pystyttämiseen tai moduulikokonaisuuden dokumentointiin käyttöönottoa varten.",
+    "action": "Lataa",
+    "error": "Paketin lataaminen epäonnistui.",
+    "restoreHint": "Palauta moduulit tasta tiedostosta:"
+  },
+  "moduleSequence": {
+    "title": "Moduulien latausjärjestys",
+    "description": "Näyttää kaikkien asennettujen moduulien riippuvuuksien mukaan ratkaistun latausjärjestyksen. Moduulit näytetään täsmälleen siinä järjestyksessä, jossa ne alustetaan alustan käynnistyksen aikana.",
+    "scenario": "Käytä moduulien alustusvirheiden vianetsintään, riippuvuusketjujen ymmärtämiseen tai käynnistysongelmien ratkaisemiseen.",
+    "showAction": "Näytä latausjärjestys",
+    "hideAction": "Piilota latausjärjestys",
+    "error": "Moduulien latausjärjestyksen lataaminen epäonnistui.",
+    "copy": "Kopioi leikepoydale",
+    "copied": "Kopioitu!"
+  },
+  "dialog": {
+    "yes": "Kyllä",
+    "no": "Ei",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Sinulla ei ole oikeutta suorittaa tätä toimintoa.",
+    "unexpected": "Odottamaton virhe tapahtui."
+  },
+  "platformInfo": {
+    "title": "Alustan tiedot",
+    "description": "Näyttää alustan keskeiset tiedot: version, lisenssin, ympäristötilan, tietokantatarjoajan ja runtime-ympäristön. Nopea yhteenveto tukeen ja diagnostiikkaan.",
+    "scenario": "Käytä tukipyyntöjä luodessasi, käyttöönottokokoonpanoa tarkistaessasi tai ympäristön tietoja tiimille jakaessasi.",
+    "action": "Näytä tiedot",
+    "version": "Alustan versio",
+    "environment": "Ympäristö",
+    "database": "Tietokantatarjoaja",
+    "runtime": "Runtime",
+    "license": "Lisenssi",
+    "noLicense": "Community (ei lisenssiä)",
+    "expires": "vanhenee",
+    "modules": "Asennetut moduulit",
+    "copy": "Kopioi leikepöydälle",
+    "copied": "Kopioitu!",
+    "download": "Lataa",
+    "loading": "Ladataan...",
+    "error": "Alustan tietojen lataaminen epäonnistui."
+  },
+  "devTools": {
+    "title": "Kehitystyokalut"
+  },
+  "theme": {
+    "system": "Teema: Jarjestelma (auto)",
+    "light": "Teema: Vaalea",
+    "dark": "Teema: Tumma"
+  }
+}

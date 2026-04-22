@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "Operações do sistema",
+    "subtitle": "Ferramentas de manutenção e diagnóstico da plataforma. Cada ação inclui uma descrição do que faz e quando utilizá-la."
+  },
+  "sections": {
+    "maintenance": "Manutenção",
+    "data": "Dados",
+    "diagnostics": "Diagnóstico e exportação"
+  },
+  "resetCache": {
+    "title": "Redefinir cache",
+    "description": "Limpa todos os caches em memória da plataforma. Configurações em cache, dados do catálogo e outros valores calculados serão recarregados do banco de dados no próximo acesso.",
+    "scenario": "Use após alterações diretas no banco de dados, atualizações de configuração ou quando os dados em cache parecerem desatualizados.",
+    "action": "Redefinir cache",
+    "loading": "Redefinindo...",
+    "confirmTitle": "Redefinir cache",
+    "confirmMessage": "Tem certeza de que deseja redefinir todos os caches da plataforma? Isso pode afetar temporariamente o desempenho enquanto os caches são reconstruídos.",
+    "successTitle": "Redefinir cache",
+    "successMessage": "O cache da plataforma foi redefinido com sucesso."
+  },
+  "restart": {
+    "title": "Reiniciar plataforma",
+    "description": "Reinicia a aplicação da plataforma de forma controlada. Todas as sessões de utilizador ativas serão interrompidas e as tarefas em segundo plano serão pausadas até que o reinício seja concluído.",
+    "scenario": "Use após instalar ou atualizar módulos, aplicar alterações de configuração que exijam reinício ou resolver problemas da plataforma.",
+    "action": "Reiniciar plataforma",
+    "loading": "Reiniciando...",
+    "confirmTitle": "Reiniciar plataforma",
+    "confirmMessage": "Tem certeza de que deseja reiniciar a plataforma? Todas as sessões ativas serão interrompidas e as tarefas em segundo plano pausadas.",
+    "successTitle": "Reiniciar plataforma",
+    "successMessage": "A plataforma foi reiniciada com sucesso.",
+    "timeoutError": "A plataforma não respondeu dentro do tempo esperado. Por favor, verifique manualmente."
+  },
+  "sampleData": {
+    "title": "Instalar dados de exemplo",
+    "description": "Descobre e instala pacotes de dados de exemplo (catálogo de demonstração, clientes, pedidos) na plataforma para fins de avaliação e testes.",
+    "scenario": "Use ao configurar um novo ambiente para demonstrações, testes de desenvolvimento ou avaliação das capacidades da plataforma. Evite em ambientes de produção.",
+    "discoverAction": "Descobrir pacotes",
+    "installAction": "Instalar",
+    "cancelAction": "Cancelar",
+    "installAnother": "Instalar outro pacote",
+    "noPackages": "Nenhum pacote de dados de exemplo disponível",
+    "confirmTitle": "Instalar dados de exemplo",
+    "confirmMessage": "Instalar \"{name}\"? Isso adicionará conteúdo de demonstração à sua plataforma.",
+    "reinstallMessage": "Os dados de exemplo \"{name}\" já estão instalados nesta plataforma. Reinstalar e sobrescrever os dados existentes?",
+    "processingTitle": "Instalação em andamento",
+    "processingMessage": "Já há uma instalação de dados de exemplo em execução. Aguarde sua conclusão antes de iniciar uma nova.",
+    "progressTitle": "Progresso da instalação",
+    "starting": "Iniciando instalação...",
+    "completed": "Instalação concluída com sucesso.",
+    "discoverError": "Falha ao descobrir pacotes.",
+    "installError": "Falha ao instalar dados de exemplo.",
+    "stateError": "Não foi possível verificar o estado atual dos dados de exemplo.",
+    "resetStateError": "Não foi possível redefinir o estado dos dados de exemplo. A permissão 'platform:setting:update' é necessária para reinstalar.",
+    "notStartedError": "A plataforma não iniciou o trabalho de importação. O estado dos dados de exemplo pode estar travado — tente reiniciar a plataforma.",
+    "pollTimeoutError": "A importação está demorando mais do que o esperado. Verifique as notificações push da plataforma para acompanhar o progresso."
+  },
+  "backup": {
+    "title": "Exportar dados da plataforma",
+    "description": "Cria um backup dos dados da plataforma como arquivo ZIP para download.",
+    "scenario": "Use antes de atualizacoes, migracoes de ambiente ou como backup regular.",
+    "action": "Iniciar exportacao",
+    "loading": "Exportando...",
+    "selectAll": "Selecionar tudo",
+    "unselectAll": "Desmarcar tudo",
+    "platformEntries": "Entradas da plataforma",
+    "security": "Seguranca",
+    "binaryData": "Dados binarios",
+    "settings": "Configuracoes",
+    "dynamicProperties": "Propriedades dinamicas",
+    "modules": "Modulos",
+    "noModules": "Nenhum modulo disponivel para exportacao",
+    "progress": "Progresso",
+    "completed": "Exportacao concluida",
+    "downloadFile": "Baixar backup",
+    "error": "Falha na exportacao.",
+    "cancel": "Cancelar"
+  },
+  "restore": {
+    "title": "Importar dados da plataforma",
+    "description": "Restaura dados a partir de um arquivo ZIP de backup previamente exportado.",
+    "scenario": "Para restaurar de backup, migrar dados ou replicar a configuracao.",
+    "uploadPrompt": "Arraste um arquivo .zip aqui ou clique para selecionar",
+    "uploadError": "Arquivo invalido. Envie um arquivo .zip de backup.",
+    "manifestInfo": "Info do backup",
+    "author": "Autor",
+    "created": "Criado",
+    "platformVersion": "Versao da plataforma",
+    "action": "Iniciar importacao",
+    "loading": "Importando...",
+    "selectAll": "Selecionar tudo",
+    "unselectAll": "Desmarcar tudo",
+    "platformEntries": "Entradas da plataforma",
+    "security": "Seguranca",
+    "binaryData": "Dados binarios",
+    "settings": "Configuracoes",
+    "dynamicProperties": "Propriedades dinamicas",
+    "modules": "Modulos",
+    "noModules": "Nenhum modulo encontrado no backup",
+    "progress": "Progresso",
+    "completed": "Importacao concluida",
+    "error": "Falha na importacao.",
+    "cancel": "Cancelar"
+  },
+  "downloadPackage": {
+    "title": "Baixar pacote JSON",
+    "description": "Baixa um arquivo vc-package.json listando todos os módulos instalados com versões e fontes dos módulos. Este arquivo pode ser usado para replicar o mesmo conjunto de módulos em outro ambiente.",
+    "scenario": "Use ao clonar um ambiente, configurar pipelines de CI/CD ou documentar o conjunto de módulos para implantação.",
+    "action": "Baixar",
+    "error": "Falha ao baixar o pacote.",
+    "restoreHint": "Restaurar modulos a partir deste arquivo:"
+  },
+  "moduleSequence": {
+    "title": "Sequência de carregamento de módulos",
+    "description": "Exibe a ordem de carregamento de todos os módulos instalados, resolvida por dependências. Os módulos são mostrados na sequência exata em que são inicializados durante a inicialização da plataforma.",
+    "scenario": "Use ao depurar falhas de inicialização de módulos, entender cadeias de dependências ou solucionar erros de inicialização.",
+    "showAction": "Mostrar ordem de carregamento",
+    "hideAction": "Ocultar ordem de carregamento",
+    "error": "Falha ao carregar a sequência de módulos.",
+    "copy": "Copiar para a area de transferencia",
+    "copied": "Copiado!"
+  },
+  "dialog": {
+    "yes": "Sim",
+    "no": "Não",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Você não tem permissão para realizar esta ação.",
+    "unexpected": "Ocorreu um erro inesperado."
+  },
+  "platformInfo": {
+    "title": "Informações da plataforma",
+    "description": "Exibe os principais detalhes da plataforma: versão, licença, modo de ambiente, provedor de banco de dados e runtime. Visão rápida para suporte e diagnóstico.",
+    "scenario": "Use ao abrir tickets de suporte, verificar a configuração de implantação ou compartilhar detalhes do ambiente com a equipe.",
+    "action": "Mostrar informações",
+    "version": "Versão da plataforma",
+    "environment": "Ambiente",
+    "database": "Provedor de banco de dados",
+    "runtime": "Runtime",
+    "license": "Licença",
+    "noLicense": "Community (sem licença)",
+    "expires": "expira",
+    "modules": "Módulos instalados",
+    "copy": "Copiar para a área de transferência",
+    "copied": "Copiado!",
+    "download": "Baixar",
+    "loading": "Carregando...",
+    "error": "Falha ao carregar informações da plataforma."
+  },
+  "devTools": {
+    "title": "Ferramentas de desenvolvimento"
+  },
+  "theme": {
+    "system": "Tema: Sistema (auto)",
+    "light": "Tema: Claro",
+    "dark": "Tema: Escuro"
+  }
+}

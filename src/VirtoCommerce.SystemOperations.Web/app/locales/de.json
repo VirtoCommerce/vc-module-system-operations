@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "Systemoperationen",
+    "subtitle": "Plattformwartung und Diagnosetools. Jede Aktion enthält eine Beschreibung ihrer Funktion und wann sie verwendet werden sollte."
+  },
+  "sections": {
+    "maintenance": "Wartung",
+    "data": "Daten",
+    "diagnostics": "Diagnose & Export"
+  },
+  "resetCache": {
+    "title": "Cache zurücksetzen",
+    "description": "Leert alle In-Memory-Caches der Plattform. Zwischengespeicherte Einstellungen, Katalogdaten und andere berechnete Werte werden beim nächsten Zugriff erneut aus der Datenbank geladen.",
+    "scenario": "Verwenden Sie diese Funktion nach direkten Datenbankänderungen, Konfigurationsaktualisierungen oder wenn zwischengespeicherte Daten veraltet erscheinen.",
+    "action": "Cache zurücksetzen",
+    "loading": "Wird zurückgesetzt...",
+    "confirmTitle": "Cache zurücksetzen",
+    "confirmMessage": "Möchten Sie wirklich alle Plattform-Caches zurücksetzen? Dies kann die Leistung vorübergehend beeinträchtigen, während die Caches neu aufgebaut werden.",
+    "successTitle": "Cache zurücksetzen",
+    "successMessage": "Der Plattform-Cache wurde erfolgreich zurückgesetzt."
+  },
+  "restart": {
+    "title": "Plattform neu starten",
+    "description": "Startet die Plattformanwendung ordnungsgemäß neu. Alle aktiven Benutzersitzungen werden unterbrochen und Hintergrundaufträge werden bis zum Abschluss des Neustarts pausiert.",
+    "scenario": "Verwenden Sie diese Funktion nach der Installation oder Aktualisierung von Modulen, nach Konfigurationsänderungen, die einen Neustart erfordern, oder zur Behebung von Plattformproblemen.",
+    "action": "Plattform neu starten",
+    "loading": "Wird neu gestartet...",
+    "confirmTitle": "Plattform neu starten",
+    "confirmMessage": "Möchten Sie die Plattform wirklich neu starten? Alle aktiven Sitzungen werden unterbrochen und Hintergrundaufträge pausiert.",
+    "successTitle": "Plattform neu starten",
+    "successMessage": "Die Plattform wurde erfolgreich neu gestartet.",
+    "timeoutError": "Die Plattform hat nicht innerhalb der erwarteten Zeit geantwortet. Bitte überprüfen Sie den Status manuell."
+  },
+  "sampleData": {
+    "title": "Beispieldaten installieren",
+    "description": "Erkennt und installiert Beispieldatenpakete (Demokatalog, Kunden, Bestellungen) in die Plattform für Evaluierungs- und Testzwecke.",
+    "scenario": "Verwenden Sie diese Funktion beim Einrichten einer neuen Umgebung für Demos, Entwicklungstests oder zur Bewertung der Plattformfunktionen. Vermeiden Sie die Verwendung in Produktionsumgebungen.",
+    "discoverAction": "Pakete erkennen",
+    "installAction": "Installieren",
+    "cancelAction": "Abbrechen",
+    "installAnother": "Weiteres Paket installieren",
+    "noPackages": "Keine Beispieldatenpakete verfügbar",
+    "confirmTitle": "Beispieldaten installieren",
+    "confirmMessage": "\"{name}\" installieren? Dies fügt Demoinhalte zu Ihrer Plattform hinzu.",
+    "reinstallMessage": "Beispieldaten \"{name}\" wurden bereits auf dieser Plattform installiert. Neu installieren und bestehende Daten überschreiben?",
+    "processingTitle": "Installation läuft",
+    "processingMessage": "Eine Installation von Beispieldaten läuft bereits. Warten Sie auf deren Abschluss, bevor Sie eine neue starten.",
+    "progressTitle": "Installationsfortschritt",
+    "starting": "Installation wird gestartet...",
+    "completed": "Installation erfolgreich abgeschlossen.",
+    "discoverError": "Pakete konnten nicht erkannt werden.",
+    "installError": "Beispieldaten konnten nicht installiert werden.",
+    "stateError": "Der aktuelle Status der Beispieldaten konnte nicht überprüft werden.",
+    "resetStateError": "Der Status der Beispieldaten konnte nicht zurückgesetzt werden. Für eine erneute Installation ist die Berechtigung 'platform:setting:update' erforderlich.",
+    "notStartedError": "Die Plattform hat den Importauftrag nicht gestartet. Der Status der Beispieldaten könnte blockiert sein — versuchen Sie, die Plattform neu zu starten.",
+    "pollTimeoutError": "Der Import dauert länger als erwartet. Überprüfen Sie den Fortschritt in den Push-Benachrichtigungen der Plattform."
+  },
+  "backup": {
+    "title": "Plattformdaten exportieren",
+    "description": "Erstellt eine Sicherung der Plattformdaten einschliesslich ausgewaehlter Module, Einstellungen, Sicherheit, dynamischer Eigenschaften und binaerer Assets als herunterladbare ZIP-Datei.",
+    "scenario": "Verwenden Sie dies vor groesseren Updates, Umgebungsmigrationen oder als regelmaessige Sicherungsstrategie.",
+    "action": "Export starten",
+    "loading": "Wird exportiert...",
+    "selectAll": "Alle auswaehlen",
+    "unselectAll": "Alle abwaehlen",
+    "platformEntries": "Plattformeintraege",
+    "security": "Sicherheit",
+    "binaryData": "Binaerdaten",
+    "settings": "Einstellungen",
+    "dynamicProperties": "Dynamische Eigenschaften",
+    "modules": "Module",
+    "noModules": "Keine Module zum Exportieren verfuegbar",
+    "progress": "Fortschritt",
+    "completed": "Export abgeschlossen",
+    "downloadFile": "Sicherung herunterladen",
+    "error": "Export fehlgeschlagen.",
+    "cancel": "Abbrechen"
+  },
+  "restore": {
+    "title": "Plattformdaten importieren",
+    "description": "Stellt Plattformdaten aus einer zuvor exportierten ZIP-Sicherungsdatei wieder her.",
+    "scenario": "Verwenden Sie dies zur Wiederherstellung aus einer Sicherung, zur Datenmigration zwischen Umgebungen oder zur Replikation der Plattformkonfiguration.",
+    "uploadPrompt": "ZIP-Sicherungsdatei hierher ziehen oder klicken zum Auswaehlen",
+    "uploadError": "Ungueltige Datei. Bitte laden Sie eine ZIP-Sicherungsdatei hoch.",
+    "manifestInfo": "Sicherungsinfo",
+    "author": "Autor",
+    "created": "Erstellt",
+    "platformVersion": "Plattformversion",
+    "action": "Import starten",
+    "loading": "Wird importiert...",
+    "selectAll": "Alle auswaehlen",
+    "unselectAll": "Alle abwaehlen",
+    "platformEntries": "Plattformeintraege",
+    "security": "Sicherheit",
+    "binaryData": "Binaerdaten",
+    "settings": "Einstellungen",
+    "dynamicProperties": "Dynamische Eigenschaften",
+    "modules": "Module",
+    "noModules": "Keine Module in der Sicherung gefunden",
+    "progress": "Fortschritt",
+    "completed": "Import abgeschlossen",
+    "error": "Import fehlgeschlagen.",
+    "cancel": "Abbrechen"
+  },
+  "downloadPackage": {
+    "title": "Paket-JSON herunterladen",
+    "description": "Lädt eine vc-package.json-Datei herunter, die alle installierten Module mit Versionen und Modulquellen auflistet. Diese Datei kann verwendet werden, um denselben Modulsatz in einer anderen Umgebung zu replizieren.",
+    "scenario": "Verwenden Sie diese Funktion beim Klonen einer Umgebung, beim Einrichten von CI/CD-Pipelines oder zur Dokumentation des Modulstapels für die Bereitstellung.",
+    "action": "Herunterladen",
+    "error": "Paket konnte nicht heruntergeladen werden.",
+    "restoreHint": "Module aus dieser Datei wiederherstellen:"
+  },
+  "moduleSequence": {
+    "title": "Modul-Ladereihenfolge",
+    "description": "Zeigt die abhängigkeitsaufgelöste Ladereihenfolge aller installierten Module an. Module werden in der exakten Reihenfolge angezeigt, in der sie beim Plattformstart initialisiert werden.",
+    "scenario": "Verwenden Sie diese Funktion zur Fehlersuche bei Modulinitialisierungsfehlern, zum Verständnis von Abhängigkeitsketten oder zur Fehlerbehebung bei Startproblemen.",
+    "showAction": "Ladereihenfolge anzeigen",
+    "hideAction": "Ladereihenfolge ausblenden",
+    "error": "Modul-Ladereihenfolge konnte nicht geladen werden.",
+    "copy": "In Zwischenablage kopieren",
+    "copied": "Kopiert!"
+  },
+  "dialog": {
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
+    "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+  },
+  "platformInfo": {
+    "title": "Plattforminformationen",
+    "description": "Zeigt wichtige Plattformdetails an: Version, Lizenz, Umgebungsmodus, Datenbankanbieter und Laufzeit. Schneller Überblick für Support und Diagnose.",
+    "scenario": "Verwenden Sie diese Funktion beim Erstellen von Support-Tickets, zur Überprüfung der Bereitstellungskonfiguration oder zum Teilen von Umgebungsdetails mit dem Team.",
+    "action": "Info anzeigen",
+    "version": "Plattformversion",
+    "environment": "Umgebung",
+    "database": "Datenbankanbieter",
+    "runtime": "Laufzeit",
+    "license": "Lizenz",
+    "noLicense": "Community (keine Lizenz)",
+    "expires": "läuft ab",
+    "modules": "Installierte Module",
+    "copy": "In Zwischenablage kopieren",
+    "copied": "Kopiert!",
+    "download": "Herunterladen",
+    "loading": "Lädt...",
+    "error": "Plattforminformationen konnten nicht geladen werden."
+  },
+  "devTools": {
+    "title": "Entwicklerwerkzeuge"
+  },
+  "theme": {
+    "system": "Thema: System (auto)",
+    "light": "Thema: Hell",
+    "dark": "Thema: Dunkel"
+  }
+}

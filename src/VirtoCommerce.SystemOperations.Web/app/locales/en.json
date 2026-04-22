@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "System Operations",
+    "subtitle": "Platform maintenance and diagnostic tools. Each action includes a description of what it does and when to use it."
+  },
+  "sections": {
+    "maintenance": "Maintenance",
+    "data": "Data",
+    "diagnostics": "Diagnostics & Export"
+  },
+  "resetCache": {
+    "title": "Reset Cache",
+    "description": "Clears all platform in-memory caches. Cached settings, catalog data, and other computed values will be reloaded from the database on next access.",
+    "scenario": "Use after direct database changes, configuration updates, or when cached data appears stale.",
+    "action": "Reset Cache",
+    "loading": "Resetting...",
+    "confirmTitle": "Reset Cache",
+    "confirmMessage": "Are you sure you want to reset all platform caches? This may temporarily affect performance while caches are rebuilt.",
+    "successTitle": "Reset Cache",
+    "successMessage": "Platform cache has been reset successfully."
+  },
+  "restart": {
+    "title": "Restart Platform",
+    "description": "Gracefully restarts the platform application. All active user sessions will be interrupted and background jobs will be paused until restart completes.",
+    "scenario": "Use after installing or updating modules, applying configuration changes that require restart, or resolving platform issues.",
+    "action": "Restart Platform",
+    "loading": "Restarting...",
+    "confirmTitle": "Restart Platform",
+    "confirmMessage": "Are you sure you want to restart the platform? All active sessions will be interrupted and background jobs paused.",
+    "successTitle": "Restart Platform",
+    "successMessage": "Platform has been restarted successfully.",
+    "timeoutError": "Platform did not respond within expected time. Please check manually."
+  },
+  "sampleData": {
+    "title": "Install Sample Data",
+    "description": "Discovers and installs sample data packages (demo catalog, customers, orders) into the platform for evaluation and testing purposes.",
+    "scenario": "Use when setting up a new environment for demos, development testing, or evaluating platform capabilities. Avoid on production environments.",
+    "discoverAction": "Discover Packages",
+    "installAction": "Install",
+    "cancelAction": "Cancel",
+    "installAnother": "Install Another Package",
+    "noPackages": "No sample data packages available",
+    "confirmTitle": "Install Sample Data",
+    "confirmMessage": "Install \"{name}\"? This will add demo content to your platform.",
+    "reinstallMessage": "Sample data \"{name}\" has already been installed on this platform. Reinstall and overwrite existing data?",
+    "processingTitle": "Installation in Progress",
+    "processingMessage": "A sample data installation is already running. Wait for it to finish before starting a new one.",
+    "progressTitle": "Installation Progress",
+    "starting": "Starting installation...",
+    "completed": "Installation completed successfully.",
+    "discoverError": "Failed to discover packages.",
+    "installError": "Failed to install sample data.",
+    "stateError": "Failed to check current sample data state.",
+    "resetStateError": "Failed to reset sample data state. The 'platform:setting:update' permission is required to reinstall after a previous install.",
+    "notStartedError": "The platform did not start the import job. The sample data state may be stuck — try restarting the platform.",
+    "pollTimeoutError": "Import is taking longer than expected. Check the platform push notifications for progress."
+  },
+  "backup": {
+    "title": "Export Platform Data",
+    "description": "Creates a backup of platform data including selected modules, settings, security, dynamic properties, and binary assets as a downloadable ZIP file.",
+    "scenario": "Use before major updates, environment migrations, or as a regular backup strategy. Select specific modules or export everything.",
+    "action": "Start Export",
+    "loading": "Exporting...",
+    "selectAll": "Select All",
+    "unselectAll": "Unselect All",
+    "platformEntries": "Platform Entries",
+    "security": "Security",
+    "binaryData": "Binary Data",
+    "settings": "Settings",
+    "dynamicProperties": "Dynamic Properties",
+    "modules": "Modules",
+    "noModules": "No modules available for export",
+    "progress": "Progress",
+    "completed": "Export completed",
+    "downloadFile": "Download Backup",
+    "error": "Export failed.",
+    "cancel": "Cancel"
+  },
+  "restore": {
+    "title": "Import Platform Data",
+    "description": "Restores platform data from a previously exported ZIP backup file. Select which modules, settings, and data to import.",
+    "scenario": "Use to restore from a backup, migrate data between environments, or replicate platform configuration.",
+    "uploadPrompt": "Drag a .zip backup file here or click to select",
+    "uploadError": "Invalid file. Please upload a .zip backup file.",
+    "manifestInfo": "Backup Info",
+    "author": "Author",
+    "created": "Created",
+    "platformVersion": "Platform Version",
+    "action": "Start Import",
+    "loading": "Importing...",
+    "selectAll": "Select All",
+    "unselectAll": "Unselect All",
+    "platformEntries": "Platform Entries",
+    "security": "Security",
+    "binaryData": "Binary Data",
+    "settings": "Settings",
+    "dynamicProperties": "Dynamic Properties",
+    "modules": "Modules",
+    "noModules": "No modules found in backup",
+    "progress": "Progress",
+    "completed": "Import completed",
+    "error": "Import failed.",
+    "cancel": "Cancel"
+  },
+  "downloadPackage": {
+    "title": "Download Package JSON",
+    "description": "Downloads a vc-package.json file listing all installed modules with versions and module sources. This file can be used to replicate the same module set on another environment.",
+    "scenario": "Use when cloning an environment, setting up CI/CD pipelines, or documenting the module stack for deployment.",
+    "action": "Download",
+    "restoreHint": "Restore modules from this file:",
+    "error": "Failed to download package."
+  },
+  "platformInfo": {
+    "title": "Platform Information",
+    "description": "Displays key platform details: version, license, environment mode, database provider, and runtime. Quick overview for support and diagnostics.",
+    "scenario": "Use when filing support tickets, verifying deployment configuration, or sharing environment details with the team.",
+    "action": "Show Info",
+    "version": "Platform Version",
+    "environment": "Environment",
+    "database": "Database Provider",
+    "runtime": "Runtime",
+    "license": "License",
+    "noLicense": "Community (no license)",
+    "expires": "expires",
+    "modules": "Installed Modules",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "download": "Download",
+    "loading": "Loading...",
+    "error": "Failed to load platform information."
+  },
+  "moduleSequence": {
+    "title": "Module Load Sequence",
+    "description": "Displays the dependency-resolved loading order of all installed modules. Modules are shown in the exact sequence they initialize during platform startup.",
+    "scenario": "Use when debugging module initialization failures, understanding dependency chains, or troubleshooting startup errors.",
+    "showAction": "Show Load Order",
+    "hideAction": "Hide Load Order",
+    "copy": "Copy to Clipboard",
+    "copied": "Copied!",
+    "error": "Failed to load module sequence."
+  },
+  "devTools": {
+    "title": "Developer Tools"
+  },
+  "theme": {
+    "system": "Theme: System (auto)",
+    "light": "Theme: Light",
+    "dark": "Theme: Dark"
+  },
+  "dialog": {
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "You don't have permission to perform this action.",
+    "unexpected": "An unexpected error occurred."
+  }
+}

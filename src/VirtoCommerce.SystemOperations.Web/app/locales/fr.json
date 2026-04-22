@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "Opérations système",
+    "subtitle": "Outils de maintenance et de diagnostic de la plateforme. Chaque action inclut une description de ce qu'elle fait et quand l'utiliser."
+  },
+  "sections": {
+    "maintenance": "Maintenance",
+    "data": "Données",
+    "diagnostics": "Diagnostic et export"
+  },
+  "resetCache": {
+    "title": "Réinitialiser le cache",
+    "description": "Vide tous les caches en mémoire de la plateforme. Les paramètres en cache, les données du catalogue et les autres valeurs calculées seront rechargés depuis la base de données lors du prochain accès.",
+    "scenario": "À utiliser après des modifications directes de la base de données, des mises à jour de configuration ou lorsque les données en cache semblent obsolètes.",
+    "action": "Réinitialiser le cache",
+    "loading": "Réinitialisation...",
+    "confirmTitle": "Réinitialiser le cache",
+    "confirmMessage": "Êtes-vous sûr de vouloir réinitialiser tous les caches de la plateforme ? Cela peut temporairement affecter les performances pendant la reconstruction des caches.",
+    "successTitle": "Réinitialiser le cache",
+    "successMessage": "Le cache de la plateforme a été réinitialisé avec succès."
+  },
+  "restart": {
+    "title": "Redémarrer la plateforme",
+    "description": "Redémarre l'application de la plateforme de manière contrôlée. Toutes les sessions utilisateur actives seront interrompues et les tâches en arrière-plan seront suspendues jusqu'à la fin du redémarrage.",
+    "scenario": "À utiliser après l'installation ou la mise à jour de modules, l'application de modifications de configuration nécessitant un redémarrage ou la résolution de problèmes de plateforme.",
+    "action": "Redémarrer la plateforme",
+    "loading": "Redémarrage...",
+    "confirmTitle": "Redémarrer la plateforme",
+    "confirmMessage": "Êtes-vous sûr de vouloir redémarrer la plateforme ? Toutes les sessions actives seront interrompues et les tâches en arrière-plan suspendues.",
+    "successTitle": "Redémarrer la plateforme",
+    "successMessage": "La plateforme a été redémarrée avec succès.",
+    "timeoutError": "La plateforme n'a pas répondu dans le délai prévu. Veuillez vérifier manuellement."
+  },
+  "sampleData": {
+    "title": "Installer les données d'exemple",
+    "description": "Découvre et installe des paquets de données d'exemple (catalogue de démonstration, clients, commandes) dans la plateforme à des fins d'évaluation et de test.",
+    "scenario": "À utiliser lors de la configuration d'un nouvel environnement pour des démonstrations, des tests de développement ou l'évaluation des capacités de la plateforme. À éviter sur les environnements de production.",
+    "discoverAction": "Découvrir les paquets",
+    "installAction": "Installer",
+    "cancelAction": "Annuler",
+    "installAnother": "Installer un autre paquet",
+    "noPackages": "Aucun paquet de données d'exemple disponible",
+    "confirmTitle": "Installer les données d'exemple",
+    "confirmMessage": "Installer \"{name}\" ? Cela ajoutera du contenu de démonstration à votre plateforme.",
+    "reinstallMessage": "Les données d'exemple \"{name}\" sont déjà installées sur cette plateforme. Réinstaller et écraser les données existantes ?",
+    "processingTitle": "Installation en cours",
+    "processingMessage": "Une installation de données d'exemple est déjà en cours. Attendez qu'elle se termine avant d'en démarrer une nouvelle.",
+    "progressTitle": "Progression de l'installation",
+    "starting": "Démarrage de l'installation...",
+    "completed": "Installation terminée avec succès.",
+    "discoverError": "Échec de la découverte des paquets.",
+    "installError": "Échec de l'installation des données d'exemple.",
+    "stateError": "Impossible de vérifier l'état actuel des données d'exemple.",
+    "resetStateError": "Impossible de réinitialiser l'état des données d'exemple. La permission 'platform:setting:update' est requise pour réinstaller.",
+    "notStartedError": "La plateforme n'a pas démarré la tâche d'importation. L'état des données d'exemple peut être bloqué — essayez de redémarrer la plateforme.",
+    "pollTimeoutError": "L'importation prend plus de temps que prévu. Consultez les notifications push de la plateforme pour suivre la progression."
+  },
+  "backup": {
+    "title": "Exporter les donnees de la plateforme",
+    "description": "Cree une sauvegarde des donnees de la plateforme sous forme de fichier ZIP telechargeable.",
+    "scenario": "Utiliser avant les mises a jour majeures, les migrations ou comme sauvegarde reguliere.",
+    "action": "Demarrer l'export",
+    "loading": "Exportation en cours...",
+    "selectAll": "Tout selectionner",
+    "unselectAll": "Tout deselectionner",
+    "platformEntries": "Entrees de la plateforme",
+    "security": "Securite",
+    "binaryData": "Donnees binaires",
+    "settings": "Parametres",
+    "dynamicProperties": "Proprietes dynamiques",
+    "modules": "Modules",
+    "noModules": "Aucun module disponible pour l'export",
+    "progress": "Progression",
+    "completed": "Export termine",
+    "downloadFile": "Telecharger la sauvegarde",
+    "error": "Echec de l'export.",
+    "cancel": "Annuler"
+  },
+  "restore": {
+    "title": "Importer les donnees de la plateforme",
+    "description": "Restaure les donnees depuis un fichier ZIP de sauvegarde.",
+    "scenario": "Utiliser pour restaurer, migrer des donnees ou repliquer la configuration.",
+    "uploadPrompt": "Glissez un fichier .zip ici ou cliquez pour selectionner",
+    "uploadError": "Fichier invalide. Veuillez telecharger un fichier .zip.",
+    "manifestInfo": "Informations de sauvegarde",
+    "author": "Auteur",
+    "created": "Cree le",
+    "platformVersion": "Version de la plateforme",
+    "action": "Demarrer l'import",
+    "loading": "Importation en cours...",
+    "selectAll": "Tout selectionner",
+    "unselectAll": "Tout deselectionner",
+    "platformEntries": "Entrees de la plateforme",
+    "security": "Securite",
+    "binaryData": "Donnees binaires",
+    "settings": "Parametres",
+    "dynamicProperties": "Proprietes dynamiques",
+    "modules": "Modules",
+    "noModules": "Aucun module trouve dans la sauvegarde",
+    "progress": "Progression",
+    "completed": "Import termine",
+    "error": "Echec de l'import.",
+    "cancel": "Annuler"
+  },
+  "downloadPackage": {
+    "title": "Télécharger le paquet JSON",
+    "description": "Télécharge un fichier vc-package.json listant tous les modules installés avec leurs versions et sources. Ce fichier peut être utilisé pour répliquer le même ensemble de modules sur un autre environnement.",
+    "scenario": "À utiliser lors du clonage d'un environnement, de la configuration de pipelines CI/CD ou de la documentation de l'ensemble des modules pour le déploiement.",
+    "action": "Télécharger",
+    "error": "Échec du téléchargement du paquet.",
+    "restoreHint": "Restaurer les modules depuis ce fichier :"
+  },
+  "moduleSequence": {
+    "title": "Séquence de chargement des modules",
+    "description": "Affiche l'ordre de chargement résolu par dépendances de tous les modules installés. Les modules sont affichés dans l'ordre exact de leur initialisation au démarrage de la plateforme.",
+    "scenario": "À utiliser pour déboguer les échecs d'initialisation de modules, comprendre les chaînes de dépendances ou résoudre les erreurs de démarrage.",
+    "showAction": "Afficher l'ordre de chargement",
+    "hideAction": "Masquer l'ordre de chargement",
+    "error": "Échec du chargement de la séquence des modules.",
+    "copy": "Copier dans le presse-papiers",
+    "copied": "Copie !"
+  },
+  "dialog": {
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Vous n'avez pas la permission d'effectuer cette action.",
+    "unexpected": "Une erreur inattendue s'est produite."
+  },
+  "platformInfo": {
+    "title": "Informations sur la plateforme",
+    "description": "Affiche les informations clés de la plateforme : version, licence, mode d'environnement, fournisseur de base de données et runtime. Aperçu rapide pour le support et le diagnostic.",
+    "scenario": "À utiliser lors du dépôt de tickets de support, de la vérification de la configuration de déploiement ou du partage des détails d'environnement avec l'équipe.",
+    "action": "Afficher les infos",
+    "version": "Version de la plateforme",
+    "environment": "Environnement",
+    "database": "Fournisseur de base de données",
+    "runtime": "Runtime",
+    "license": "Licence",
+    "noLicense": "Community (sans licence)",
+    "expires": "expire",
+    "modules": "Modules installés",
+    "copy": "Copier dans le presse-papiers",
+    "copied": "Copié !",
+    "download": "Télécharger",
+    "loading": "Chargement...",
+    "error": "Échec du chargement des informations de la plateforme."
+  },
+  "devTools": {
+    "title": "Outils de developpement"
+  },
+  "theme": {
+    "system": "Theme : Systeme (auto)",
+    "light": "Theme : Clair",
+    "dark": "Theme : Sombre"
+  }
+}

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#43b0e6"/>
+      <stop offset="100%" stop-color="#2980b9"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded square -->
+  <rect width="128" height="128" rx="24" fill="url(#bg)"/>
+  <!-- Gear icon -->
+  <g transform="translate(64,64)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Outer gear teeth -->
+    <path d="M-6,-30 L-6,-38 L6,-38 L6,-30 A32,32 0 0,1 16,-26 L22,-32 L32,-22 L26,-16 A32,32 0 0,1 30,-6 L38,-6 L38,6 L30,6 A32,32 0 0,1 26,16 L32,22 L22,32 L16,26 A32,32 0 0,1 6,30 L6,38 L-6,38 L-6,30 A32,32 0 0,1 -16,26 L-22,32 L-32,22 L-26,16 A32,32 0 0,1 -30,6 L-38,6 L-38,-6 L-30,-6 A32,32 0 0,1 -26,-16 L-32,-22 L-22,-32 L-16,-26 A32,32 0 0,1 -6,-30 Z" fill="rgba(255,255,255,0.15)" stroke="#fff" stroke-width="3"/>
+    <!-- Inner circle -->
+    <circle cx="0" cy="0" r="12" fill="rgba(255,255,255,0.25)" stroke="#fff" stroke-width="3"/>
+    <!-- Wrench overlay -->
+    <path d="M-4,-4 L-14,-14 A8,8 0 1,0 -20,-8 L-8,4" fill="none" stroke="#fff" stroke-width="3.5"/>
+  </g>
+</svg>

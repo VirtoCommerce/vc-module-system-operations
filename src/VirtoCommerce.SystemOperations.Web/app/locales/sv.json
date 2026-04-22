@@ -1,0 +1,159 @@
+{
+  "page": {
+    "title": "Systemoperationer",
+    "subtitle": "Underhålls- och diagnostikverktyg för plattformen. Varje åtgärd innehåller en beskrivning av vad den gör och när den bör användas."
+  },
+  "sections": {
+    "maintenance": "Underhåll",
+    "data": "Data",
+    "diagnostics": "Diagnostik och export"
+  },
+  "resetCache": {
+    "title": "Återställ cache",
+    "description": "Rensar alla plattformens cacheminnen. Cachade inställningar, katalogdata och andra beräknade värden laddas om från databasen vid nästa åtkomst.",
+    "scenario": "Använd efter direkta databasändringar, konfigurationsuppdateringar eller när cachad data verkar inaktuell.",
+    "action": "Återställ cache",
+    "loading": "Återställer...",
+    "confirmTitle": "Återställ cache",
+    "confirmMessage": "Är du säker på att du vill återställa alla plattformens cacheminnen? Detta kan tillfälligt påverka prestandan medan cacharna byggs upp igen.",
+    "successTitle": "Återställ cache",
+    "successMessage": "Plattformens cache har återställts."
+  },
+  "restart": {
+    "title": "Starta om plattformen",
+    "description": "Startar om plattformsapplikationen på ett kontrollerat sätt. Alla aktiva användarsessioner avbryts och bakgrundsjobb pausas tills omstarten är klar.",
+    "scenario": "Använd efter installation eller uppdatering av moduler, vid konfigurationsändringar som kräver omstart eller för att åtgärda plattformsproblem.",
+    "action": "Starta om plattformen",
+    "loading": "Startar om...",
+    "confirmTitle": "Starta om plattformen",
+    "confirmMessage": "Är du säker på att du vill starta om plattformen? Alla aktiva sessioner avbryts och bakgrundsjobb pausas.",
+    "successTitle": "Starta om plattformen",
+    "successMessage": "Plattformen har startats om.",
+    "timeoutError": "Plattformen svarade inte inom förväntad tid. Kontrollera manuellt."
+  },
+  "sampleData": {
+    "title": "Installera exempeldata",
+    "description": "Upptäcker och installerar exempeldatapaket (demokatalog, kunder, beställningar) på plattformen för utvärdering och testning.",
+    "scenario": "Använd vid uppsättning av en ny miljö för demonstrationer, utvecklingstestning eller utvärdering av plattformens funktioner. Undvik användning i produktionsmiljöer.",
+    "discoverAction": "Upptäck paket",
+    "installAction": "Installera",
+    "cancelAction": "Avbryt",
+    "installAnother": "Installera ett annat paket",
+    "noPackages": "Inga exempeldatapaket tillgängliga",
+    "confirmTitle": "Installera exempeldata",
+    "confirmMessage": "Installera \"{name}\"? Detta lägger till demoinnehåll på din plattform.",
+    "reinstallMessage": "Exempeldata \"{name}\" är redan installerad på den här plattformen. Installera om och skriva över befintlig data?",
+    "processingTitle": "Installation pågår",
+    "processingMessage": "En installation av exempeldata pågår redan. Vänta tills den är klar innan du startar en ny.",
+    "progressTitle": "Installationsförlopp",
+    "starting": "Startar installation...",
+    "completed": "Installationen slutfördes.",
+    "discoverError": "Kunde inte upptäcka paket.",
+    "installError": "Kunde inte installera exempeldata.",
+    "stateError": "Kunde inte kontrollera aktuell status för exempeldata.",
+    "resetStateError": "Kunde inte återställa statusen för exempeldata. Behörigheten 'platform:setting:update' krävs för att installera om.",
+    "notStartedError": "Plattformen startade inte importjobbet. Statusen för exempeldata kan vara låst — försök starta om plattformen.",
+    "pollTimeoutError": "Importen tar längre tid än väntat. Kontrollera förloppet i plattformens push-notiser."
+  },
+  "backup": {
+    "title": "Exportera plattformsdata",
+    "description": "Skapar en sakerhetskopiering av plattformsdata som en nedladdningsbar ZIP-fil.",
+    "scenario": "Anvand fore uppdateringar, miljoflyttningar eller som regelbunden sakerhetskopia.",
+    "action": "Starta export",
+    "loading": "Exporterar...",
+    "selectAll": "Valj alla",
+    "unselectAll": "Avmarkera alla",
+    "platformEntries": "Plattformsposter",
+    "security": "Sakerhet",
+    "binaryData": "Binardata",
+    "settings": "Installningar",
+    "dynamicProperties": "Dynamiska egenskaper",
+    "modules": "Moduler",
+    "noModules": "Inga moduler tillgangliga for export",
+    "progress": "Framsteg",
+    "completed": "Export slutford",
+    "downloadFile": "Ladda ner sakerhetskopia",
+    "error": "Export misslyckades.",
+    "cancel": "Avbryt"
+  },
+  "restore": {
+    "title": "Importera plattformsdata",
+    "description": "Aterstaller plattformsdata fran en exporterad ZIP-sakerhetskopia.",
+    "scenario": "For att aterstalla, migrera data eller replikera konfigurationen.",
+    "uploadPrompt": "Dra en .zip-fil hit eller klicka for att valja",
+    "uploadError": "Ogiltig fil. Ladda upp en .zip-sakerhetskopifil.",
+    "manifestInfo": "Sakerhetskopieringsinfo",
+    "author": "Forfattare",
+    "created": "Skapad",
+    "platformVersion": "Plattformsversion",
+    "action": "Starta import",
+    "loading": "Importerar...",
+    "selectAll": "Valj alla",
+    "unselectAll": "Avmarkera alla",
+    "platformEntries": "Plattformsposter",
+    "security": "Sakerhet",
+    "binaryData": "Binardata",
+    "settings": "Installningar",
+    "dynamicProperties": "Dynamiska egenskaper",
+    "modules": "Moduler",
+    "noModules": "Inga moduler hittades i sakerhetskopian",
+    "progress": "Framsteg",
+    "completed": "Import slutford",
+    "error": "Import misslyckades.",
+    "cancel": "Avbryt"
+  },
+  "downloadPackage": {
+    "title": "Ladda ner paket-JSON",
+    "description": "Laddar ner en vc-package.json-fil som listar alla installerade moduler med versioner och modulkällor. Filen kan användas för att replikera samma moduluppsättning i en annan miljö.",
+    "scenario": "Använd vid kloning av en miljö, uppsättning av CI/CD-pipelines eller dokumentation av moduluppsättningen för driftsättning.",
+    "action": "Ladda ner",
+    "error": "Kunde inte ladda ner paketet.",
+    "restoreHint": "Aterstall moduler fran denna fil:"
+  },
+  "moduleSequence": {
+    "title": "Modulladdningsordning",
+    "description": "Visar den beroendeupplösta laddningsordningen för alla installerade moduler. Modulerna visas i den exakta ordning de initialiseras vid plattformens uppstart.",
+    "scenario": "Använd vid felsökning av modulinitieringsfel, förståelse av beroendekedjor eller felsökning av uppstartsproblem.",
+    "showAction": "Visa laddningsordning",
+    "hideAction": "Dölj laddningsordning",
+    "error": "Kunde inte ladda modulladdningsordningen.",
+    "copy": "Kopiera till urklipp",
+    "copied": "Kopierat!"
+  },
+  "dialog": {
+    "yes": "Ja",
+    "no": "Nej",
+    "ok": "OK"
+  },
+  "errors": {
+    "permissionDenied": "Du har inte behörighet att utföra denna åtgärd.",
+    "unexpected": "Ett oväntat fel inträffade."
+  },
+  "platformInfo": {
+    "title": "Plattformsinformation",
+    "description": "Visar viktiga plattformsdetaljer: version, licens, miljöläge, databasleverantör och runtime. Snabböversikt för support och diagnostik.",
+    "scenario": "Använd vid inlämning av supportärenden, verifiering av distributionskonfiguration eller delning av miljödetaljer med teamet.",
+    "action": "Visa info",
+    "version": "Plattformsversion",
+    "environment": "Miljö",
+    "database": "Databasleverantör",
+    "runtime": "Runtime",
+    "license": "Licens",
+    "noLicense": "Community (ingen licens)",
+    "expires": "upphör",
+    "modules": "Installerade moduler",
+    "copy": "Kopiera till urklipp",
+    "copied": "Kopierat!",
+    "download": "Ladda ner",
+    "loading": "Laddar...",
+    "error": "Kunde inte ladda plattformsinformation."
+  },
+  "devTools": {
+    "title": "Utvecklarverktyg"
+  },
+  "theme": {
+    "system": "Tema: System (auto)",
+    "light": "Tema: Ljust",
+    "dark": "Tema: Morkt"
+  }
+}
