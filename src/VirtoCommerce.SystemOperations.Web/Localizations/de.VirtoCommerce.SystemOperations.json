@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Neustart-Poll-Timeout (Sekunden)",
+          "description": "Wie lange die Plattform darauf wartet, dass die API nach dem Klick auf „Plattform neu starten“ wieder online ist. Erhöhen Sie den Wert bei langsamen Kaltstarts in Kubernetes oder wenn EF-Migrationen beim Start ausgeführt werden."
+        },
+        "DefaultTheme": {
+          "title": "Standardthema",
+          "description": "Anfangsthema für Administratoren, die im Browser noch keines ausgewählt haben. Eine im localStorage gespeicherte benutzerspezifische Einstellung hat immer Vorrang."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Destruktive Vorgänge zulassen",
+          "description": "Wenn deaktiviert, werden die Karten „Cache zurücksetzen“ und „Plattform neu starten“ auf der System-Operations-Seite ausgeblendet. Geeignet, um Produktionsumgebungen zu sperren und gleichzeitig Diagnosefunktionen zugänglich zu halten."
+        }
+      }
+    }
+  }
+}

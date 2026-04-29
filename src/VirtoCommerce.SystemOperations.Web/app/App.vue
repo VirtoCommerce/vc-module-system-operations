@@ -5,6 +5,7 @@ import { useI18n, I18nKey } from './composables/useI18n';
 import { useOperations } from './composables/useOperations';
 import { useSystemInfo } from './composables/useSystemInfo';
 import { ApiError } from './composables/useApi';
+import { useModuleSettings } from './composables/useModuleSettings';
 import VcDialog from './components/VcDialog.vue';
 import SectionGroup from './components/SectionGroup.vue';
 import OperationCard from './components/OperationCard.vue';
@@ -31,8 +32,27 @@ provide(I18nKey, i18n);
 const dialog = useDialog();
 provide(DialogKey, dialog);
 
+// Module settings declared in module.manifest <settings>. Loaded once on
+// mount; consumers read effective values via `moduleSettings.get(name, fallback)`.
+const MODULE_ID = 'VirtoCommerce.SystemOperations';
+const SETTING_DEFAULT_THEME = `${MODULE_ID}.DefaultTheme`;
+const SETTING_ALLOW_DESTRUCTIVE = `${MODULE_ID}.AllowDestructiveOperations`;
+const SETTING_RESTART_TIMEOUT = `${MODULE_ID}.RestartTimeoutSeconds`;
+const moduleSettings = useModuleSettings(MODULE_ID);
+
+// `useOperations` consults the timeout getter on each restart click, so an
+// admin updating the value mid-session takes effect on the next click
+// without remounting.
 const { resetCache, restartPlatform, isResetting, isRestarting, resetError, restartError } =
-  useOperations(dialog, t);
+  useOperations(dialog, t, {
+    restartTimeoutSeconds: () => moduleSettings.get<number>(SETTING_RESTART_TIMEOUT, 120),
+  });
+
+// Production safety: when false, hide Reset Cache + Restart Platform cards.
+// Defaults to true (i.e. allow) so existing installs keep current behaviour.
+const allowDestructiveOperations = computed(() =>
+  moduleSettings.get<boolean>(SETTING_ALLOW_DESTRUCTIVE, true),
+);
 
 const { downloadPackage } = useSystemInfo();
 
@@ -70,20 +90,41 @@ const themeTooltip = computed(() => {
   return t('theme.light');
 });
 
-onMounted(() => {
+onMounted(async () => {
+  // Apply a synchronous theme immediately (localStorage if present, else
+  // 'system') so the user never sees an unstyled flash. Then, once module
+  // settings load, fall back to the platform-default theme if no
+  // localStorage value was set.
+  let storedTheme: ThemeMode | null = null;
   try {
-    const stored = localStorage.getItem(THEME_KEY) as ThemeMode | null;
-    if (stored === 'light' || stored === 'dark' || stored === 'system') {
-      applyTheme(stored);
-    } else {
-      applyTheme('system');
+    const v = localStorage.getItem(THEME_KEY);
+    if (v === 'light' || v === 'dark' || v === 'system') {
+      storedTheme = v;
     }
-  } catch { applyTheme('system'); }
+  } catch { /* ignore */ }
+  applyTheme(storedTheme ?? 'system');
 
   // Listen for OS theme changes when in system mode
   window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (themeMode.value === 'system') applyTheme('system');
   });
+
+  // Load module settings (best-effort; failures don't block the page).
+  try {
+    await moduleSettings.load();
+
+    // If the user hasn't explicitly chosen a theme on this browser, honour
+    // the platform-wide default the admin configured.
+    if (!storedTheme) {
+      const def = moduleSettings.get<ThemeMode>(SETTING_DEFAULT_THEME, 'system');
+      if (def === 'light' || def === 'dark' || def === 'system') {
+        applyTheme(def);
+      }
+    }
+  } catch {
+    // Settings endpoint unreachable / 401. Keep whatever theme is applied
+    // and treat destructive operations as allowed (the default).
+  }
 });
 
 const isDownloadingPackage = ref(false);
@@ -147,6 +188,7 @@ async function handleDownloadPackage() {
     </OperationCard>
 
     <OperationCard
+      v-if="allowDestructiveOperations"
       icon="fas fa-eraser"
       icon-color="orange"
       :title="t('resetCache.title')"
@@ -165,6 +207,7 @@ async function handleDownloadPackage() {
     </OperationCard>
 
     <OperationCard
+      v-if="allowDestructiveOperations"
       icon="fas fa-bolt"
       icon-color="red"
       :title="t('restart.title')"

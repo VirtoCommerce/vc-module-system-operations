@@ -16,9 +16,54 @@
       <description>Platform maintenance and diagnostic tools</description>
       <iconUrl>/apps/system-operations/app-icon.svg</iconUrl>
       <permission>platform:developer-tools:access</permission>
-      <supportEmbeddedMode>true</supportEmbeddedMode>
+      <placement>MainMenu</placement>
     </app>
   </apps>
+
+  <!--
+    Manifest-declared platform settings. Read at runtime via
+    `GET /api/platform/settings/v2/global/values` and the `useModuleSettings`
+    composable. See docs/developer-guide/manifest-settings.md in vc-platform
+    for the schema reference.
+  -->
+  <settings>
+    <!-- Tunable replacement for the hardcoded 60-attempt × 2s polling loop
+         in app/composables/useOperations.ts. Cold-start time on customer
+         infra varies; ops can tune without a rebuild. -->
+    <setting>
+      <name>VirtoCommerce.SystemOperations.RestartTimeoutSeconds</name>
+      <groupName>System Operations|Restart</groupName>
+      <displayName>Restart polling timeout (seconds)</displayName>
+      <valueType>PositiveInteger</valueType>
+      <defaultValue>120</defaultValue>
+    </setting>
+
+    <!-- Platform-wide default theme; user override (localStorage) wins
+         on a per-browser basis. Lets ops align the default with brand. -->
+    <setting>
+      <name>VirtoCommerce.SystemOperations.DefaultTheme</name>
+      <groupName>System Operations|UI</groupName>
+      <displayName>Default theme</displayName>
+      <valueType>ShortText</valueType>
+      <defaultValue>system</defaultValue>
+      <allowedValues>
+        <value>system</value>
+        <value>light</value>
+        <value>dark</value>
+      </allowedValues>
+    </setting>
+
+    <!-- Production safety: hide Reset Cache and Restart Platform cards
+         when false. Page still renders for diagnostics; just no one-click
+         destructive actions. -->
+    <setting>
+      <name>VirtoCommerce.SystemOperations.AllowDestructiveOperations</name>
+      <groupName>System Operations|Safety</groupName>
+      <displayName>Allow destructive operations</displayName>
+      <valueType>Boolean</valueType>
+      <defaultValue>true</defaultValue>
+    </setting>
+  </settings>
 
   <authors>
     <author>Oleg Zhuk</author>

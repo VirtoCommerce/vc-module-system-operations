@@ -2,5 +2,23 @@
   "SystemOperations": {
     "title": "System Operations",
     "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Restart polling timeout (seconds)",
+          "description": "How long the platform waits for the API to come back online after Restart Platform is clicked. Tune higher for slow cold-starts on Kubernetes or when EF migrations run on startup."
+        },
+        "DefaultTheme": {
+          "title": "Default theme",
+          "description": "Initial theme presented to admins who haven’t explicitly chosen one in their browser. Per-user override saved in localStorage always wins."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Allow destructive operations",
+          "description": "When disabled, the Reset Cache and Restart Platform cards are hidden from the System Operations page. Use to lock down production environments while keeping diagnostics accessible."
+        }
+      }
+    }
   }
 }

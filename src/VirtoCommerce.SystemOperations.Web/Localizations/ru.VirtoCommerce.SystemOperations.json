@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Время ожидания опроса при перезапуске (секунды)",
+          "description": "Время ожидания платформой возврата API в сеть после нажатия «Перезапустить платформу». Увеличьте значение при медленных холодных стартах в Kubernetes или если миграции EF выполняются при запуске."
+        },
+        "DefaultTheme": {
+          "title": "Тема по умолчанию",
+          "description": "Начальная тема для администраторов, которые ещё не выбрали свою в браузере. Персональная настройка из localStorage всегда имеет приоритет."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Разрешить деструктивные операции",
+          "description": "Если отключено, на странице System Operations скрываются карточки «Сбросить кэш» и «Перезапустить платформу». Используйте для блокировки продуктивных сред, оставляя доступной диагностику."
+        }
+      }
+    }
+  }
+}

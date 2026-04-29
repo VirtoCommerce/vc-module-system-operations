@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "重启轮询超时（秒）",
+          "description": "点击「重启平台」后，平台等待 API 重新上线的时间。在 Kubernetes 冷启动较慢或启动时执行 EF 迁移的情况下，请适当增大该值。"
+        },
+        "DefaultTheme": {
+          "title": "默认主题",
+          "description": "向尚未在浏览器中显式选择主题的管理员展示的初始主题。localStorage 中保存的用户级偏好始终优先。"
+        },
+        "AllowDestructiveOperations": {
+          "title": "允许执行破坏性操作",
+          "description": "禁用后，System Operations 页面将隐藏「重置缓存」和「重启平台」卡片。可用于锁定生产环境，同时保留诊断功能。"
+        }
+      }
+    }
+  }
+}

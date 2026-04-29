@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "再起動ポーリングのタイムアウト (秒)",
+          "description": "「プラットフォームを再起動」をクリックした後、API が再びオンラインになるまでプラットフォームが待機する時間。Kubernetes でのコールドスタートが遅い場合、または起動時に EF マイグレーションが実行される場合は値を大きくしてください。"
+        },
+        "DefaultTheme": {
+          "title": "既定のテーマ",
+          "description": "ブラウザーでテーマを明示的に選択していない管理者に対して提示される初期テーマ。localStorage に保存されたユーザー単位の設定が常に優先されます。"
+        },
+        "AllowDestructiveOperations": {
+          "title": "破壊的な操作を許可",
+          "description": "無効にすると、System Operations ページから「キャッシュをリセット」と「プラットフォームを再起動」のカードが非表示になります。診断機能はそのまま、本番環境をロックダウンする用途に使用します。"
+        }
+      }
+    }
+  }
+}
