@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Konserwacja",
     "data": "Dane",
-    "diagnostics": "Diagnostyka i eksport"
+    "diagnostics": "Diagnostyka i eksport",
+    "plugins": "Wtyczki"
   },
   "resetCache": {
     "title": "Resetuj pamięć podręczną",

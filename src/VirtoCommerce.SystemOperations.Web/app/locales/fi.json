@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Ylläpito",
     "data": "Tiedot",
-    "diagnostics": "Diagnostiikka ja vienti"
+    "diagnostics": "Diagnostiikka ja vienti",
+    "plugins": "Lisäosat"
   },
   "resetCache": {
     "title": "Tyhjennä välimuisti",

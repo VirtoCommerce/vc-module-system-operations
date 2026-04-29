@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Maintenance",
     "data": "Data",
-    "diagnostics": "Diagnostics & Export"
+    "diagnostics": "Diagnostics & Export",
+    "plugins": "Plugins"
   },
   "resetCache": {
     "title": "Reset Cache",

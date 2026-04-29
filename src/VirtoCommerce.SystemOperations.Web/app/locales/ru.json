@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Обслуживание",
     "data": "Данные",
-    "diagnostics": "Диагностика и экспорт"
+    "diagnostics": "Диагностика и экспорт",
+    "plugins": "Расширения"
   },
   "resetCache": {
     "title": "Сбросить кеш",

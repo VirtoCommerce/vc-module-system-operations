@@ -17,6 +17,7 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 - **Import Platform Data** — Restore platform data from a previously exported ZIP backup with module/entry selection, real-time progress streaming, and cancel support.
 - **Download Package JSON** — Export `vc-package.json` with all installed modules and versions for environment replication. Includes a ready-to-copy `vc-build Install` command for restoring modules from the downloaded file.
 - **Module Load Sequence** — View the dependency-resolved loading order of all installed modules with Copy to Clipboard support.
+- **Plugin Extensibility (Module Federation)** — Other modules can ship UI cards that render alongside the built-in ones, discovered automatically via the platform's modularity framework. See [Plugin extensibility](#plugin-extensibility-module-federation) below.
 
 Each operation includes a clear description of what it does, when to use it, and appropriate confirmation dialogs for destructive actions.
 
@@ -57,6 +58,103 @@ This module has no backend services, no database, and no custom API endpoints. I
 Long-running operations (Export, Import, Sample Data Install) use Hangfire background jobs on the platform side. Progress is tracked by polling the push notification search endpoint (`POST /api/platform/pushnotifications` with `{ ids: [notificationId] }`) every 2 seconds until the notification's `finished` field is set.
 
 The UI is a Vue.js 3 + TypeScript + Vite application, served via the platform's `<apps>` mechanism and registered as a Developer Tool via `IDeveloperToolRegistrar`. The app supports 13 languages matching the platform's localization.
+
+It is also a **Module Federation host** — see the next section.
+
+## Plugin extensibility (Module Federation)
+
+System Operations participates in the platform-wide [Backoffice Modularity Framework](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/developer-guide/backoffice-modularity-framework.md). Any other VC module can contribute UI to this app at runtime by declaring a dependency on `VirtoCommerce.SystemOperations` and shipping a Module Federation remote under `{moduleRoot}/plugins/system-operations/`.
+
+### How it works
+
+```
+1. Browser loads /apps/system-operations/index.html
+2. main.ts boots Vue, mounts the shell immediately
+3. loadPlugins() ─→ GET /api/apps/system-operations/manifest
+4. Platform walks installed modules in dependency order, finds every
+   {moduleRoot}/plugins/system-operations/remoteEntry.js, returns one
+   PluginEntry per discovered remote.
+5. @module-federation/runtime registers the remotes, negotiates Vue
+   as a singleton, fetches each remoteEntry.js.
+6. For each plugin, host calls `plugin.install(host, ctx)` — the
+   plugin uses `host.registerCard({...})` to add OperationCards.
+7. The reactive registry surfaces new cards into the shell without a
+   re-fetch.
+```
+
+### Host API for plugin authors
+
+```ts
+// Inlined into plugins as a tiny standalone .d.ts — no runtime
+// dependency on this package.
+
+interface SystemOperationsHost {
+  registerCard(card: {
+    section?: 'maintenance' | 'data' | 'diagnostics' | 'plugins';
+    component: import('vue').Component;     // rendered as the card body
+    props: {
+      icon: string;                          // Font Awesome class
+      iconColor: 'blue' | 'red' | 'orange' | 'green' | 'purple';
+      title: string;
+      description?: string;
+      scenario?: string;
+      permission?: string;                   // permission badge (cosmetic)
+      variant?: 'danger' | 'warning';
+    };
+    order?: number;                          // sort within the section
+  }): void;
+}
+
+interface PluginContext {
+  pluginId: string;
+  pluginVersion: string;
+  isDev: boolean;
+}
+
+// Default export of the plugin's MF entry (`./Module`):
+export default {
+  install(host: SystemOperationsHost, ctx: PluginContext): void {
+    host.registerCard({ /* ... */ });
+  },
+};
+```
+
+### Plugin folder convention
+
+```
+your-module/
+├── module.manifest                      <dependency id="VirtoCommerce.SystemOperations">
+└── plugins/
+    └── system-operations/
+        ├── remoteEntry.js               built by @module-federation/vite
+        ├── *.js                         chunks
+        └── *.css                        chunks
+```
+
+Optionally drop a `plugin.json` next to `remoteEntry.js` to override defaults — see the [framework spec](https://github.com/VirtoCommerce/vc-platform/blob/master/docs/developer-guide/backoffice-modularity-framework.md#plugin-descriptor-optional-pluginjson).
+
+### Sample extension
+
+A working reference plugin lives at [`samples/VirtoCommerce.SystemOperations.SampleExtension/`](./samples/VirtoCommerce.SystemOperations.SampleExtension). It contributes a "Browser Info" diagnostic card and serves as a copy-paste starting template. See its [README](./samples/VirtoCommerce.SystemOperations.SampleExtension/README.md) for the build + install steps.
+
+To try it end-to-end:
+
+```bash
+# 1. Build the host (this module).
+cd src/VirtoCommerce.SystemOperations.Web
+npm install
+npm run build
+cd ../..
+
+# 2. Build the sample plugin.
+cd samples/VirtoCommerce.SystemOperations.SampleExtension
+npm install
+npm run build
+
+# 3. Install both on a running platform (manifest + plugins folder for each).
+# 4. Open Configuration → Developer Tools → System Operations.
+# 5. The "Browser Info" card appears under Diagnostics & Export.
+```
 
 ## Installation
 
@@ -111,8 +209,15 @@ src/VirtoCommerce.SystemOperations.Web/
     package.json                    — Vue/Vite dependencies
     app/                            — Vue.js application source
         index.html                  — Vite entry HTML
-        main.ts                     — App entry point
-        App.vue                     — Root component (sections + cards)
+        main.ts                     — App entry point (mount + loadPlugins)
+        App.vue                     — Root component (sections + cards + plugin slots)
+        plugins/
+            types.ts                — Public host API contract (SystemOperationsHost,
+                                      RegisterCardOptions, PluginContext)
+            registry.ts             — Reactive registry; provides forPlugin() facade,
+                                      bySection() lookup, sectionHasContent()
+            loader.ts               — Fetches /api/apps/system-operations/manifest,
+                                      registers MF remotes, calls install(host, ctx)
         components/
             OperationCard.vue       — Reusable card (icon, title, desc, scenario, action slot)
             VcDialog.vue            — Platform-styled modal dialog
@@ -138,6 +243,10 @@ src/VirtoCommerce.SystemOperations.Web/
             dialog.css              — Modal dialog styles
             main.css                — Cards, buttons, layout
     Content/system-operations/      — Vite build output (served at /apps/system-operations/)
+samples/
+    VirtoCommerce.SystemOperations.SampleExtension/
+                                    — Reference plugin: contributes a "Browser Info"
+                                      card to the Diagnostics section.
 ```
 
 ## Extending the Page

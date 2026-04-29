@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Manutenção",
     "data": "Dados",
-    "diagnostics": "Diagnóstico e exportação"
+    "diagnostics": "Diagnóstico e exportação",
+    "plugins": "Plug-ins"
   },
   "resetCache": {
     "title": "Redefinir cache",

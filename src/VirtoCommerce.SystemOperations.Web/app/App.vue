@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref, computed, onMounted } from 'vue';
+import { provide, ref, computed, onMounted, inject } from 'vue';
 import { useDialog, DialogKey } from './composables/useDialog';
 import { useI18n, I18nKey } from './composables/useI18n';
 import { useOperations } from './composables/useOperations';
@@ -14,6 +14,15 @@ import PlatformBackup from './components/PlatformBackup.vue';
 import PlatformRestore from './components/PlatformRestore.vue';
 import PlatformInfo from './components/PlatformInfo.vue';
 import DevToolsNav from './components/DevToolsNav.vue';
+import { PluginRegistryKey } from './plugins/registry';
+import type { SystemOperationsSection } from './plugins/types';
+
+// Plugin registry (provided by main.ts). Lookup helper returns the cards
+// contributed for a section in the order plugins should render.
+const pluginRegistry = inject(PluginRegistryKey)!;
+function pluginCards(section: SystemOperationsSection) {
+  return pluginRegistry.bySection.value.get(section) ?? [];
+}
 
 const i18n = useI18n();
 const { t } = i18n;
@@ -172,6 +181,15 @@ async function handleDownloadPackage() {
       </div>
       <div v-if="restartError" class="op-card__error">{{ restartError }}</div>
     </OperationCard>
+
+    <!-- Plugin contributions (section: maintenance) -->
+    <OperationCard
+      v-for="card in pluginCards('maintenance')"
+      :key="`maintenance-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
+    </OperationCard>
   </SectionGroup>
 
   <!-- Data -->
@@ -207,6 +225,15 @@ async function handleDownloadPackage() {
       :scenario="t('restore.scenario')"
     >
       <PlatformRestore />
+    </OperationCard>
+
+    <!-- Plugin contributions (section: data) -->
+    <OperationCard
+      v-for="card in pluginCards('data')"
+      :key="`data-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
     </OperationCard>
   </SectionGroup>
 
@@ -246,6 +273,26 @@ async function handleDownloadPackage() {
       :scenario="t('moduleSequence.scenario')"
     >
       <ModuleLoadSequence />
+    </OperationCard>
+
+    <!-- Plugin contributions (section: diagnostics) -->
+    <OperationCard
+      v-for="card in pluginCards('diagnostics')"
+      :key="`diagnostics-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
+    </OperationCard>
+  </SectionGroup>
+
+  <!-- Plugins — only renders when at least one plugin contributes a "plugins"-section card. -->
+  <SectionGroup v-if="pluginRegistry.sectionHasContent('plugins')" :title="t('sections.plugins')">
+    <OperationCard
+      v-for="card in pluginCards('plugins')"
+      :key="`plugins-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
     </OperationCard>
   </SectionGroup>
 

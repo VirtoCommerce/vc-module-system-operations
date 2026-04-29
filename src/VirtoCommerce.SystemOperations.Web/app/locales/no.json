@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Vedlikehold",
     "data": "Data",
-    "diagnostics": "Diagnostikk og eksport"
+    "diagnostics": "Diagnostikk og eksport",
+    "plugins": "Tillegg"
   },
   "resetCache": {
     "title": "Tilbakestill hurtigbuffer",
