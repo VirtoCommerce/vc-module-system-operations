@@ -5,6 +5,7 @@ showing the running browser, OS, screen size, and time zone of the current admin
 
 ## Screenshot
 
+<img width="906" height="561" alt="image" src="https://github.com/user-attachments/assets/3837255c-0675-429c-bfa7-dafe05bdf6e1" />
 
 ## What it does
 
