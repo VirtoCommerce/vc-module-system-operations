@@ -38,9 +38,20 @@
       <defaultValue>120</defaultValue>
     </setting>
 
+    <!-- Production safety: hide Reset Cache and Restart Platform cards
+         when false. Page still renders for diagnostics; just no one-click
+         destructive actions. -->
+    <setting>
+      <name>VirtoCommerce.SystemOperations.AllowDestructiveOperations</name>
+      <groupName>System Operations|Safety</groupName>
+      <displayName>Allow destructive operations</displayName>
+      <valueType>Boolean</valueType>
+      <defaultValue>true</defaultValue>
+    </setting>
+
     <!-- Platform-wide default theme; user override (localStorage) wins
          on a per-browser basis. Lets ops align the default with brand. -->
-    <setting>
+    <setting tenant="UserProfile">
       <name>VirtoCommerce.SystemOperations.DefaultTheme</name>
       <groupName>System Operations|UI</groupName>
       <displayName>Default theme</displayName>
@@ -53,16 +64,6 @@
       </allowedValues>
     </setting>
 
-    <!-- Production safety: hide Reset Cache and Restart Platform cards
-         when false. Page still renders for diagnostics; just no one-click
-         destructive actions. -->
-    <setting>
-      <name>VirtoCommerce.SystemOperations.AllowDestructiveOperations</name>
-      <groupName>System Operations|Safety</groupName>
-      <displayName>Allow destructive operations</displayName>
-      <valueType>Boolean</valueType>
-      <defaultValue>true</defaultValue>
-    </setting>
   </settings>
 
   <authors>

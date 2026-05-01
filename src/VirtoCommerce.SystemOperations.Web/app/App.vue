@@ -32,26 +32,31 @@ provide(I18nKey, i18n);
 const dialog = useDialog();
 provide(DialogKey, dialog);
 
-// Module settings declared in module.manifest <settings>. Loaded once on
-// mount; consumers read effective values via `moduleSettings.get(name, fallback)`.
+// Module settings declared in module.manifest <settings>. Two scopes:
+//   • global settings (RestartTimeoutSeconds, AllowDestructiveOperations)
+//     come from /api/platform/settings/v2/global/* — admin-tuned, shared.
+//   • UserProfile settings (DefaultTheme) come from /api/platform/settings/v2/me/*
+//     — per-user, persisted to the caller's profile across browsers/devices.
+// The composable picks the right endpoint family based on `scope`.
 const MODULE_ID = 'VirtoCommerce.SystemOperations';
 const SETTING_DEFAULT_THEME = `${MODULE_ID}.DefaultTheme`;
 const SETTING_ALLOW_DESTRUCTIVE = `${MODULE_ID}.AllowDestructiveOperations`;
 const SETTING_RESTART_TIMEOUT = `${MODULE_ID}.RestartTimeoutSeconds`;
-const moduleSettings = useModuleSettings(MODULE_ID);
+const globalSettings = useModuleSettings(MODULE_ID);
+const userSettings = useModuleSettings(MODULE_ID, { scope: 'UserProfile' });
 
 // `useOperations` consults the timeout getter on each restart click, so an
 // admin updating the value mid-session takes effect on the next click
 // without remounting.
 const { resetCache, restartPlatform, isResetting, isRestarting, resetError, restartError } =
   useOperations(dialog, t, {
-    restartTimeoutSeconds: () => moduleSettings.get<number>(SETTING_RESTART_TIMEOUT, 120),
+    restartTimeoutSeconds: () => globalSettings.get<number>(SETTING_RESTART_TIMEOUT, 120),
   });
 
 // Production safety: when false, hide Reset Cache + Restart Platform cards.
 // Defaults to true (i.e. allow) so existing installs keep current behaviour.
 const allowDestructiveOperations = computed(() =>
-  moduleSettings.get<boolean>(SETTING_ALLOW_DESTRUCTIVE, true),
+  globalSettings.get<boolean>(SETTING_ALLOW_DESTRUCTIVE, true),
 );
 
 const { downloadPackage } = useSystemInfo();
@@ -69,13 +74,22 @@ function applyTheme(mode: ThemeMode) {
   themeMode.value = mode;
   const dark = mode === 'dark' || (mode === 'system' && getSystemDark());
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  // localStorage is a per-browser cache used to avoid FOUC on next mount;
+  // UserProfile is the cross-device source of truth (persisted via save).
   try { localStorage.setItem(THEME_KEY, mode); } catch { /* ignore */ }
 }
 
-function cycleTheme() {
+async function cycleTheme() {
   const order: ThemeMode[] = ['system', 'light', 'dark'];
   const next = order[(order.indexOf(themeMode.value) + 1) % order.length];
   applyTheme(next);
+  // Persist to the caller's UserProfile so the choice follows them across
+  // browsers/devices. Best-effort: a failed save (offline / 401) keeps the
+  // local change applied — localStorage will still serve the next mount on
+  // this browser.
+  try {
+    await userSettings.save({ [SETTING_DEFAULT_THEME]: next });
+  } catch { /* keep the local change even if the server didn't accept it */ }
 }
 
 const themeIcon = computed(() => {
@@ -92,9 +106,9 @@ const themeTooltip = computed(() => {
 
 onMounted(async () => {
   // Apply a synchronous theme immediately (localStorage if present, else
-  // 'system') so the user never sees an unstyled flash. Then, once module
-  // settings load, fall back to the platform-default theme if no
-  // localStorage value was set.
+  // 'system') so the user never sees an unstyled flash. Once UserProfile
+  // settings load, the persisted server-side preference (the source of
+  // truth across browsers/devices) takes over if it differs.
   let storedTheme: ThemeMode | null = null;
   try {
     const v = localStorage.getItem(THEME_KEY);
@@ -109,21 +123,28 @@ onMounted(async () => {
     if (themeMode.value === 'system') applyTheme('system');
   });
 
-  // Load module settings (best-effort; failures don't block the page).
+  // Load global settings (RestartTimeout, AllowDestructive). Best-effort.
   try {
-    await moduleSettings.load();
+    await globalSettings.load();
+  } catch {
+    // /global/* unreachable / 401 — fall through to defaults.
+  }
 
-    // If the user hasn't explicitly chosen a theme on this browser, honour
-    // the platform-wide default the admin configured.
-    if (!storedTheme) {
-      const def = moduleSettings.get<ThemeMode>(SETTING_DEFAULT_THEME, 'system');
-      if (def === 'light' || def === 'dark' || def === 'system') {
-        applyTheme(def);
-      }
+  // Load the caller's UserProfile theme preference. Cross-device source of
+  // truth — if it differs from the localStorage cache we just rendered,
+  // switch to it (the user changed their theme on another browser/device).
+  // Falls back to the schema default ('system') when no value is persisted.
+  try {
+    await userSettings.load();
+    const persisted = userSettings.get<ThemeMode>(SETTING_DEFAULT_THEME, 'system');
+    if (
+      (persisted === 'light' || persisted === 'dark' || persisted === 'system') &&
+      persisted !== themeMode.value
+    ) {
+      applyTheme(persisted);
     }
   } catch {
-    // Settings endpoint unreachable / 401. Keep whatever theme is applied
-    // and treat destructive operations as allowed (the default).
+    // /me/* unreachable / 401 — keep whatever theme is applied.
   }
 });
 

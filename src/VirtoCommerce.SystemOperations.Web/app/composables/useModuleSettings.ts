@@ -1,12 +1,27 @@
 // Reactive accessor for platform settings declared in this module's
-// `module.manifest <settings>` block. Reads via the v2 settings API:
+// `module.manifest <settings>` block. Two scopes are supported:
 //
-//   GET  /api/platform/settings/v2/global/schema?moduleId=…
-//   GET  /api/platform/settings/v2/global/values
-//   POST /api/platform/settings/v2/global/values
+//   global       (default) — shared across all admins/tenants. Routed to
+//                  /api/platform/settings/v2/global/values?moduleId=<id>.
+//                  Requires `platform:setting:read` / `:update` permission.
+//   UserProfile  — per-user. Routed to
+//                  /api/platform/settings/v2/me/values?moduleId=<id>.
+//                  Requires authentication only (no extra permission for
+//                  own profile). Anonymous → 401.
+//
+// One round-trip: the platform's /values endpoint accepts a `moduleId`
+// query filter and returns each registered setting with its persisted
+// value or default already filled in (modifiedOnly=false). That means
+// callers don't need a parallel /schema fetch just to know which keys
+// belong to this module — the filtered values blob is the answer.
+// If you need full schema metadata (displayName, allowedValues,
+// valueType) — e.g. to render a settings editor — call
+// `/v2/<scope>/schema?moduleId=…` directly; this composable is the
+// read-and-use shortcut that doesn't.
 //
 // See docs/developer-guide/manifest-settings.md (in vc-platform) for the
-// declarative-settings story this composable consumes.
+// declarative-settings story this composable consumes, including §4a
+// for the per-user scope.
 //
 // `load()` returns a freshly-fetched snapshot; the host can call it on
 // app start (eager) or lazily on first access. The returned `values`
@@ -16,51 +31,45 @@
 import { ref, type Ref } from 'vue';
 import { useApi, ApiError } from './useApi';
 
-export type SettingValueType =
-  | 'ShortText'
-  | 'LongText'
-  | 'Integer'
-  | 'PositiveInteger'
-  | 'Decimal'
-  | 'DateTime'
-  | 'Boolean'
-  | 'SecureString'
-  | 'Json';
+export type SettingScope = 'global' | 'UserProfile';
 
-export interface SettingSchema {
-  name: string;
-  groupName: string;
-  displayName?: string;
-  valueType: SettingValueType;
-  defaultValue?: unknown;
-  allowedValues?: unknown[];
-  isRequired?: boolean;
-  isHidden?: boolean;
-  isPublic?: boolean;
-  restartRequired?: boolean;
-  moduleId?: string;
+export interface UseModuleSettingsOptions {
+  /**
+   * Which storage tier to read/write. Defaults to 'global'. Pick
+   * 'UserProfile' for per-user preferences (theme, layout density, etc.)
+   * — values are stored under the authenticated caller's profile and
+   * surfaced via /api/platform/settings/v2/me/*.
+   */
+  scope?: SettingScope;
 }
 
 export interface UseModuleSettingsResult {
-  /** Schema for every setting registered against {moduleId}. */
-  schema: Ref<SettingSchema[]>;
-  /** Current values (effective: persisted overrides default). */
+  /** Current values (effective: persisted overrides default), keyed by setting name. */
   values: Ref<Record<string, unknown>>;
   /** Whether load() has completed at least once. */
   loaded: Ref<boolean>;
   /** Last error encountered by load() / save(); null on success. */
   error: Ref<ApiError | null>;
-  /** Refetch schema + values. Idempotent. */
+  /** Refetch values. Idempotent. */
   load(): Promise<void>;
   /** Persist one or more setting values. Updates `values` on success. */
   save(updates: Record<string, unknown>): Promise<void>;
-  /** Effective value for a single setting: persisted → default → fallback. */
+  /** Effective value for a single setting: persisted/default → caller fallback. */
   get<T = unknown>(name: string, fallback?: T): T;
 }
 
-export function useModuleSettings(moduleId: string): UseModuleSettingsResult {
+export function useModuleSettings(
+  moduleId: string,
+  options: UseModuleSettingsOptions = {},
+): UseModuleSettingsResult {
+  const scope: SettingScope = options.scope ?? 'global';
+  // /global/values for shared settings; /me/values for per-user settings.
+  // Identical response shapes — only the URL prefix differs.
+  const urlPrefix = scope === 'UserProfile'
+    ? '/api/platform/settings/v2/me'
+    : '/api/platform/settings/v2/global';
+
   const { get: apiGet, post: apiPost } = useApi();
-  const schema = ref<SettingSchema[]>([]);
   const values = ref<Record<string, unknown>>({});
   const loaded = ref(false);
   const error = ref<ApiError | null>(null);
@@ -68,25 +77,15 @@ export function useModuleSettings(moduleId: string): UseModuleSettingsResult {
   async function load() {
     error.value = null;
     try {
-      const [schemaResp, valuesResp] = await Promise.all([
-        apiGet<SettingSchema[]>(
-          `/api/platform/settings/v2/global/schema?moduleId=${encodeURIComponent(moduleId)}`,
-        ),
-        apiGet<Record<string, unknown>>(
-          `/api/platform/settings/v2/global/values?modifiedOnly=false`,
-        ),
-      ]);
-
-      schema.value = schemaResp ?? [];
-
-      // Filter the global values blob down to just settings owned by this
-      // module so callers can't accidentally write into another module's
-      // namespace.
-      const owned = new Set(schema.value.map((s) => s.name));
-      values.value = Object.fromEntries(
-        Object.entries(valuesResp ?? {}).filter(([k]) => owned.has(k)),
+      // moduleId scopes the response server-side: only descriptors with
+      // matching ModuleId come back. modifiedOnly=false means the dict
+      // includes every setting in scope with its default value filled
+      // in if nothing is persisted — single source of truth, no schema
+      // round-trip needed.
+      const valuesResp = await apiGet<Record<string, unknown>>(
+        `${urlPrefix}/values?modifiedOnly=false&moduleId=${encodeURIComponent(moduleId)}`,
       );
-
+      values.value = valuesResp ?? {};
       loaded.value = true;
     } catch (err) {
       error.value = err instanceof ApiError ? err : new ApiError(0, String(err));
@@ -97,7 +96,7 @@ export function useModuleSettings(moduleId: string): UseModuleSettingsResult {
   async function save(updates: Record<string, unknown>) {
     error.value = null;
     try {
-      await apiPost('/api/platform/settings/v2/global/values', updates);
+      await apiPost(`${urlPrefix}/values`, updates);
       // Optimistically merge so consumers see the new values without a
       // second round-trip.
       values.value = { ...values.value, ...updates };
@@ -108,15 +107,12 @@ export function useModuleSettings(moduleId: string): UseModuleSettingsResult {
   }
 
   function getEffective<T>(name: string, fallback?: T): T {
-    if (name in values.value) {
-      return values.value[name] as T;
-    }
-    const declared = schema.value.find((s) => s.name === name);
-    if (declared && declared.defaultValue !== undefined && declared.defaultValue !== null) {
-      return declared.defaultValue as T;
-    }
-    return fallback as T;
+    // The server fills defaults into the response when modifiedOnly=false,
+    // so a present key is the source of truth (persisted or default).
+    // The caller-supplied fallback only matters before load() resolves
+    // (or if load() failed).
+    return name in values.value ? (values.value[name] as T) : (fallback as T);
   }
 
-  return { schema, values, loaded, error, load, save, get: getEffective };
+  return { values, loaded, error, load, save, get: getEffective };
 }
