@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Limit czasu odpytywania po ponownym uruchomieniu (sekundy)",
+          "description": "Jak długo platforma czeka na powrót API po kliknięciu „Uruchom ponownie platformę”. Zwiększ wartość w przypadku wolnych startów w Kubernetes lub gdy migracje EF wykonują się przy uruchomieniu."
+        },
+        "DefaultTheme": {
+          "title": "Motyw domyślny",
+          "description": "Domyślny motyw wyświetlany administratorom, którzy nie wybrali jeszcze własnego w przeglądarce. Ustawienie per-użytkownik zapisane w localStorage zawsze ma pierwszeństwo."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Zezwalaj na operacje destrukcyjne",
+          "description": "Gdy wyłączone, karty „Wyczyść pamięć podręczną” i „Uruchom ponownie platformę” są ukrywane na stronie System Operations. Używaj do blokowania środowisk produkcyjnych, zachowując dostęp do diagnostyki."
+        }
+      }
+    }
+  }
+}

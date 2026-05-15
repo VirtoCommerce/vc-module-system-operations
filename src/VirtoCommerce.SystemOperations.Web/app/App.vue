@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { provide, ref, computed, onMounted } from 'vue';
+import { provide, ref, computed, onMounted, inject } from 'vue';
 import { useDialog, DialogKey } from './composables/useDialog';
 import { useI18n, I18nKey } from './composables/useI18n';
 import { useOperations } from './composables/useOperations';
 import { useSystemInfo } from './composables/useSystemInfo';
 import { ApiError } from './composables/useApi';
+import { useModuleSettings } from './composables/useModuleSettings';
 import VcDialog from './components/VcDialog.vue';
 import SectionGroup from './components/SectionGroup.vue';
 import OperationCard from './components/OperationCard.vue';
@@ -14,6 +15,15 @@ import PlatformBackup from './components/PlatformBackup.vue';
 import PlatformRestore from './components/PlatformRestore.vue';
 import PlatformInfo from './components/PlatformInfo.vue';
 import DevToolsNav from './components/DevToolsNav.vue';
+import { PluginRegistryKey } from './plugins/registry';
+import type { SystemOperationsSection } from './plugins/types';
+
+// Plugin registry (provided by main.ts). Lookup helper returns the cards
+// contributed for a section in the order plugins should render.
+const pluginRegistry = inject(PluginRegistryKey)!;
+function pluginCards(section: SystemOperationsSection) {
+  return pluginRegistry.bySection.value.get(section) ?? [];
+}
 
 const i18n = useI18n();
 const { t } = i18n;
@@ -22,8 +32,32 @@ provide(I18nKey, i18n);
 const dialog = useDialog();
 provide(DialogKey, dialog);
 
+// Module settings declared in module.manifest <settings>. Two scopes:
+//   • global settings (RestartTimeoutSeconds, AllowDestructiveOperations)
+//     come from /api/platform/settings/v2/global/* — admin-tuned, shared.
+//   • UserProfile settings (DefaultTheme) come from /api/platform/settings/v2/me/*
+//     — per-user, persisted to the caller's profile across browsers/devices.
+// The composable picks the right endpoint family based on `scope`.
+const MODULE_ID = 'VirtoCommerce.SystemOperations';
+const SETTING_DEFAULT_THEME = `${MODULE_ID}.DefaultTheme`;
+const SETTING_ALLOW_DESTRUCTIVE = `${MODULE_ID}.AllowDestructiveOperations`;
+const SETTING_RESTART_TIMEOUT = `${MODULE_ID}.RestartTimeoutSeconds`;
+const globalSettings = useModuleSettings(MODULE_ID);
+const userSettings = useModuleSettings(MODULE_ID, { scope: 'UserProfile' });
+
+// `useOperations` consults the timeout getter on each restart click, so an
+// admin updating the value mid-session takes effect on the next click
+// without remounting.
 const { resetCache, restartPlatform, isResetting, isRestarting, resetError, restartError } =
-  useOperations(dialog, t);
+  useOperations(dialog, t, {
+    restartTimeoutSeconds: () => globalSettings.get<number>(SETTING_RESTART_TIMEOUT, 120),
+  });
+
+// Production safety: when false, hide Reset Cache + Restart Platform cards.
+// Defaults to true (i.e. allow) so existing installs keep current behaviour.
+const allowDestructiveOperations = computed(() =>
+  globalSettings.get<boolean>(SETTING_ALLOW_DESTRUCTIVE, true),
+);
 
 const { downloadPackage } = useSystemInfo();
 
@@ -40,13 +74,22 @@ function applyTheme(mode: ThemeMode) {
   themeMode.value = mode;
   const dark = mode === 'dark' || (mode === 'system' && getSystemDark());
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  // localStorage is a per-browser cache used to avoid FOUC on next mount;
+  // UserProfile is the cross-device source of truth (persisted via save).
   try { localStorage.setItem(THEME_KEY, mode); } catch { /* ignore */ }
 }
 
-function cycleTheme() {
+async function cycleTheme() {
   const order: ThemeMode[] = ['system', 'light', 'dark'];
   const next = order[(order.indexOf(themeMode.value) + 1) % order.length];
   applyTheme(next);
+  // Persist to the caller's UserProfile so the choice follows them across
+  // browsers/devices. Best-effort: a failed save (offline / 401) keeps the
+  // local change applied — localStorage will still serve the next mount on
+  // this browser.
+  try {
+    await userSettings.save({ [SETTING_DEFAULT_THEME]: next });
+  } catch { /* keep the local change even if the server didn't accept it */ }
 }
 
 const themeIcon = computed(() => {
@@ -61,20 +104,48 @@ const themeTooltip = computed(() => {
   return t('theme.light');
 });
 
-onMounted(() => {
+onMounted(async () => {
+  // Apply a synchronous theme immediately (localStorage if present, else
+  // 'system') so the user never sees an unstyled flash. Once UserProfile
+  // settings load, the persisted server-side preference (the source of
+  // truth across browsers/devices) takes over if it differs.
+  let storedTheme: ThemeMode | null = null;
   try {
-    const stored = localStorage.getItem(THEME_KEY) as ThemeMode | null;
-    if (stored === 'light' || stored === 'dark' || stored === 'system') {
-      applyTheme(stored);
-    } else {
-      applyTheme('system');
+    const v = localStorage.getItem(THEME_KEY);
+    if (v === 'light' || v === 'dark' || v === 'system') {
+      storedTheme = v;
     }
-  } catch { applyTheme('system'); }
+  } catch { /* ignore */ }
+  applyTheme(storedTheme ?? 'system');
 
   // Listen for OS theme changes when in system mode
   window.matchMedia?.('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (themeMode.value === 'system') applyTheme('system');
   });
+
+  // Load global settings (RestartTimeout, AllowDestructive). Best-effort.
+  try {
+    await globalSettings.load();
+  } catch {
+    // /global/* unreachable / 401 — fall through to defaults.
+  }
+
+  // Load the caller's UserProfile theme preference. Cross-device source of
+  // truth — if it differs from the localStorage cache we just rendered,
+  // switch to it (the user changed their theme on another browser/device).
+  // Falls back to the schema default ('system') when no value is persisted.
+  try {
+    await userSettings.load();
+    const persisted = userSettings.get<ThemeMode>(SETTING_DEFAULT_THEME, 'system');
+    if (
+      (persisted === 'light' || persisted === 'dark' || persisted === 'system') &&
+      persisted !== themeMode.value
+    ) {
+      applyTheme(persisted);
+    }
+  } catch {
+    // /me/* unreachable / 401 — keep whatever theme is applied.
+  }
 });
 
 const isDownloadingPackage = ref(false);
@@ -138,6 +209,7 @@ async function handleDownloadPackage() {
     </OperationCard>
 
     <OperationCard
+      v-if="allowDestructiveOperations"
       icon="fas fa-eraser"
       icon-color="orange"
       :title="t('resetCache.title')"
@@ -156,6 +228,7 @@ async function handleDownloadPackage() {
     </OperationCard>
 
     <OperationCard
+      v-if="allowDestructiveOperations"
       icon="fas fa-bolt"
       icon-color="red"
       :title="t('restart.title')"
@@ -171,6 +244,15 @@ async function handleDownloadPackage() {
         </button>
       </div>
       <div v-if="restartError" class="op-card__error">{{ restartError }}</div>
+    </OperationCard>
+
+    <!-- Plugin contributions (section: maintenance) -->
+    <OperationCard
+      v-for="card in pluginCards('maintenance')"
+      :key="`maintenance-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
     </OperationCard>
   </SectionGroup>
 
@@ -207,6 +289,15 @@ async function handleDownloadPackage() {
       :scenario="t('restore.scenario')"
     >
       <PlatformRestore />
+    </OperationCard>
+
+    <!-- Plugin contributions (section: data) -->
+    <OperationCard
+      v-for="card in pluginCards('data')"
+      :key="`data-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
     </OperationCard>
   </SectionGroup>
 
@@ -246,6 +337,26 @@ async function handleDownloadPackage() {
       :scenario="t('moduleSequence.scenario')"
     >
       <ModuleLoadSequence />
+    </OperationCard>
+
+    <!-- Plugin contributions (section: diagnostics) -->
+    <OperationCard
+      v-for="card in pluginCards('diagnostics')"
+      :key="`diagnostics-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
+    </OperationCard>
+  </SectionGroup>
+
+  <!-- Plugins — only renders when at least one plugin contributes a "plugins"-section card. -->
+  <SectionGroup v-if="pluginRegistry.sectionHasContent('plugins')" :title="t('sections.plugins')">
+    <OperationCard
+      v-for="card in pluginCards('plugins')"
+      :key="`plugins-${card.pluginId}`"
+      v-bind="card.props"
+    >
+      <component :is="card.component" />
     </OperationCard>
   </SectionGroup>
 

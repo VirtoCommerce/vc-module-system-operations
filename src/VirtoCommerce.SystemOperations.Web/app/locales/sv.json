@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "Underhåll",
     "data": "Data",
-    "diagnostics": "Diagnostik och export"
+    "diagnostics": "Diagnostik och export",
+    "plugins": "Tillägg"
   },
   "resetCache": {
     "title": "Återställ cache",

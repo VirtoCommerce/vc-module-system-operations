@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Uudelleenkäynnistyksen kyselyn aikakatkaisu (sekuntia)",
+          "description": "Aika, jonka alusta odottaa API:n palautumista verkkoon Käynnistä alusta uudelleen -toiminnon jälkeen. Suurenna arvoa hitaita Kubernetes-käynnistyksiä varten tai jos EF-migraatiot suoritetaan käynnistyksen yhteydessä."
+        },
+        "DefaultTheme": {
+          "title": "Oletusteema",
+          "description": "Aloitusteema, joka näytetään ylläpitäjille, jotka eivät ole vielä valinneet teemaa selaimessaan. Käyttäjäkohtainen valinta localStoragessa voittaa aina."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Salli tuhoavat toiminnot",
+          "description": "Kun pois käytöstä, Tyhjennä välimuisti- ja Käynnistä alusta uudelleen -kortit piilotetaan System Operations -sivulta. Käytä tuotantoympäristön lukitsemiseen samalla, kun diagnostiikka pysyy käytettävissä."
+        }
+      }
+    }
+  }
+}

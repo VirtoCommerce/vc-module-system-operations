@@ -8,9 +8,13 @@
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Content\**" />
     <Compile Remove="dist\**" />
+    <Content Remove="Content\**" />
     <Content Remove="dist\**" />
+    <EmbeddedResource Remove="Content\**" />
     <EmbeddedResource Remove="dist\**" />
+    <None Remove="Content\**" />
     <None Remove="dist\**" />
   </ItemGroup>
   <ItemGroup>
@@ -20,8 +24,5 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="VirtoCommerce.Platform.Core" Version="3.1027.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\system-operations\" />
   </ItemGroup>
 </Project>

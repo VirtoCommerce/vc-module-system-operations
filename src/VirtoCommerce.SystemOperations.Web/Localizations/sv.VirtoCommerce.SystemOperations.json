@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Tidsgräns för omstart-polling (sekunder)",
+          "description": "Hur länge plattformen väntar på att API:t ska bli tillgängligt igen efter klick på «Starta om plattform». Öka värdet vid långsamma kallstarter på Kubernetes eller när EF-migreringar körs vid start."
+        },
+        "DefaultTheme": {
+          "title": "Standardtema",
+          "description": "Inledande tema som visas för administratörer som inte uttryckligen valt ett i sin webbläsare. Per-användare-val sparat i localStorage vinner alltid."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Tillåt destruktiva åtgärder",
+          "description": "När inaktiverat döljs korten «Återställ cache» och «Starta om plattform» på System Operations-sidan. Använd för att låsa produktionsmiljöer samtidigt som diagnostik förblir tillgänglig."
+        }
+      }
+    }
+  }
+}

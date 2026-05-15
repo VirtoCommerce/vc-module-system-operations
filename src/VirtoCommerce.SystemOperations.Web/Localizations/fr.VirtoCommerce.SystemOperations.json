@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Délai d’interrogation du redémarrage (secondes)",
+          "description": "Temps d’attente de la plateforme pour que l’API redevienne disponible après un clic sur «Redémarrer la plateforme». Augmentez la valeur en cas de démarrages à froid lents sur Kubernetes ou lorsque des migrations EF s’exécutent au démarrage."
+        },
+        "DefaultTheme": {
+          "title": "Thème par défaut",
+          "description": "Thème initial présenté aux administrateurs qui n’en ont pas encore choisi un dans leur navigateur. Le choix par utilisateur enregistré dans localStorage prévaut toujours."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Autoriser les opérations destructives",
+          "description": "Lorsque désactivé, les cartes «Réinitialiser le cache» et «Redémarrer la plateforme» sont masquées sur la page System Operations. À utiliser pour verrouiller les environnements de production tout en conservant l’accès aux diagnostics."
+        }
+      }
+    }
+  }
+}

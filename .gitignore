@@ -340,4 +340,7 @@ dist/
 
 # SystemOperations App
 **/Content/system-operations/**
+**/plugins/system-operations/**
+*temp*
+*.local.*
 

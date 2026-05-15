@@ -1,0 +1,24 @@
+{
+  "SystemOperations": {
+    "title": "System Operations",
+    "description": "Platform maintenance and diagnostic tools"
+  },
+  "settings": {
+    "VirtoCommerce": {
+      "SystemOperations": {
+        "RestartTimeoutSeconds": {
+          "title": "Timeout di polling del riavvio (secondi)",
+          "description": "Tempo di attesa della piattaforma affinché l’API torni online dopo il clic su «Riavvia piattaforma». Aumentare il valore per avvii a freddo lenti su Kubernetes o quando vengono eseguite migrazioni EF all’avvio."
+        },
+        "DefaultTheme": {
+          "title": "Tema predefinito",
+          "description": "Tema iniziale mostrato agli amministratori che non ne hanno ancora scelto uno nel browser. La preferenza per utente salvata in localStorage prevale sempre."
+        },
+        "AllowDestructiveOperations": {
+          "title": "Consenti operazioni distruttive",
+          "description": "Quando disabilitata, le schede «Reimposta cache» e «Riavvia piattaforma» vengono nascoste nella pagina System Operations. Utilizzare per proteggere gli ambienti di produzione mantenendo accessibili le diagnostiche."
+        }
+      }
+    }
+  }
+}

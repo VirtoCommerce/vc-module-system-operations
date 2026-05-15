@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "维护",
     "data": "数据",
-    "diagnostics": "诊断与导出"
+    "diagnostics": "诊断与导出",
+    "plugins": "插件"
   },
   "resetCache": {
     "title": "重置缓存",

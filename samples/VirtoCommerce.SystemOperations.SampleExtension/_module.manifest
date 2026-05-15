@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <id>VirtoCommerce.SystemOperations.SampleExtension</id>
+  <version>3.1000.0</version>
+  <version-tag></version-tag>
+
+  <platformVersion>3.1027.0</platformVersion>
+
+  <!--
+    The dependency on VirtoCommerce.SystemOperations is what makes this
+    module a "plugin" for the system-operations app. The platform's
+    AppManifestService walks the dependency graph to discover plugins,
+    finds plugins/{appId}/remoteEntry.js inside this module's folder, and
+    surfaces it via GET /api/apps/system-operations/manifest.
+  -->
+  <dependencies>
+    <dependency id="VirtoCommerce.SystemOperations" version="3.1000.0" />
+  </dependencies>
+
+  <title>System Operations — Sample Extension</title>
+  <description>
+    Demonstrates how to author a Module-Federation-based plugin for the
+    System Operations app. Adds a "Browser Info" diagnostic card that
+    displays the user's browser, OS, screen size, and language.
+  </description>
+
+  <authors>
+    <author>Oleg Zhuk</author>
+  </authors>
+  <owners>
+    <owner>Virto Commerce</owner>
+  </owners>
+
+  <projectUrl>https://github.com/VirtoCommerce/vc-module-system-operations</projectUrl>
+  <iconUrl>Modules/$(VirtoCommerce.SystemOperations.SampleExtension)/Content/logo.svg</iconUrl>
+  <requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+  <!-- Frontend-only module — no .NET assembly. -->
+  <!--<assemblyFile></assemblyFile>
+  <moduleType></moduleType>-->
+
+  <releaseNotes>Sample extension for the System Operations modularity framework.</releaseNotes>
+  <copyright>Copyright © 2026 VirtoCommerce. All rights reserved</copyright>
+  <tags>sample extension system-operations modularity</tags>
+  <useFullTypeNameInSwagger>false</useFullTypeNameInSwagger>
+</module>

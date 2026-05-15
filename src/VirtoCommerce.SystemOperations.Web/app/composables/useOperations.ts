@@ -4,11 +4,29 @@ import type { useDialog } from './useDialog';
 
 type TranslateFn = (key: string, params?: Record<string, string>) => string;
 
+/**
+ * Optional dependency-injection slot for runtime configuration. The
+ * `restartTimeoutSeconds` getter is consulted on each restart click so a
+ * later-loaded value (e.g. fetched async via `useModuleSettings(...)`)
+ * applies on the *next* call without re-instantiating this composable.
+ */
+export interface UseOperationsOptions {
+  /** Returns the current platform-restart polling timeout in seconds. */
+  restartTimeoutSeconds?: () => number;
+}
+
+const DEFAULT_RESTART_TIMEOUT_SECONDS = 120;
+const RESTART_POLL_INTERVAL_MS = 2000;
+
 function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function useOperations(dialog: ReturnType<typeof useDialog>, t: TranslateFn) {
+export function useOperations(
+  dialog: ReturnType<typeof useDialog>,
+  t: TranslateFn,
+  options: UseOperationsOptions = {},
+) {
   const { post, get } = useApi();
   const isResetting = ref(false);
   const isRestarting = ref(false);
@@ -52,14 +70,21 @@ export function useOperations(dialog: ReturnType<typeof useDialog>, t: Translate
 
       await delay(3000);
 
-      const maxAttempts = 60;
+      // Total timeout = `restartTimeoutSeconds` setting (default 120s).
+      // Resolved per-call so an admin updating the setting takes effect
+      // on the next restart click without remounting the app.
+      const timeoutSeconds = Math.max(
+        1,
+        options.restartTimeoutSeconds?.() ?? DEFAULT_RESTART_TIMEOUT_SECONDS,
+      );
+      const maxAttempts = Math.ceil((timeoutSeconds * 1000) / RESTART_POLL_INTERVAL_MS);
       for (let i = 0; i < maxAttempts; i++) {
         try {
           await get('/api/platform/diagnostics/systeminfo');
           await dialog.success(t('restart.successTitle'), t('restart.successMessage'));
           return;
         } catch {
-          await delay(2000);
+          await delay(RESTART_POLL_INTERVAL_MS);
         }
       }
 

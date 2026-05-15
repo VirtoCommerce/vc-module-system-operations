@@ -6,7 +6,8 @@
   "sections": {
     "maintenance": "メンテナンス",
     "data": "データ",
-    "diagnostics": "診断とエクスポート"
+    "diagnostics": "診断とエクスポート",
+    "plugins": "プラグイン"
   },
   "resetCache": {
     "title": "キャッシュをリセット",
