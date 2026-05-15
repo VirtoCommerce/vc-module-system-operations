@@ -4,7 +4,7 @@
   <version>3.1000.0</version>
   <version-tag></version-tag>
 
-  <platformVersion>3.1000.0</platformVersion>
+  <platformVersion>3.1027.0</platformVersion>
 
   <!--
     The dependency on VirtoCommerce.SystemOperations is what makes this
