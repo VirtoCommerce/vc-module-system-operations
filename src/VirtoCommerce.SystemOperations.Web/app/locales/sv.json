@@ -130,6 +130,14 @@
     "permissionDenied": "Du har inte behörighet att utföra denna åtgärd.",
     "unexpected": "Ett oväntat fel inträffade."
   },
+  "exportMigrations": {
+    "title": "Exportera migreringsskript",
+    "description": "Laddar ner en ZIP med den SQL för EF Core-databasmigreringar som skulle köras vid start – för plattformen, säkerheten och varje installerad modul – grupperad per måldatabas, med en databasöversikt. Ingenting tillämpas på databasen.",
+    "scenario": "Används för att granska schemaändringar med en DBA och köra dem manuellt i en annan miljö innan den startas – det tillvägagångssätt som Microsoft rekommenderar för produktion.",
+    "action": "Exportera",
+    "loading": "Exporterar...",
+    "error": "Det gick inte att exportera migreringsskripten."
+  },
   "platformInfo": {
     "title": "Plattformsinformation",
     "description": "Visar viktiga plattformsdetaljer: version, licens, miljöläge, databasleverantör och runtime. Snabböversikt för support och diagnostik.",

@@ -111,6 +111,14 @@
     "restoreHint": "Restore modules from this file:",
     "error": "Failed to download package."
   },
+  "exportMigrations": {
+    "title": "Export Migration Scripts",
+    "description": "Downloads a ZIP of the EF Core database migration SQL that startup would apply — for the platform, security and every installed module — grouped per target database, with a database mapping. Nothing is applied to the database.",
+    "scenario": "Use to review schema changes with a DBA and run them manually on another environment before it starts — the approach Microsoft recommends for production.",
+    "action": "Export",
+    "loading": "Exporting...",
+    "error": "Failed to export migration scripts."
+  },
   "platformInfo": {
     "title": "Platform Information",
     "description": "Displays key platform details: version, license, environment mode, database provider, and runtime. Quick overview for support and diagnostics.",

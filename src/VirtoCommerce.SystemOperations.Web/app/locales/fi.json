@@ -130,6 +130,14 @@
     "permissionDenied": "Sinulla ei ole oikeutta suorittaa tätä toimintoa.",
     "unexpected": "Odottamaton virhe tapahtui."
   },
+  "exportMigrations": {
+    "title": "Vie migraatioskriptit",
+    "description": "Lataa ZIP-paketin EF Core -tietokantamigraatioiden SQL:stä, joka suoritettaisiin käynnistyksessä – alustalle, suojaukselle ja jokaiselle asennetulle moduulille – ryhmiteltynä kohdetietokannoittain ja tietokantakartoituksen kanssa. Tietokantaan ei tehdä muutoksia.",
+    "scenario": "Käytä tätä tarkistaaksesi skeemamuutokset DBA:n kanssa ja suorittaaksesi ne manuaalisesti toisessa ympäristössä ennen sen käynnistämistä – Microsoftin tuotantoon suosittelema tapa.",
+    "action": "Vie",
+    "loading": "Viedään...",
+    "error": "Migraatioskriptien vienti epäonnistui."
+  },
   "platformInfo": {
     "title": "Alustan tiedot",
     "description": "Näyttää alustan keskeiset tiedot: version, lisenssin, ympäristötilan, tietokantatarjoajan ja runtime-ympäristön. Nopea yhteenveto tukeen ja diagnostiikkaan.",

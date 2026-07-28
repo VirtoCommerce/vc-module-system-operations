@@ -130,6 +130,14 @@
     "permissionDenied": "Du har ikke tillatelse til å utføre denne handlingen.",
     "unexpected": "En uventet feil oppstod."
   },
+  "exportMigrations": {
+    "title": "Eksporter migrasjonsskript",
+    "description": "Laster ned en ZIP med SQL-en for EF Core-databasemigreringene som ville blitt kjørt ved oppstart – for plattformen, sikkerheten og hver installerte modul – gruppert per måldatabase, med en databaseoversikt. Ingenting endres i databasen.",
+    "scenario": "Brukes til å gjennomgå skjemaendringer med en DBA og kjøre dem manuelt i et annet miljø før det startes – tilnærmingen Microsoft anbefaler for produksjon.",
+    "action": "Eksporter",
+    "loading": "Eksporterer...",
+    "error": "Kunne ikke eksportere migrasjonsskript."
+  },
   "platformInfo": {
     "title": "Plattforminformasjon",
     "description": "Viser viktige plattformdetaljer: versjon, lisens, miljømodus, databaseleverandør og runtime. Rask oversikt for support og diagnostikk.",

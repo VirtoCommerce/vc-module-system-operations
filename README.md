@@ -17,6 +17,7 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 - **Import Platform Data** — Restore platform data from a previously exported ZIP backup with module/entry selection, real-time progress streaming, and cancel support.
 - **Download Package JSON** — Export `vc-package.json` with all installed modules and versions for environment replication. Includes a ready-to-copy `vc-build Install` command for restoring modules from the downloaded file.
 - **Module Load Sequence** — View the dependency-resolved loading order of all installed modules with Copy to Clipboard support.
+- **Export Migration Scripts** — Download a ZIP of the EF Core database migration SQL that startup would apply — for the platform, security and every installed module — grouped per target database, with a `_databases.md`/`_databases.json` mapping of which context lives in which database. **Idempotent** by default (safe to run on another environment at any migration state; needs no DB connection); a **pending-only** delta mode is also available. Nothing is applied. This lets you review schema changes with a DBA and run them manually on another environment before it starts — the approach Microsoft [recommends for production](https://learn.microsoft.com/ef/core/managing-schemas/migrations/applying). See [Migration export](#migration-export) below.
 - **Plugin Extensibility (Module Federation)** — Other modules can ship UI cards that render alongside the built-in ones, discovered automatically via the platform's modularity framework. See [Plugin extensibility](#plugin-extensibility-module-federation) below.
 
 Each operation includes a clear description of what it does, when to use it, and appropriate confirmation dialogs for destructive actions.
@@ -34,7 +35,7 @@ Each operation includes a clear description of what it does, when to use it, and
 
 ## Architecture
 
-This module has no backend services, no database, and no custom API endpoints. It calls existing platform APIs directly from the browser:
+This module is primarily a frontend that calls existing platform APIs directly from the browser. It also adds **one backend endpoint of its own** — the migration export (see [Migration export](#migration-export)) — implemented as a `Core` / `Data` / `Web` vertical slice. The platform-API calls it makes:
 
 | Operation | API Endpoint |
 |-----------|-------------|
@@ -54,12 +55,28 @@ This module has no backend services, no database, and no custom API endpoints. I
 | Cancel Job | `POST /api/platform/exortimport/tasks/{jobId}/cancel` |
 | Poll Progress | `POST /api/platform/pushnotifications` |
 | Module Load Sequence | `GET /api/platform/modules/loading-order` |
+| Export Migrations | `GET /api/system-operations/migrations/export` (**this module**) |
 
 Long-running operations (Export, Import, Sample Data Install) use Hangfire background jobs on the platform side. Progress is tracked by polling the push notification search endpoint (`POST /api/platform/pushnotifications` with `{ ids: [notificationId] }`) every 2 seconds until the notification's `finished` field is set.
 
 The UI is a Vue.js 3 + TypeScript + Vite application, served via the platform's `<apps>` mechanism and registered as a Developer Tool via `IDeveloperToolRegistrar`. The app supports 13 languages matching the platform's localization.
 
 It is also a **Module Federation host** — see the next section.
+
+## Migration export
+
+The **Export Migration Scripts** card downloads the EF Core migration SQL that platform startup would apply, so you can review it and run it manually on another environment before that environment starts.
+
+- **Endpoint:** `GET /api/system-operations/migrations/export?mode=idempotent|pending` → `migration-scripts.zip` (permission `systemoperations:migrations:export`).
+- **How it works:** the running platform already has every `DbContext` (platform + security + all installed modules) registered in DI. The exporter enumerates them and scripts each with EF Core's own `IMigrator.GenerateScript` — using each context's live provider, so the SQL is correct for **SQL Server, PostgreSQL and MySQL**. It never calls `Migrate()` and never opens the database in idempotent mode.
+- **Multi-database aware:** Virto supports per-module connection strings (a context resolves `ConnectionStrings:<ModuleId>` with a `VirtoCommerce` fallback; Security uses `Auth:ConnectionString`). The export reads each context's target from the live connection (`DbConnection.DataSource` + `.Database` — no credentials) and groups output per database.
+- **ZIP contents:** `<Context>.sql` per context; `_combined.<database>.sql` per target database (apply each to its database); and `_databases.md` / `_databases.json` mapping context → provider → server → database → files.
+- **Modes:** `idempotent` (default) — full self-guarding script, safe at any target state, the Microsoft-recommended production artifact; `pending` — only migrations not yet applied to the connected database (falls back to idempotent if the DB is unreachable).
+- **Note:** MySQL idempotent scripts contain `DELIMITER` directives — run them with a MySQL client that honors them (`mysql` CLI, Workbench).
+
+Backend layout: `VirtoCommerce.SystemOperations.Core` (`IMigrationScriptExporter`, `MigrationExportMode`, permissions), `VirtoCommerce.SystemOperations.Data` (`MigrationScriptExporter`), `VirtoCommerce.SystemOperations.Web` (module + controller). This is the module's first backend assembly (its `assemblyFile`/`moduleType` are now enabled in `module.manifest`).
+
+For full details — modes, providers, multi-database mapping, API and usage — see [docs/migration-export.md](docs/migration-export.md).
 
 ## Plugin extensibility (Module Federation)
 

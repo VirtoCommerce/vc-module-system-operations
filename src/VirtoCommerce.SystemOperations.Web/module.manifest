@@ -77,8 +77,8 @@
   <iconUrl>Modules/$(VirtoCommerce.SystemOperations)/Content/logo.svg</iconUrl>
   <requireLicenseAcceptance>false</requireLicenseAcceptance>
 
-  <!--<assemblyFile>VirtoCommerce.SystemOperations.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.SystemOperations.Web.Module, VirtoCommerce.SystemOperations.Web</moduleType>-->
+  <assemblyFile>VirtoCommerce.SystemOperations.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.SystemOperations.Web.Module, VirtoCommerce.SystemOperations.Web</moduleType>
 
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2026 VirtoCommerce. All rights reserved</copyright>

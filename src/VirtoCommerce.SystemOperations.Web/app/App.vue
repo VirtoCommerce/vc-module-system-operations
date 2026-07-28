@@ -14,6 +14,7 @@ import SampleDataPackages from './components/SampleDataPackages.vue';
 import PlatformBackup from './components/PlatformBackup.vue';
 import PlatformRestore from './components/PlatformRestore.vue';
 import PlatformInfo from './components/PlatformInfo.vue';
+import ExportMigrations from './components/ExportMigrations.vue';
 import DevToolsNav from './components/DevToolsNav.vue';
 import { PluginRegistryKey } from './plugins/registry';
 import type { SystemOperationsSection } from './plugins/types';
@@ -326,6 +327,17 @@ async function handleDownloadPackage() {
         </div>
       </div>
       <div v-if="packageError" class="op-card__error">{{ packageError }}</div>
+    </OperationCard>
+
+    <OperationCard
+      icon="fas fa-file-export"
+      icon-color="green"
+      :title="t('exportMigrations.title')"
+      permission="systemoperations:migrations:export"
+      :description="t('exportMigrations.description')"
+      :scenario="t('exportMigrations.scenario')"
+    >
+      <ExportMigrations />
     </OperationCard>
 
     <OperationCard

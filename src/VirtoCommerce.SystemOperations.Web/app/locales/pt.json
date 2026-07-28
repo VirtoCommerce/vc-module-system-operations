@@ -130,6 +130,14 @@
     "permissionDenied": "Você não tem permissão para realizar esta ação.",
     "unexpected": "Ocorreu um erro inesperado."
   },
+  "exportMigrations": {
+    "title": "Exportar scripts de migração",
+    "description": "Baixa um ZIP com o SQL de migração de banco de dados do EF Core que seria aplicado na inicialização — para a plataforma, a segurança e cada módulo instalado — agrupado por banco de dados de destino, com um mapeamento de bancos de dados. Nada é aplicado ao banco de dados.",
+    "scenario": "Use para revisar as alterações de esquema com um DBA e executá-las manualmente em outro ambiente antes de iniciá-lo — a abordagem que a Microsoft recomenda para produção.",
+    "action": "Exportar",
+    "loading": "Exportando...",
+    "error": "Falha ao exportar os scripts de migração."
+  },
   "platformInfo": {
     "title": "Informações da plataforma",
     "description": "Exibe os principais detalhes da plataforma: versão, licença, modo de ambiente, provedor de banco de dados e runtime. Visão rápida para suporte e diagnóstico.",
