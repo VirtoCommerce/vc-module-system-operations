@@ -130,6 +130,14 @@
     "permissionDenied": "Nie masz uprawnień do wykonania tej akcji.",
     "unexpected": "Wystąpił nieoczekiwany błąd."
   },
+  "exportMigrations": {
+    "title": "Eksportuj skrypty migracji",
+    "description": "Pobiera archiwum ZIP z kodem SQL migracji bazy danych EF Core, który zostałby zastosowany podczas uruchamiania — dla platformy, zabezpieczeń i każdego zainstalowanego modułu — pogrupowany według docelowej bazy danych, wraz z mapą baz danych. W bazie danych nie są wprowadzane żadne zmiany.",
+    "scenario": "Służy do przeglądania zmian schematu z administratorem bazy danych (DBA) i uruchamiania ich ręcznie w innym środowisku przed jego uruchomieniem — podejście zalecane przez Microsoft dla środowiska produkcyjnego.",
+    "action": "Eksportuj",
+    "loading": "Eksportowanie...",
+    "error": "Nie udało się wyeksportować skryptów migracji."
+  },
   "platformInfo": {
     "title": "Informacje o platformie",
     "description": "Wyświetla kluczowe szczegóły platformy: wersję, licencję, tryb środowiska, dostawcę bazy danych i runtime. Szybki przegląd dla wsparcia i diagnostyki.",

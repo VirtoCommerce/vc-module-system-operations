@@ -36,15 +36,22 @@ export async function loadPlugins(registry: PluginRegistry, isDev: boolean): Pro
       headers: { Accept: 'application/json' },
     });
     if (!response.ok) {
-      // 401/403/404 are not fatal — just means no plugins to load.
+      // Not fatal. Older platforms (before 3.1027) don't expose the app-extensions manifest endpoint,
+      // so a 404 (or any non-success) simply means there are no module extensions to load.
       console.warn(
-        `[system-operations] manifest endpoint ${ENDPOINT} returned HTTP ${response.status}; skipping plugin discovery.`,
+        `[system-operations] Module extensions are unavailable (manifest endpoint ${ENDPOINT} returned HTTP ${response.status}). ` +
+          'Update the platform to 3.1027 or later to use module extensions. Continuing without them.',
       );
       return;
     }
     manifest = (await response.json()) as ManifestResponse;
   } catch (err) {
-    console.error('[system-operations] failed to fetch plugin manifest:', err);
+    // Endpoint missing / network / parse error — treat the same as "no extensions": warn only and continue.
+    const detail = err instanceof Error ? err.message : String(err);
+    console.warn(
+      `[system-operations] Module extensions are unavailable (${ENDPOINT}: ${detail}). ` +
+        'Update the platform to 3.1027 or later to use module extensions. Continuing without them.',
+    );
     return;
   }
 

@@ -4,7 +4,7 @@
   <version>3.1002.0</version>
   <version-tag></version-tag>
 
-  <platformVersion>3.1027.0</platformVersion>
+  <platformVersion>3.1007.22</platformVersion>
   <dependencies />
 
   <title>System Operations</title>
@@ -14,7 +14,7 @@
     <app id="system-operations">
       <title>System Operations</title>
       <description>Platform maintenance and diagnostic tools</description>
-      <iconUrl>/apps/system-operations/logo.svg</iconUrl>
+      <iconUrl>/apps/system-operations/app-icon.svg</iconUrl>
       <permission>platform:developer-tools:access</permission>
       <placement>MainMenu</placement>
     </app>
@@ -77,8 +77,8 @@
   <iconUrl>Modules/$(VirtoCommerce.SystemOperations)/Content/logo.svg</iconUrl>
   <requireLicenseAcceptance>false</requireLicenseAcceptance>
 
-  <!--<assemblyFile>VirtoCommerce.SystemOperations.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.SystemOperations.Web.Module, VirtoCommerce.SystemOperations.Web</moduleType>-->
+  <assemblyFile>VirtoCommerce.SystemOperations.Web.dll</assemblyFile>
+  <moduleType>VirtoCommerce.SystemOperations.Web.Module, VirtoCommerce.SystemOperations.Web</moduleType>
 
   <releaseNotes>First version.</releaseNotes>
   <copyright>Copyright © 2026 VirtoCommerce. All rights reserved</copyright>

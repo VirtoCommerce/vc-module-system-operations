@@ -130,6 +130,14 @@
     "permissionDenied": "您没有执行此操作的权限。",
     "unexpected": "发生了意外错误。"
   },
+  "exportMigrations": {
+    "title": "导出迁移脚本",
+    "description": "下载一个 ZIP，其中包含启动时将应用的 EF Core 数据库迁移 SQL（涵盖平台、安全以及每个已安装的模块），按目标数据库分组，并附带数据库映射。不会对数据库进行任何更改。",
+    "scenario": "用于与 DBA 一起审查架构更改，并在另一个环境启动之前手动运行这些更改——这是 Microsoft 推荐的生产环境做法。",
+    "action": "导出",
+    "loading": "正在导出...",
+    "error": "导出迁移脚本失败。"
+  },
   "platformInfo": {
     "title": "平台信息",
     "description": "显示平台的关键详细信息：版本、许可证、环境模式、数据库提供程序和运行时。用于支持和诊断的快速概览。",

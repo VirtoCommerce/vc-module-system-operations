@@ -18,6 +18,14 @@
     "@vitejs/plugin-vue": "^5.2.3",
     "typescript": "^5.8.3",
     "vite": "^6.3.3",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "^3.3.8"
+  },
+  "comments": {
+    "overrides": "Pin transitive build-time deps to patched versions to clear high-severity npm audit advisories (adm-zip GHSA-xcpc-8h2w-3j85 via @module-federation/vite, undici, ws) without bumping @module-federation/vite across a major. vue-tsc was bumped to 3.x to clear the minimatch/brace-expansion advisories in its type-checker chain. All of these are dev/build-only and are not part of the shipped browser bundle."
+  },
+  "overrides": {
+    "adm-zip": "0.6.0",
+    "undici": "7.29.0",
+    "ws": "8.21.1"
   }
 }

@@ -130,6 +130,14 @@
     "permissionDenied": "Sie haben keine Berechtigung, diese Aktion auszuführen.",
     "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
   },
+  "exportMigrations": {
+    "title": "Migrationsskripte exportieren",
+    "description": "Lädt ein ZIP mit dem EF Core-Datenbankmigrations-SQL herunter, das beim Start angewendet würde – für die Plattform, die Sicherheit und jedes installierte Modul –, gruppiert nach Zieldatenbank und mit einer Datenbankzuordnung. An der Datenbank wird nichts geändert.",
+    "scenario": "Verwenden Sie dies, um Schemaänderungen mit einem DBA zu prüfen und sie vor dem Start manuell in einer anderen Umgebung auszuführen – der von Microsoft für die Produktion empfohlene Ansatz.",
+    "action": "Exportieren",
+    "loading": "Wird exportiert...",
+    "error": "Migrationsskripte konnten nicht exportiert werden."
+  },
   "platformInfo": {
     "title": "Plattforminformationen",
     "description": "Zeigt wichtige Plattformdetails an: Version, Lizenz, Umgebungsmodus, Datenbankanbieter und Laufzeit. Schneller Überblick für Support und Diagnose.",
