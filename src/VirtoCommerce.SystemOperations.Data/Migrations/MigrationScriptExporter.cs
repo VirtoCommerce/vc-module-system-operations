@@ -24,7 +24,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
     private const string PlatformContextTypeName = "PlatformDbContext";
     private const string SecurityContextTypeName = "SecurityDbContext";
     private const string DbContextSuffix = "DbContext";
-    private const string Nl = "\n";
+    private const char Nl = '\n';
 
     private readonly IServiceProvider _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
     private readonly ILogger<MigrationScriptExporter> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -211,7 +211,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
     {
         // Hand-written JSON to avoid taking a serializer dependency and to keep credential-free output explicit.
         var sb = new StringBuilder();
-        sb.Append("{").Append(Nl);
+        sb.Append('{').Append(Nl);
         sb.Append($"  \"mode\": \"{mode}\",").Append(Nl);
         sb.Append("  \"contexts\": [").Append(Nl);
         for (var i = 0; i < results.Count; i++)
@@ -228,11 +228,11 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             sb.Append("    }").Append(i < results.Count - 1 ? "," : string.Empty).Append(Nl);
         }
         sb.Append("  ]").Append(Nl);
-        sb.Append("}").Append(Nl);
+        sb.Append('}').Append(Nl);
         return sb.ToString();
     }
 
-    private List<(string Name, Type Type)> DiscoverContexts()
+    private static List<(string Name, Type Type)> DiscoverContexts()
     {
         var contextTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(SafeGetTypes)
