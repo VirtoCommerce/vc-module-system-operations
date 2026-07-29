@@ -32,7 +32,7 @@ Each operation includes a clear description of what it does, when to use it, and
 
 ### Light Theme
 
-<img width="1910" height="1717" alt="image" src="https://github.com/user-attachments/assets/75caab31-251f-4e6f-98bb-b3c80abccf62" />
+<img width="1912" height="1224" alt="image" src="https://github.com/user-attachments/assets/fbc5180e-5225-4feb-8329-d22945816b95" />
 
 ### Dart Theme
 
