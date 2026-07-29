@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.Platform.Core.Common;
+using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.SystemOperations.Core.Migrations;
 
 namespace VirtoCommerce.SystemOperations.Data.Migrations;
@@ -59,7 +61,41 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             }
         }
 
-        return BuildZip(results, mode);
+        return BuildZip(results, mode, BuildPackageJson());
+    }
+
+    /// <summary>
+    /// Builds a vc-package.json-style manifest (platform version + installed modules and versions) so the
+    /// export carries the scope of the platform that produced the SQL.
+    /// </summary>
+    private string BuildPackageJson()
+    {
+        var modules = new List<(string Id, string Version)>();
+#pragma warning disable VC0014 // IModuleCatalog is the read-only module query available across supported platforms.
+        var catalog = _serviceProvider.GetService<IModuleCatalog>();
+        if (catalog != null)
+        {
+            foreach (var module in catalog.Modules.OfType<ManifestModuleInfo>().OrderBy(x => x.Id, StringComparer.OrdinalIgnoreCase))
+            {
+                modules.Add((module.Id, module.Version?.ToString()));
+            }
+        }
+#pragma warning restore VC0014
+
+        var platformVersion = PlatformVersion.CurrentVersion?.ToString();
+
+        var sb = new StringBuilder();
+        sb.Append('{').Append(Nl);
+        sb.Append($"  \"platformVersion\": {JsonString(platformVersion)},").Append(Nl);
+        sb.Append("  \"modules\": [").Append(Nl);
+        for (var i = 0; i < modules.Count; i++)
+        {
+            var comma = i < modules.Count - 1 ? "," : string.Empty;
+            sb.Append($"    {{ \"id\": {JsonString(modules[i].Id)}, \"version\": {JsonString(modules[i].Version)} }}{comma}").Append(Nl);
+        }
+        sb.Append("  ]").Append(Nl);
+        sb.Append('}').Append(Nl);
+        return sb.ToString();
     }
 
     private ContextScript ScriptContext(DbContext context, string name, MigrationExportMode mode)
@@ -131,7 +167,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         }
     }
 
-    private static byte[] BuildZip(IReadOnlyList<ContextScript> results, MigrationExportMode mode)
+    private static byte[] BuildZip(IReadOnlyList<ContextScript> results, MigrationExportMode mode, string packageJson)
     {
         using var memory = new MemoryStream();
         using (var archive = new ZipArchive(memory, ZipArchiveMode.Create, leaveOpen: true))
@@ -177,6 +213,9 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             // "Which context is in which database" mapping.
             WriteEntry(archive, "_databases.md", BuildDatabasesMarkdown(results, mode));
             WriteEntry(archive, "_databases.json", BuildDatabasesJson(results, mode));
+
+            // Platform + installed-module scope that produced these scripts.
+            WriteEntry(archive, "vc-package.json", packageJson);
         }
 
         return memory.ToArray();

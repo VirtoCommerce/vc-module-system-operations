@@ -76,13 +76,13 @@ The **Export Migration Scripts** card downloads the EF Core migration SQL that p
 - **Endpoint:** `GET /api/system-operations/migrations/export?mode=idempotent|pending` → `migration-scripts.zip` (permission `systemoperations:migrations:export`).
 - **How it works:** the running platform already has every `DbContext` (platform + security + all installed modules) registered in DI. The exporter enumerates them and scripts each with EF Core's own `IMigrator.GenerateScript` — using each context's live provider, so the SQL is correct for **SQL Server, PostgreSQL and MySQL**. It never calls `Migrate()` and never opens the database in idempotent mode.
 - **Multi-database aware:** Virto supports per-module connection strings (a context resolves `ConnectionStrings:<ModuleId>` with a `VirtoCommerce` fallback; Security uses `Auth:ConnectionString`). The export reads each context's target from the live connection (`DbConnection.DataSource` + `.Database` — no credentials) and groups output per database.
-- **ZIP contents:** `<Context>.sql` per context; `_combined.<database>.sql` per target database (apply each to its database); and `_databases.md` / `_databases.json` mapping context → provider → server → database → files.
+- **ZIP contents:** `<Context>.sql` per context; `_combined.<database>.sql` per target database (apply each to its database); `_databases.md` / `_databases.json` mapping context → provider → server → database → files; and `vc-package.json` (platform version + installed modules) capturing the scope that produced the scripts.
 - **Modes:** `idempotent` (default) — full self-guarding script, safe at any target state, the Microsoft-recommended production artifact; `pending` — only migrations not yet applied to the connected database (falls back to idempotent if the DB is unreachable).
 - **Note:** MySQL idempotent scripts contain `DELIMITER` directives — run them with a MySQL client that honors them (`mysql` CLI, Workbench).
 
 Backend layout: `VirtoCommerce.SystemOperations.Core` (`IMigrationScriptExporter`, `MigrationExportMode`, permissions), `VirtoCommerce.SystemOperations.Data` (`MigrationScriptExporter`), `VirtoCommerce.SystemOperations.Web` (module + controller). This is the module's first backend assembly (its `assemblyFile`/`moduleType` are now enabled in `module.manifest`).
 
-For full details — modes, providers, multi-database mapping, API and usage — see [docs/migration-export.md](docs/migration-export.md).
+For a plain-language, non-technical summary, see [docs/migration-export-business-overview.md](docs/migration-export-business-overview.md). For full technical details — modes, providers, multi-database mapping, API and usage — see [docs/migration-export.md](docs/migration-export.md).
 
 ## Plugin extensibility (Module Federation)
 

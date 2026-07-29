@@ -23,6 +23,7 @@ A `migration-scripts.zip` containing:
 | `<Context>.sql` | One script per DbContext — `Platform`, `Security`, and one per installed module (`Catalog`, `Order`, …). |
 | `_combined.<database>.sql` | All contexts that target the **same database**, concatenated in order — apply one file per database. |
 | `_databases.md` / `_databases.json` | Mapping of **context → provider → server → database → script files**. The "which module lives in which database" report. |
+| `vc-package.json` | The **platform version and installed modules (with versions)** — the scope of the platform that produced these scripts, so the SQL and its origin travel together. |
 
 Every script is prefixed with a header noting the context, provider, target server/database, and mode.
 

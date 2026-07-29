@@ -40,6 +40,11 @@ namespace VirtoCommerce.SystemOperations.Tests
             Assert.Contains("ExporterTest.sql", names);
             Assert.Contains("_databases.md", names);
             Assert.Contains("_databases.json", names);
+            Assert.Contains("vc-package.json", names);
+
+            var package = ReadEntry(archive, "vc-package.json");
+            Assert.Contains("platformVersion", package);
+            Assert.Contains("\"modules\"", package);
             Assert.Contains(names, n => n.StartsWith("_combined.", StringComparison.Ordinal) && n.EndsWith(".sql", StringComparison.Ordinal));
 
             var script = ReadEntry(archive, "ExporterTest.sql");
