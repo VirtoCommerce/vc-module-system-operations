@@ -1,4 +1,7 @@
 using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtoCommerce.SystemOperations.Core;
@@ -31,6 +34,29 @@ public class SystemOperationsMigrationsController : ControllerBase
             : MigrationExportMode.Idempotent;
 
         var zip = _exporter.ExportZip(exportMode);
-        return File(zip, "application/zip", "migration-scripts.zip");
+        return File(zip, "application/zip", BuildFileName());
+    }
+
+    /// <summary>
+    /// Builds a download name of the form <c>[host]-migration-scripts-{yyyyMMdd-HHmmss}.zip</c> so exports
+    /// are identifiable by source environment and time.
+    /// </summary>
+    private string BuildFileName()
+    {
+        var host = Request?.Host.Host;
+        if (string.IsNullOrWhiteSpace(host))
+        {
+            host = Environment.MachineName;
+        }
+
+        var timestamp = DateTime.UtcNow.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+        return $"{Sanitize(host)}-migration-scripts-{timestamp}.zip";
+    }
+
+    private static string Sanitize(string value)
+    {
+        var invalid = Path.GetInvalidFileNameChars();
+        var chars = value.Select(c => invalid.Contains(c) ? '_' : c).ToArray();
+        return new string(chars);
     }
 }

@@ -6,6 +6,12 @@ The System Operations module provides a centralized developer tools page for pla
 
 The module registers as a Developer Tool tab and renders a self-contained web application inside an iframe, with zero dependency on the platform's AngularJS frontend.
 
+## Compatibility
+
+The module targets the **lowest supported platform** — **Stable 14** (platform `3.1007.22`) — and runs on that and any later release. Core operations (platform info, cache reset, restart, sample data, backup/restore, package export, module load sequence, migration export) work on Stable 14.
+
+**Modularity (plugin extensions via Module Federation) requires platform `3.1027` or later**, which is where the app-extensions manifest endpoint (`GET /api/apps/{appId}/manifest`) was introduced. On older platforms that endpoint returns 404; the module detects this, logs a single console warning suggesting an upgrade, and continues to work normally without extensions.
+
 ## Key Features
 
 - **Developer Tools Navigation** — Dynamic section listing all registered developer tools from the platform, with automatic icon/color assignment per tool type (Health, Hangfire, Swagger, GraphQL, etc.). Click opens in the same iframe, Ctrl+click opens in a new tab. External tools open in a new tab automatically.
