@@ -14,7 +14,7 @@
     <app id="system-operations">
       <title>System Operations</title>
       <description>Platform maintenance and diagnostic tools</description>
-      <iconUrl>/apps/system-operations/logo.svg</iconUrl>
+      <iconUrl>/apps/system-operations/app-icon.svg</iconUrl>
       <permission>platform:developer-tools:access</permission>
       <placement>MainMenu</placement>
     </app>

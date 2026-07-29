@@ -35,15 +35,15 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
 
         foreach (var (name, type) in DiscoverContexts())
         {
-            using var scope = _serviceProvider.CreateScope();
-            if (scope.ServiceProvider.GetService(type) is not DbContext context)
-            {
-                // Base/abstract or unregistered context — skip.
-                continue;
-            }
-
             try
             {
+                using var scope = _serviceProvider.CreateScope();
+                if (scope.ServiceProvider.GetService(type) is not DbContext context)
+                {
+                    // Base/abstract or unregistered context — skip.
+                    continue;
+                }
+
                 var script = ScriptContext(context, name, mode);
                 if (script != null)
                 {
@@ -52,7 +52,9 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             }
             catch (Exception ex)
             {
-                // Never let one problematic context abort the whole export.
+                // Never let one problematic context abort the whole export — this also covers failures while
+                // constructing the context (e.g. a provider that connects when its options are built, or a
+                // misconfigured module). The bad context is logged and skipped; the rest of the archive is returned.
                 _logger.LogError(ex, "Failed to script migrations for '{Name}' ({Type})", name, type.FullName);
             }
         }
@@ -69,7 +71,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         if (mode == MigrationExportMode.Idempotent)
         {
             var idempotent = migrator.GenerateScript(null, null, MigrationsSqlGenerationOptions.Idempotent);
-            return new ContextScript(name, context.GetType().FullName, provider, server, database, idempotent);
+            return new ContextScript(name, context.GetType().FullName, provider, server, database, idempotent, MigrationExportMode.Idempotent, fellBack: false);
         }
 
         // Pending-only delta against the connected database.
@@ -84,7 +86,8 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
                 "Could not read applied migrations for '{Name}' ({Message}); falling back to an idempotent script.",
                 name, ex.Message);
             var fallback = migrator.GenerateScript(null, null, MigrationsSqlGenerationOptions.Idempotent);
-            return new ContextScript(name, context.GetType().FullName, provider, server, database, fallback);
+            // Requested Pending but the database was unreadable — the SQL is idempotent; record that.
+            return new ContextScript(name, context.GetType().FullName, provider, server, database, fallback, MigrationExportMode.Idempotent, fellBack: true);
         }
 
         var all = context.Database.GetMigrations().ToList();
@@ -110,7 +113,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         }
 
         var sql = migrator.GenerateScript(from, null, MigrationsSqlGenerationOptions.Default);
-        return new ContextScript(name, context.GetType().FullName, provider, server, database, sql, pending);
+        return new ContextScript(name, context.GetType().FullName, provider, server, database, sql, MigrationExportMode.Pending, fellBack: false, pending);
     }
 
     private static (string Server, string Database) ReadConnectionTarget(DbContext context)
@@ -139,7 +142,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             foreach (var r in results)
             {
                 r.FileName = UniqueName(r.Name + ".sql", usedNames);
-                WriteEntry(archive, r.FileName, Header(r, mode) + r.Sql);
+                WriteEntry(archive, r.FileName, Header(r) + r.Sql);
             }
 
             // Per-target-database combined scripts.
@@ -155,11 +158,11 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
                 var sb = new StringBuilder();
                 sb.Append("-- Combined migration script").Append(Nl);
                 sb.Append($"-- Target database: server={Show(group.First().Server)}; database={Show(group.First().Database)}").Append(Nl);
-                sb.Append($"-- Mode: {mode}").Append(Nl).Append(Nl);
+                sb.Append($"-- Requested mode: {mode}").Append(Nl).Append(Nl);
                 foreach (var r in group)
                 {
                     sb.Append("-- ============================================================").Append(Nl);
-                    sb.Append($"-- {r.Name}").Append(Nl);
+                    sb.Append($"-- {r.Name} [{ShortModeLabel(r)}]").Append(Nl);
                     sb.Append("-- ============================================================").Append(Nl);
                     sb.Append(r.Sql).Append(Nl).Append(Nl);
                 }
@@ -179,13 +182,13 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         return memory.ToArray();
     }
 
-    private static string Header(ContextScript r, MigrationExportMode mode)
+    private static string Header(ContextScript r)
     {
         var sb = new StringBuilder();
         sb.Append($"-- Migration script for '{r.Name}' ({r.ContextType})").Append(Nl);
         sb.Append($"-- Provider: {Show(r.Provider)}").Append(Nl);
         sb.Append($"-- Target: server={Show(r.Server)}; database={Show(r.Database)}").Append(Nl);
-        sb.Append($"-- Mode: {mode}").Append(Nl);
+        sb.Append($"-- Mode: {ModeLabel(r)}").Append(Nl);
         if (r.Pending is { Count: > 0 })
         {
             sb.Append($"-- Pending migrations ({r.Pending.Count}): {string.Join(", ", r.Pending)}").Append(Nl);
@@ -193,16 +196,30 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         return sb.ToString();
     }
 
+    /// <summary>Full mode label for a per-context file header, noting a Pending→Idempotent fallback.</summary>
+    private static string ModeLabel(ContextScript r)
+    {
+        return r.FellBack
+            ? $"{r.EffectiveMode} (fell back from Pending: database unreadable)"
+            : r.EffectiveMode.ToString();
+    }
+
+    /// <summary>Compact mode label for tables and combined-script separators.</summary>
+    private static string ShortModeLabel(ContextScript r)
+    {
+        return r.FellBack ? $"{r.EffectiveMode} (fallback)" : r.EffectiveMode.ToString();
+    }
+
     private static string BuildDatabasesMarkdown(IReadOnlyList<ContextScript> results, MigrationExportMode mode)
     {
         var sb = new StringBuilder();
         sb.Append("# Migration export — database mapping").Append(Nl).Append(Nl);
-        sb.Append($"Mode: **{mode}**. One combined script per target database; apply each to the matching database.").Append(Nl).Append(Nl);
-        sb.Append("| Context | Provider | Server | Database | Script | Combined |").Append(Nl);
-        sb.Append("|---|---|---|---|---|---|").Append(Nl);
+        sb.Append($"Requested mode: **{mode}**. One combined script per target database; apply each to the matching database. The Mode column shows the mode actually used per context.").Append(Nl).Append(Nl);
+        sb.Append("| Context | Mode | Provider | Server | Database | Script | Combined |").Append(Nl);
+        sb.Append("|---|---|---|---|---|---|---|").Append(Nl);
         foreach (var r in results.OrderBy(x => x.Name, StringComparer.OrdinalIgnoreCase))
         {
-            sb.Append($"| {r.Name} | {Show(r.Provider)} | {Show(r.Server)} | {Show(r.Database)} | {r.FileName} | {r.CombinedFileName} |").Append(Nl);
+            sb.Append($"| {r.Name} | {ShortModeLabel(r)} | {Show(r.Provider)} | {Show(r.Server)} | {Show(r.Database)} | {r.FileName} | {r.CombinedFileName} |").Append(Nl);
         }
         return sb.ToString();
     }
@@ -212,7 +229,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         // Hand-written JSON to avoid taking a serializer dependency and to keep credential-free output explicit.
         var sb = new StringBuilder();
         sb.Append('{').Append(Nl);
-        sb.Append($"  \"mode\": \"{mode}\",").Append(Nl);
+        sb.Append($"  \"requestedMode\": \"{mode}\",").Append(Nl);
         sb.Append("  \"contexts\": [").Append(Nl);
         for (var i = 0; i < results.Count; i++)
         {
@@ -220,6 +237,8 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             sb.Append("    {").Append(Nl);
             sb.Append($"      \"context\": {JsonString(r.Name)},").Append(Nl);
             sb.Append($"      \"contextType\": {JsonString(r.ContextType)},").Append(Nl);
+            sb.Append($"      \"mode\": {JsonString(r.EffectiveMode.ToString())},").Append(Nl);
+            sb.Append($"      \"fellBack\": {(r.FellBack ? "true" : "false")},").Append(Nl);
             sb.Append($"      \"provider\": {JsonString(r.Provider)},").Append(Nl);
             sb.Append($"      \"server\": {JsonString(r.Server)},").Append(Nl);
             sb.Append($"      \"database\": {JsonString(r.Database)},").Append(Nl);
@@ -382,7 +401,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
 
     private sealed class ContextScript
     {
-        public ContextScript(string name, string contextType, string provider, string server, string database, string sql, IReadOnlyList<string> pending = null)
+        public ContextScript(string name, string contextType, string provider, string server, string database, string sql, MigrationExportMode effectiveMode, bool fellBack, IReadOnlyList<string> pending = null)
         {
             Name = name;
             ContextType = contextType;
@@ -390,6 +409,8 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
             Server = server;
             Database = database;
             Sql = sql;
+            EffectiveMode = effectiveMode;
+            FellBack = fellBack;
             Pending = pending;
         }
 
@@ -399,6 +420,13 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         public string Server { get; }
         public string Database { get; }
         public string Sql { get; }
+
+        /// <summary>The mode actually used to generate this context's SQL (may differ from the requested mode).</summary>
+        public MigrationExportMode EffectiveMode { get; }
+
+        /// <summary>True when a requested Pending export fell back to Idempotent because the DB was unreadable.</summary>
+        public bool FellBack { get; }
+
         public IReadOnlyList<string> Pending { get; }
         public string FileName { get; set; }
         public string CombinedFileName { get; set; }
