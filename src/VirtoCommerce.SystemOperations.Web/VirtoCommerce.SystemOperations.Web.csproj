@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.SystemOperations.Core\VirtoCommerce.SystemOperations.Core.csproj" />
     <ProjectReference Include="..\VirtoCommerce.SystemOperations.Data\VirtoCommerce.SystemOperations.Data.csproj" />
+    <ProjectReference Include="..\VirtoCommerce.SystemOperations.MCP\VirtoCommerce.SystemOperations.MCP.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\system-operations\" />
