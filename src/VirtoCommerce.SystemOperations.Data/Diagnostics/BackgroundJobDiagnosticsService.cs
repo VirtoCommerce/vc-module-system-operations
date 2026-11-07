@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Hangfire;
 using Hangfire.Storage;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,8 @@ namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
 
 // Reads the Hangfire storage the platform runs with. Every platform instance that processes jobs is a Hangfire server
 // with a heartbeat, so the servers are also the known instances of the cluster and their start times its restarts.
+// Hangfire comes with the Background Jobs module, not with the platform: without that module the Hangfire assembly is
+// missing, so the methods that use its types are called apart and their load failure means no jobs to read.
 public class BackgroundJobDiagnosticsService(
     IServiceProvider serviceProvider,
     ISensitiveDataRedactor redactor,
@@ -24,6 +28,33 @@ public class BackgroundJobDiagnosticsService(
     private const int DefaultServerNameParts = 3;
 
     public virtual BackgroundJobCounts GetCounts()
+    {
+        try
+        {
+            return ReadCounts();
+        }
+        catch (Exception ex) when (IsHangfireMissing(ex))
+        {
+            logger.LogDebug(ex, "Hangfire is not installed");
+            return new BackgroundJobCounts { Available = false };
+        }
+    }
+
+    public virtual IList<FailedJob> GetFailedJobs(DateTime? since, int take)
+    {
+        try
+        {
+            return ReadFailedJobs(since, take);
+        }
+        catch (Exception ex) when (IsHangfireMissing(ex))
+        {
+            logger.LogDebug(ex, "Hangfire is not installed");
+            return [];
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private BackgroundJobCounts ReadCounts()
     {
         var monitoring = GetMonitoringApi();
         if (monitoring == null)
@@ -67,7 +98,8 @@ public class BackgroundJobDiagnosticsService(
         }
     }
 
-    public virtual IList<FailedJob> GetFailedJobs(DateTime? since, int take)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private List<FailedJob> ReadFailedJobs(DateTime? since, int take)
     {
         var monitoring = GetMonitoringApi();
         if (monitoring == null)
@@ -116,6 +148,11 @@ public class BackgroundJobDiagnosticsService(
         var parts = serverName?.Split(':');
 
         return parts?.Length >= DefaultServerNameParts ? $"{parts[0]}:{parts[1]}" : serverName;
+    }
+
+    private static bool IsHangfireMissing(Exception ex)
+    {
+        return ex is FileNotFoundException or FileLoadException or TypeLoadException;
     }
 
     protected virtual IMonitoringApi GetMonitoringApi()

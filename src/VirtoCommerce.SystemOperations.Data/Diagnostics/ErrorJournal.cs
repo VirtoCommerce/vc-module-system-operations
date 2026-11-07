@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using VirtoCommerce.SystemOperations.Core.Diagnostics;
 
 namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
@@ -20,6 +21,8 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     private const int FingerprintLength = 12;
 
     private readonly ConcurrentDictionary<string, ErrorGroup> _groups = new(StringComparer.Ordinal);
+    // ConcurrentDictionary.Count takes every lock of the dictionary, too much for each logged error.
+    private int _groupCount;
 
     public DateTime StartedAt { get; } = timeProvider.GetUtcNow().UtcDateTime;
 
@@ -28,28 +31,22 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
         ArgumentNullException.ThrowIfNull(occurrence);
 
         var (fingerprint, exceptionType, topFrame) = Identify(occurrence);
+        var group = GetOrAddGroup(fingerprint, occurrence, exceptionType, topFrame);
 
-        var group = _groups.GetOrAdd(fingerprint, key => new ErrorGroup
-        {
-            Fingerprint = key,
-            Source = occurrence.Source,
-            MessageTemplate = redactor.Redact(FirstLine(occurrence.MessageTemplate)).Truncate(MaxMessageLength),
-            ExceptionType = exceptionType,
-            TopFrame = topFrame,
-            FirstSeen = occurrence.Timestamp,
-            MachineName = Environment.MachineName,
-        });
+        // Redacted outside the lock: the same error logged by many threads at once waits for the lock only to store it.
+        // Some loggers write the whole exception into the message; the stack is kept apart, so the message is its first
+        // line.
+        var message = Redact(FirstLine(occurrence.Message), MaxMessageLength);
+        var stackTrace = Redact(occurrence.Exception?.ToString(), MaxStackTraceLength);
 
         lock (group)
         {
             group.Count++;
             group.Level = occurrence.Level;
             group.LastSeen = occurrence.Timestamp > group.LastSeen ? occurrence.Timestamp : group.LastSeen;
-            // Some loggers write the whole exception into the message; the stack is kept apart, so the message is its
-            // first line.
-            group.LastMessage = redactor.Redact(FirstLine(occurrence.Message)).Truncate(MaxMessageLength);
+            group.LastMessage = message;
             group.LastTraceId = occurrence.TraceId ?? group.LastTraceId;
-            group.StackTrace = redactor.Redact(occurrence.Exception?.ToString()).Truncate(MaxStackTraceLength);
+            group.StackTrace = stackTrace;
 
             group.RecentOccurrences.Add(occurrence.Timestamp);
             if (group.RecentOccurrences.Count > MaxOccurrences)
@@ -58,7 +55,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
             }
         }
 
-        if (_groups.Count > MaxGroups)
+        if (Volatile.Read(ref _groupCount) > MaxGroups)
         {
             Trim();
         }
@@ -104,6 +101,40 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     public virtual ErrorGroup Get(string fingerprint)
     {
         return fingerprint != null && _groups.TryGetValue(fingerprint, out var group) ? Snapshot(group) : null;
+    }
+
+    private ErrorGroup GetOrAddGroup(string fingerprint, ErrorOccurrence occurrence, string exceptionType, string topFrame)
+    {
+        if (_groups.TryGetValue(fingerprint, out var group))
+        {
+            return group;
+        }
+
+        var created = new ErrorGroup
+        {
+            Fingerprint = fingerprint,
+            Source = occurrence.Source,
+            MessageTemplate = Redact(FirstLine(occurrence.MessageTemplate), MaxMessageLength),
+            ExceptionType = exceptionType,
+            TopFrame = topFrame,
+            FirstSeen = occurrence.Timestamp,
+            MachineName = Environment.MachineName,
+        };
+
+        group = _groups.GetOrAdd(fingerprint, created);
+        if (ReferenceEquals(group, created))
+        {
+            Interlocked.Increment(ref _groupCount);
+        }
+
+        return group;
+    }
+
+    // The text is cut before it is redacted, so a long exception costs no more than a short one, but with a margin: a
+    // secret cut in half at the end may not be recognized, and the margin is cut off after the redaction.
+    private string Redact(string value, int maxLength)
+    {
+        return redactor.Redact(value.Truncate(maxLength * 2)).Truncate(maxLength);
     }
 
     // An error with an exception is grouped by where it is thrown, as error trackers do: the same failure with other
@@ -169,7 +200,10 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     {
         foreach (var stale in _groups.Values.OrderBy(x => x.LastSeen).Take(_groups.Count - MaxGroups).ToList())
         {
-            _groups.TryRemove(stale.Fingerprint, out _);
+            if (_groups.TryRemove(stale.Fingerprint, out _))
+            {
+                Interlocked.Decrement(ref _groupCount);
+            }
         }
     }
 }

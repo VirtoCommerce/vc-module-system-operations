@@ -8,7 +8,7 @@ using VirtoCommerce.SystemOperations.Core.Diagnostics;
 
 namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
 
-public class ModuleInventoryService(IModuleService moduleService) : IModuleInventoryService
+public class ModuleInventoryService(IModuleService moduleService, ISensitiveDataRedactor redactor) : IModuleInventoryService
 {
     private const string VirtoModulePrefix = "VirtoCommerce.";
     private const string PlatformAssemblyPrefix = "VirtoCommerce.Platform.";
@@ -69,7 +69,8 @@ public class ModuleInventoryService(IModuleService moduleService) : IModuleInven
             Title = module.Title,
             Origin = GetOrigin(module),
             Failed = failed,
-            Errors = [.. module.Errors],
+            // A module that fails to load may quote its configuration in the error.
+            Errors = module.Errors.Select(redactor.Redact).ToList(),
             Owners = [.. module.Owners ?? []],
             Dependencies = module.Dependencies.Select(x => $"{x.Id} {x.Version}{(x.Optional ? " (optional)" : string.Empty)}").ToList(),
         };

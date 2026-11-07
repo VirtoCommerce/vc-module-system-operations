@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Serilog.Events;
 using Serilog.Parsing;
 using VirtoCommerce.SystemOperations.Core.Diagnostics;
@@ -125,6 +126,50 @@ public class ErrorJournalTests
         // Assert
         var templates = _journal.Search(new ErrorSearchCriteria()).Select(x => x.MessageTemplate).Order().ToArray();
         Assert.Equal(["Failed", "Retrying"], templates);
+    }
+
+    [Fact]
+    public void Record_CountsEveryOccurrence_And_KeepsTheGroupLimit_UnderConcurrentLogging()
+    {
+        // Arrange
+        var exception = Throw(() => throw new InvalidOperationException("Storm"));
+        const int threads = 8;
+        const int perThread = 500;
+
+        // Act: one error repeated by every thread, the most recent, among more distinct errors than the journal keeps.
+        Parallel.For(0, threads, thread =>
+        {
+            for (var i = 0; i < perThread; i++)
+            {
+                _journal.Record(Occurrence(Now.AddHours(1), "Storm", "Storm", exception));
+                _journal.Record(Occurrence(Now.AddSeconds(i), $"Unique {thread}-{i}", $"Unique {thread}-{i}"));
+            }
+        });
+
+        // Assert
+        Assert.True(_journal.Search(new ErrorSearchCriteria { Take = 10_000 }).Count <= ErrorJournal.MaxGroups + threads);
+        var storm = Assert.Single(_journal.Search(new ErrorSearchCriteria { Keyword = "Storm" }));
+        Assert.Equal(threads * perThread, storm.Count);
+    }
+
+    // A long exception is cut before it is redacted, with a margin: a card number across the kept length is still
+    // recognized as one and masked, not cut into digits that no longer look like a card.
+    [Fact]
+    public void Record_MasksACardNumberAcrossTheKeptLength()
+    {
+        // Arrange
+        const string prefix = "System.InvalidOperationException: ";
+        var padding = new string('x', 5990 - prefix.Length - 1);
+        var exception = new InvalidOperationException($"{padding} 4111 1111 1111 1111 declined");
+
+        // Act
+        _journal.Record(Occurrence(Now, "Long", "Long", exception));
+
+        // Assert
+        var group = Assert.Single(_journal.Search(new ErrorSearchCriteria()));
+        Assert.StartsWith(prefix, group.StackTrace);
+        Assert.Contains("[card]", group.StackTrace);
+        Assert.DoesNotContain("4111 1", group.StackTrace);
     }
 
     [Theory]

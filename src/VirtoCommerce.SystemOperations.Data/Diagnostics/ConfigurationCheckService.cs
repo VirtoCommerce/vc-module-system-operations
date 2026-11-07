@@ -116,6 +116,14 @@ public class ConfigurationCheckService(
 
     private void CheckBackgroundJobs(List<Finding> findings, EnvironmentProfile profile, bool production)
     {
+        if (production && string.Equals(profile.BackgroundJobsProvider, "InMemory", StringComparison.OrdinalIgnoreCase))
+        {
+            findings.Add(Configuration("background-jobs-in-memory", FindingSeverities.Warning,
+                "The background job engine runs in memory",
+                "VirtoCommerce:BackgroundJobs:Provider is InMemory.",
+                "Use Hangfire or RabbitMQ in production: the in-memory engine is meant for local runs and tests, its jobs are lost on every restart and run only on the instance that queued them."));
+        }
+
         if (production && string.Equals(profile.HangfireStorage, "Memory", StringComparison.OrdinalIgnoreCase))
         {
             findings.Add(Configuration("hangfire-memory-storage", FindingSeverities.Warning,

@@ -4,13 +4,18 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VirtoCommerce.SystemOperations.Core.Diagnostics;
 using VirtoCommerce.SystemOperations.Core.Migrations;
 
 namespace VirtoCommerce.SystemOperations.Data.Migrations;
 
 // Reads the migration history of every database context, as the platform would before it applies migrations at start.
 // It opens each database to read its history; it never applies anything.
-public class MigrationStatusService(IServiceProvider serviceProvider, ILogger<MigrationStatusService> logger) : IMigrationStatusService
+public class MigrationStatusService(
+    IServiceProvider serviceProvider,
+    ISensitiveDataRedactor redactor,
+    ILogger<MigrationStatusService> logger)
+    : IMigrationStatusService
 {
     public virtual IList<MigrationContextStatus> GetStatus()
     {
@@ -41,7 +46,8 @@ public class MigrationStatusService(IServiceProvider serviceProvider, ILogger<Mi
             catch (Exception ex)
             {
                 logger.LogWarning(ex, "Could not read the migrations of '{Name}' ({Type})", name, type.FullName);
-                status.Error = ex.GetBaseException().Message;
+                // A connection error may quote the connection string.
+                status.Error = redactor.Redact(ex.GetBaseException().Message);
             }
 
             result.Add(status);

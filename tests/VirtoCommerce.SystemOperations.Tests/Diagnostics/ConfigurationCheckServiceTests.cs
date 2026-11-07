@@ -112,6 +112,24 @@ public class ConfigurationCheckServiceTests
         Assert.Equal(severity, Find(findings, id).Severity);
     }
 
+    [Theory]
+    [InlineData("InMemory", "Database", "background-jobs-in-memory")]
+    [InlineData("Hangfire", "Memory", "hangfire-memory-storage")]
+    public async Task CheckAsync_WarnsOfJobsKeptInMemory_InProduction(string provider, string storage, string id)
+    {
+        // Arrange
+        var profile = Profile(instances: 1, redis: true);
+        profile.BackgroundJobsProvider = provider;
+        profile.HangfireStorage = storage;
+        var service = CreateService(new Dictionary<string, string>(), profile);
+
+        // Act
+        var findings = await service.CheckAsync(TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal(FindingSeverities.Warning, Find(findings, id).Severity);
+    }
+
     private static Finding Find(IList<Finding> findings, string id)
     {
         return findings.SingleOrDefault(x => x.Id == id);

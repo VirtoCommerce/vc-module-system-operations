@@ -16,6 +16,15 @@ public class SensitiveDataRedactorTests
     [InlineData("https://user:p4ss@search.example.com/index", "https://***@search.example.com/index")]
     [InlineData("Order of jane.doe@example.com failed", "Order of ***@*** failed")]
     [InlineData("Card 4111 1111 1111 1111 declined", "Card [card] declined")]
+    // Quoted values: JSON, an object logged by Serilog, attributes.
+    [InlineData("{\"password\":\"hunter2\",\"userName\":\"admin\"}", "{\"password\":\"***\",\"userName\":\"admin\"}")]
+    [InlineData("{ \"ApiKey\": \"abc 123\" }", "{ \"ApiKey\": \"***\" }")]
+    [InlineData("SignIn { UserName: \"admin\", Password: \"hunter2\" }", "SignIn { UserName: \"admin\", Password: \"***\" }")]
+    [InlineData("<add Password=\"S3 cret\" />", "<add Password=\"***\" />")]
+    [InlineData("client_secret='x-1;2'&grant_type=client_credentials", "client_secret='***'&grant_type=client_credentials")]
+    [InlineData("\"refresh_token\": \"\"", "\"refresh_token\": \"\"")]
+    [InlineData("{\"secret\":\"a\\\"b\",\"next\":1}", "{\"secret\":\"***\",\"next\":1}")]
+    [InlineData("Password=\"one\"\nnext line", "Password=\"***\"\nnext line")]
     public void Redact_RemovesSecretsAndPersonalData(string value, string expected)
     {
         Assert.Equal(expected, _redactor.Redact(value));

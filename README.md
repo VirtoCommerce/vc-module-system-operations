@@ -52,7 +52,7 @@ The module adds an operations toolset to the back-office MCP endpoint of the [MC
 - **Incident timeline.** Restarts and deployments, the first occurrence of each error and failed jobs, in time order.
 - **Production readiness.** Rules such as the development signing certificate, local file storage or Lucene with several instances, missing Redis, in-memory jobs, debug logs and an expiring license, plus failed modules and pending database migrations.
 - **Support case for Virto.** A Markdown report with the environment, own modules, findings, errors with trace ids and stack traces, failed jobs and the timeline, with secrets and personal data removed. Nothing is sent: the person reviews and sends it.
-- **Safe actions.** Reset the cache after the user confirms in the chat; restart the platform only after a second person approves.
+- **Safe actions.** Reset the cache, confirmed in the chat where the client can ask; restart the platform only after a second person approves.
 
 ### Quick setup
 
@@ -125,7 +125,7 @@ Every answer names the instance it was measured on, because a call reaches one i
 | Analysis | `check_capacity` | CPU, memory, garbage collection, thread pool, database latency and the job backlog against limits, with one recommendation |
 | Analysis | `check_pending_migrations` | Applied and pending EF Core migrations of every database context |
 | Hand-off | `prepare_support_case` | A Markdown report for Virto support with secrets and personal data removed; nothing is sent |
-| Actions | `reset_platform_cache` | The back office's Reset cache; the agent's client asks the user to confirm |
+| Actions | `reset_platform_cache` | The back office's Reset cache; a client that supports MCP elicitation asks the user to confirm, other clients run it at once, as the back office's button does |
 | Actions | `restart_platform` | The back office's Restart; submitted for approval by a second person, with a preview |
 
 Every read tool needs `systemoperations:diagnostics:read`, so a user without it does not see them. The actions need the permissions of the back-office operations they repeat. Tool calls are audited by the MCP module, and tool switches in **Agent tools** turn any of them off.
@@ -136,14 +136,14 @@ Every read tool needs `systemoperations:diagnostics:read`, so a user without it 
 | --- | --- | --- |
 | Errors | A Serilog sink added through `ILoggerConfigurationService` records errors, and warnings with an exception, of every logger | In memory, per instance, since its start: up to 500 fingerprints, the last 200 times of each |
 | Health | The platform's `HealthCheckService` | Read on each call |
-| Instances and jobs | The Hangfire monitoring API: each platform process that processes jobs is a server with a heartbeat | Read on each call |
+| Instances and jobs | The Hangfire monitoring API: each platform process that processes jobs is a server with a heartbeat. Hangfire comes with the Background Jobs module; without it, or with a job engine other than Hangfire and legacy Hangfire off, the job data and the instance count are reported as not available | Read on each call |
 | Capacity | .NET runtime counters of the process: CPU over a sample, working set against the GC memory limit (the container limit when there is one), GC pauses, thread pool | Read on each call |
 | Modules | `IModuleService` and the module folders; a module is Virto's when its id starts with `VirtoCommerce.` and Virto Commerce owns or authors it | Read on each call |
 | License | The platform's license provider: type and expiration date only | Read on each call |
 
 **What it does not do yet.** The error journal is per instance and starts empty on every start, so on a cluster `search_errors` shows the instance the call reached; each answer names it. The platform does not log GraphQL resolver errors, so they do not reach the journal. Request latency per endpoint, longer history and telemetry backends (Application Insights, Seq) are not read.
 
-**Privacy.** Every message, stack trace and value a tool returns passes a redactor: passwords and keys in connection strings, bearer tokens, JWTs, credentials in URLs, emails and card numbers are replaced with `***`. The configuration rules read connection strings and certificate settings but never return their values.
+**Privacy.** Every message, stack trace and value a tool returns passes a redactor: passwords, keys and tokens in connection strings, query strings, JSON and logged objects (quoted or not), bearer tokens, JWTs, credentials in URLs, emails and card numbers are replaced with `***`. The configuration rules read connection strings and certificate settings but never return their values.
 
 ## Architecture
 

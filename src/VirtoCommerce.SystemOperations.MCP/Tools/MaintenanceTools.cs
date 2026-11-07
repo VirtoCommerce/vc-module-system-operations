@@ -11,7 +11,8 @@ using static VirtoCommerce.Platform.Core.PlatformConstants.Security.Permissions;
 namespace VirtoCommerce.SystemOperations.MCP.Tools;
 
 // The back office's Reset cache and Restart, with the permissions the back office asks for them. Resetting the cache
-// asks the user in the chat; a restart takes the platform down for a while, so a second person approves it.
+// asks the user in the chat where the client can ask, and otherwise runs as the back office's button does; a restart
+// takes the platform down for a while, so a second person approves it.
 [McpServerToolType]
 [McpScope(McpScopes.Admin)]
 public class MaintenanceTools(
@@ -44,15 +45,16 @@ public class MaintenanceTools(
         [Description("Why the platform is restarted, for the approver and the audit log.")] string reason,
         bool dryRun = false)
     {
-        var instance = Environment.MachineName;
         var jobs = jobDiagnostics.GetCounts();
 
+        // The preview is made where the change is requested, and the approved change runs where it is approved: the
+        // restarting instance is the approver's, so the preview does not name a machine.
         var preview = new McpChangePreview
         {
             Action = "restart",
             ObjectType = "platform_instance",
-            ObjectId = instance,
-            ObjectName = $"Platform on {instance}",
+            ObjectId = "platform",
+            ObjectName = "The platform instance that runs the approved change",
             DryRun = dryRun,
         }
         .AddChange("state", "running", dryRun ? "will restart" : "restarting")
@@ -66,7 +68,7 @@ public class MaintenanceTools(
 
         if (jobs.Available && jobs.LiveInstances > 1)
         {
-            preview.AddWarning($"{jobs.LiveInstances} instances are running: only the instance that runs the approved change restarts, not the others.");
+            preview.AddWarning($"{jobs.LiveInstances} instances are running: only the instance that runs the approved change restarts, not the others. It was requested on {Environment.MachineName}.");
         }
 
         if (!dryRun)

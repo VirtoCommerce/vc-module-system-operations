@@ -25,7 +25,7 @@ public partial class SensitiveDataRedactor : ISensitiveDataRedactor
             return value;
         }
 
-        value = SecretPairRegex().Replace(value, m => $"{m.Groups["key"].Value}{m.Groups["sep"].Value}{Mask}");
+        value = SecretPairRegex().Replace(value, MaskSecretPair);
         value = BearerRegex().Replace(value, $"Bearer {Mask}");
         value = JwtRegex().Replace(value, Mask);
         value = UrlCredentialsRegex().Replace(value, $"://{Mask}@");
@@ -33,6 +33,14 @@ public partial class SensitiveDataRedactor : ISensitiveDataRedactor
         value = CardNumberRegex().Replace(value, m => IsLuhnValid(m.Value) ? "[card]" : m.Value);
 
         return value;
+    }
+
+    // A quoted value keeps its quotes, so JSON and logged objects stay readable.
+    private static string MaskSecretPair(Match match)
+    {
+        var quote = match.Groups["quote"].Value;
+
+        return $"{match.Groups["key"].Value}{match.Groups["keyQuote"].Value}{match.Groups["sep"].Value}{quote}{Mask}{quote}";
     }
 
     private static bool IsLuhnValid(string candidate)
@@ -55,7 +63,8 @@ public partial class SensitiveDataRedactor : ISensitiveDataRedactor
         return sum % LuhnModulus == 0;
     }
 
-    [GeneratedRegex(@"(?<key>password|pwd|accountkey|sharedaccesskey|secret|client_secret|apikey|api_key|api-key|access_token|refresh_token|token|key)(?<sep>\s*[=:]\s*)(?!\*\*\*)[^;,\s""'&]+",
+    // key=value, key: value, "key": "value", Key: "value" (an object logged by Serilog), Key="value", key='value'.
+    [GeneratedRegex(@"(?<key>password|pwd|accountkey|sharedaccesskey|secret|client_secret|apikey|api_key|api-key|access_token|refresh_token|token|key)(?<keyQuote>[""']?)(?<sep>\s*[=:]\s*)(?:(?<quote>[""'])(?:\\.|(?!\k<quote>)[^\\\r\n])+\k<quote>|(?!\*\*\*)[^;,\s""'&]+)",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex SecretPairRegex();
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -30,7 +31,7 @@ namespace VirtoCommerce.SystemOperations.Web
 
             // Diagnostics of the platform. The error journal keeps the errors of this instance from its start, through a
             // Serilog sink the platform adds next to the configured ones.
-            serviceCollection.AddSingleton(TimeProvider.System);
+            serviceCollection.TryAddSingleton(TimeProvider.System);
             serviceCollection.AddSingleton<ISensitiveDataRedactor, SensitiveDataRedactor>();
             serviceCollection.AddSingleton<IErrorJournal, ErrorJournal>();
             serviceCollection.AddSingleton<ErrorJournalSink>();

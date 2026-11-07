@@ -2,20 +2,23 @@ using System.ComponentModel;
 using ModelContextProtocol.Server;
 using VirtoCommerce.MCP.Core;
 using VirtoCommerce.MCP.Core.Attributes;
+using static VirtoCommerce.SystemOperations.Core.ModuleConstants.Security.Permissions;
 
 namespace VirtoCommerce.SystemOperations.MCP.Prompts;
 
 // The routines of the people who run a Virto Commerce solution, offered by MCP clients as slash commands, for example
-// /daily_health_check in Claude. They only describe what to do; the tools decide what the user may see and change.
+// /daily_health_check in Claude. They only describe what to do; the tools decide what the user may see and change. A
+// prompt has no [Authorize] check of its own, so [McpPermission] hides the prompts from a user who cannot run their tools.
 [McpServerPromptType]
 [McpScope(McpScopes.Admin)]
+[McpPermission(DiagnosticsRead)]
 public static class OperationsPrompts
 {
     private const string Rules = """
         Rules:
         - Base every statement on a tool result and quote the evidence (a number, a finding, a fingerprint, a trace id).
         - Name the instance each measurement comes from: a call reaches one instance of the cluster.
-        - Do not change anything unless I ask. reset_platform_cache asks me to confirm; restart_platform needs a second person's approval.
+        - Do not change anything unless I ask. reset_platform_cache asks me to confirm where my client can ask, otherwise it runs at once, so call it only when I ask for it; restart_platform needs a second person's approval.
         """;
 
     [McpServerPrompt(Name = "daily_health_check")]

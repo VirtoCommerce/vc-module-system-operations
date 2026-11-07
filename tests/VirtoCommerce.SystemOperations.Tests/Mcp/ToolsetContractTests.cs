@@ -12,6 +12,7 @@ using VirtoCommerce.SystemOperations.Core.Diagnostics;
 using VirtoCommerce.SystemOperations.MCP;
 using VirtoCommerce.SystemOperations.MCP.Prompts;
 using Xunit;
+using ModuleConstantsPermissions = VirtoCommerce.SystemOperations.Core.ModuleConstants.Security.Permissions;
 
 namespace VirtoCommerce.SystemOperations.Tests.Mcp;
 
@@ -102,6 +103,19 @@ public partial class ToolsetContractTests
         // Assert
         Assert.Equal(Tools.Length, provider.GetServices<McpServerTool>().Count());
         Assert.Equal(6, provider.GetServices<McpServerPrompt>().Count());
+    }
+
+    // The MCP module hides a prompt whose [McpPermission] the user lacks; a prompt has no [Authorize] check.
+    [Fact]
+    public void Prompts_RequireTheDiagnosticsPermission()
+    {
+        // Act
+        using var provider = new ServiceCollection().AddSystemOperationsMcp().BuildServiceProvider();
+
+        // Assert
+        Assert.All(provider.GetServices<McpServerPrompt>(), prompt => Assert.Contains(
+            ModuleConstantsPermissions.DiagnosticsRead,
+            prompt.Metadata.OfType<McpPermissionAttribute>().SelectMany(x => x.Permissions)));
     }
 
     [Fact]
