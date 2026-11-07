@@ -10,6 +10,13 @@ namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
 public partial class SensitiveDataRedactor : ISensitiveDataRedactor
 {
     private const string Mask = "***";
+    private const int RegexTimeoutMs = 1000;
+    private const int MinCardDigits = 13;
+    private const int MaxCardDigits = 19;
+    private const int LuhnModulus = 10;
+
+    // A doubled digit of the Luhn check, with the digits of a two-digit product added: 6 * 2 = 12 -> 1 + 2 = 3.
+    private static readonly int[] _luhnDoubled = [0, 2, 4, 6, 8, 1, 3, 5, 7, 9];
 
     public virtual string Redact(string value)
     {
@@ -31,47 +38,40 @@ public partial class SensitiveDataRedactor : ISensitiveDataRedactor
     private static bool IsLuhnValid(string candidate)
     {
         var digits = candidate.Where(char.IsDigit).Select(x => x - '0').ToArray();
-        if (digits.Length < 13 || digits.Length > 19)
+        if (digits.Length < MinCardDigits || digits.Length > MaxCardDigits)
         {
             return false;
         }
 
+        // Every second digit from the right is doubled.
         var sum = 0;
-        for (var i = 0; i < digits.Length; i++)
+        var doubled = false;
+        for (var i = digits.Length - 1; i >= 0; i--)
         {
-            var digit = digits[digits.Length - 1 - i];
-            if (i % 2 == 1)
-            {
-                digit *= 2;
-                if (digit > 9)
-                {
-                    digit -= 9;
-                }
-            }
-
-            sum += digit;
+            sum += doubled ? _luhnDoubled[digits[i]] : digits[i];
+            doubled = !doubled;
         }
 
-        return sum % 10 == 0;
+        return sum % LuhnModulus == 0;
     }
 
     [GeneratedRegex(@"(?<key>password|pwd|accountkey|sharedaccesskey|secret|client_secret|apikey|api_key|api-key|access_token|refresh_token|token|key)(?<sep>\s*[=:]\s*)(?!\*\*\*)[^;,\s""'&]+",
-        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, 1000)]
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex SecretPairRegex();
 
-    [GeneratedRegex(@"Bearer\s+[A-Za-z0-9\-._~+/]+=*", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex(@"Bearer\s+[A-Za-z0-9\-._~+/]+=*", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex BearerRegex();
 
-    [GeneratedRegex(@"eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+", RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex(@"eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+", RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex JwtRegex();
 
-    [GeneratedRegex(@"://[^/\s:@]+:[^/\s@]+@", RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex(@"://[^/\s:@]+:[^/\s@]+@", RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex UrlCredentialsRegex();
 
-    [GeneratedRegex(@"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+", RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex(@"[A-Za-z0-9._%+\-]+@[A-Za-z0-9\-]+(\.[A-Za-z0-9\-]+)+", RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex EmailRegex();
 
-    [GeneratedRegex(@"\b\d(?:[ -]?\d){12,18}\b", RegexOptions.CultureInvariant, 1000)]
+    [GeneratedRegex(@"\b\d(?:[ -]?\d){12,18}\b", RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex CardNumberRegex();
 }
 

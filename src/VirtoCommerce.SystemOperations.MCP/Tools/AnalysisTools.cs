@@ -53,8 +53,8 @@ public class AnalysisTools(
         "findings with evidence and one recommendation: ok, scale_up, scale_out, fix_hotspot or investigate. Measure " +
         "again during the problem and at a quiet time to compare.")]
     public Task<CapacityReport> CheckCapacity(
-        CancellationToken cancellationToken,
-        [Description("Seconds to sample the CPU, 1 to 10. Default 2.")] int sample_seconds = 2)
+        [Description("Seconds to sample the CPU, 1 to 10. Default 2.")] int sample_seconds = 2,
+        CancellationToken cancellationToken = default)
     {
         return capacityService.MeasureAsync(TimeSpan.FromSeconds(Math.Clamp(sample_seconds, 1, MaxSampleSeconds)), cancellationToken);
     }

@@ -21,12 +21,12 @@ public class SupportTools(ISupportCaseBuilder supportCaseBuilder)
         "where they are thrown and their stack traces, failed jobs and the timeline. Secrets, emails and card numbers " +
         "are replaced with ***. Nothing is sent: show the report to the user to review and send.")]
     public async Task<object> PrepareSupportCase(
-        CancellationToken cancellationToken,
         [Description("What users see, in a sentence or two.")] string symptom,
         [Description("How to reproduce it, if known.")] string steps_to_reproduce = null,
         [Description("What was already tried.")] string what_was_tried = null,
         [Description("Fingerprint of the error the case is about, from search_errors. Omit it to include the most frequent errors.")] string fingerprint = null,
-        [Description("Hours of errors, failed jobs and events to include, 1 to 336. Default 24.")] int hours = 24)
+        [Description("Hours of errors, failed jobs and events to include, 1 to 336. Default 24.")] int hours = 24,
+        CancellationToken cancellationToken = default)
     {
         var report = await supportCaseBuilder.BuildAsync(new SupportCaseRequest
         {

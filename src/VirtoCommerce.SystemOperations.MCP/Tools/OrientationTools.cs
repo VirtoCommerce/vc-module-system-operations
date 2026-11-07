@@ -25,6 +25,8 @@ public class OrientationTools(
     IIncidentTimelineService timelineService,
     TimeProvider timeProvider)
 {
+    private const int MaxTimelineEvents = 500;
+
     [McpServerTool(Name = "get_environment_profile", ReadOnly = true, Destructive = false, Idempotent = true)]
     [Description("What this Virto Commerce solution runs on: platform and .NET versions, environment, database, search, " +
         "assets and background job providers, Redis, the instance (processors, memory limit, uptime), the number of known " +
@@ -86,7 +88,7 @@ public class OrientationTools(
         {
             since,
             until = now,
-            events = timelineService.GetTimeline(since, now, Math.Clamp(take, 1, 500)),
+            events = timelineService.GetTimeline(since, now, Math.Clamp(take, 1, MaxTimelineEvents)),
         };
     }
 }

@@ -17,6 +17,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     public const int MaxOccurrences = 200;
     private const int MaxMessageLength = 1000;
     private const int MaxStackTraceLength = 6000;
+    private const int FingerprintLength = 12;
 
     private readonly ConcurrentDictionary<string, ErrorGroup> _groups = new(StringComparer.Ordinal);
 
@@ -77,8 +78,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
         if (!string.IsNullOrWhiteSpace(criteria.Keyword))
         {
             var keyword = criteria.Keyword.Trim();
-            groups = groups.Where(x => Contains(x.LastMessage, keyword) || Contains(x.MessageTemplate, keyword) ||
-                Contains(x.Source, keyword) || Contains(x.ExceptionType, keyword) || Contains(x.TopFrame, keyword));
+            groups = groups.Where(x => Matches(x, keyword));
         }
 
         if (criteria.Since != null)
@@ -124,21 +124,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     // "   at Namespace.Type.Method(Args) in C:\path\File.cs:line 12" -> "Namespace.Type.Method(Args)"
     public static string GetTopFrame(string stackTrace)
     {
-        if (string.IsNullOrEmpty(stackTrace))
-        {
-            return null;
-        }
-
-        var line = stackTrace.Split('\n').Select(x => x.Trim()).FirstOrDefault(x => x.StartsWith("at ", StringComparison.Ordinal));
-        if (line == null)
-        {
-            return null;
-        }
-
-        line = line[3..];
-        var location = line.IndexOf(" in ", StringComparison.Ordinal);
-
-        return location > 0 ? line[..location] : line;
+        return ErrorExplainer.ParseFrames(stackTrace).FirstOrDefault();
     }
 
     public static string GetFingerprint(string exceptionType, string messageTemplate, string topFrame)
@@ -146,7 +132,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
         var text = $"{exceptionType}|{messageTemplate}|{topFrame}";
         var hash = SHA256.HashData(Encoding.UTF8.GetBytes(text));
 
-        return Convert.ToHexStringLower(hash)[..12];
+        return Convert.ToHexStringLower(hash)[..FingerprintLength];
     }
 
     public static string FirstLine(string value)
@@ -166,6 +152,12 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
         {
             return group.Clone();
         }
+    }
+
+    private static bool Matches(ErrorGroup group, string keyword)
+    {
+        return new[] { group.LastMessage, group.MessageTemplate, group.Source, group.ExceptionType, group.TopFrame }
+            .Any(x => Contains(x, keyword));
     }
 
     private static bool Contains(string value, string keyword)

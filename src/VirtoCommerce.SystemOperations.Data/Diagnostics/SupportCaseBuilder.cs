@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
 // Puts together what Virto support asks for first: versions, own modules, configuration findings, health, the errors
 // with their trace ids and where they are thrown, failed jobs and the timeline. Every value passes the redactor, and
 // nothing is sent: the person reads the text and sends it.
+[SuppressMessage("Major Code Smell", "S107:Methods should not have too many parameters",
+    Justification = "A DI constructor: each parameter is a diagnostics service whose report is a section of the case.")]
 public class SupportCaseBuilder(
     IEnvironmentProfileService profileService,
     IPlatformHealthService healthService,
@@ -27,11 +30,18 @@ public class SupportCaseBuilder(
     private const int MaxErrors = 5;
     private const int MaxFailedJobs = 10;
     private const int MaxTimelineEvents = 30;
+    // The most frequent errors are chosen among this many of the most recent.
+    private const int RecentErrorsToRank = 50;
 
-    public virtual async Task<string> BuildAsync(SupportCaseRequest request, CancellationToken cancellationToken = default)
+    public virtual Task<string> BuildAsync(SupportCaseRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
+        return BuildReportAsync(request, cancellationToken);
+    }
+
+    private async Task<string> BuildReportAsync(SupportCaseRequest request, CancellationToken cancellationToken)
+    {
         var now = timeProvider.GetUtcNow().UtcDateTime;
         var since = now.AddHours(-Math.Clamp(request.Hours, 1, 24 * 14));
         var profile = await profileService.GetProfileAsync(cancellationToken);
@@ -39,7 +49,9 @@ public class SupportCaseBuilder(
         var sb = new StringBuilder();
         sb.AppendLine("# Support case");
         sb.AppendLine();
-        sb.AppendLine(CultureInfo.InvariantCulture, $"Prepared {now:yyyy-MM-dd HH:mm} UTC on instance {profile.Instance.MachineName}, covering the last {(now - since).TotalHours:0} hours. Review it before sending: secrets, emails and card numbers are replaced with ***, but the text may still name your customers or products.");
+        sb.AppendLine(CultureInfo.InvariantCulture,
+            $"Prepared {now:yyyy-MM-dd HH:mm} UTC on instance {profile.Instance.MachineName}, covering the last {(now - since).TotalHours:0} hours.");
+        sb.AppendLine("Review it before sending: secrets, emails and card numbers are replaced with ***, but the text may still name your customers or products.");
         sb.AppendLine();
 
         AppendProblem(sb, request);
@@ -57,7 +69,7 @@ public class SupportCaseBuilder(
     protected virtual IList<ErrorGroup> GetErrors(SupportCaseRequest request, DateTime since)
     {
         return string.IsNullOrEmpty(request.Fingerprint)
-            ? errorJournal.Search(new ErrorSearchCriteria { Since = since, Take = 50 }).OrderByDescending(x => x.Count).Take(MaxErrors).ToList()
+            ? errorJournal.Search(new ErrorSearchCriteria { Since = since, Take = RecentErrorsToRank }).OrderByDescending(x => x.Count).Take(MaxErrors).ToList()
             : errorJournal.Search(new ErrorSearchCriteria { Fingerprint = request.Fingerprint, Take = 1 });
     }
 
@@ -78,8 +90,12 @@ public class SupportCaseBuilder(
     {
         sb.AppendLine("## Environment");
         sb.AppendLine(CultureInfo.InvariantCulture, $"- Platform {profile.PlatformVersion}, .NET {profile.DotNetVersion}, {profile.OperatingSystem} ({profile.RuntimeIdentifier}), environment {profile.EnvironmentName}");
-        sb.AppendLine(CultureInfo.InvariantCulture, $"- Database {profile.DatabaseProvider}; search {profile.SearchProvider}; assets {profile.AssetsProvider}; background jobs {profile.BackgroundJobsProvider} ({profile.HangfireStorage}); Redis {(profile.RedisConfigured ? "configured" : "not configured")}");
-        sb.AppendLine(CultureInfo.InvariantCulture, $"- Instances known: {profile.KnownInstanceCount?.ToString(CultureInfo.InvariantCulture) ?? "unknown"}; this one has {profile.Instance.ProcessorCount} processors, {profile.Instance.MemoryLimitBytes / 1024 / 1024} MB memory limit, up {profile.Instance.Uptime:d\\.hh\\:mm}");
+        sb.AppendLine(CultureInfo.InvariantCulture,
+            $"- Database {profile.DatabaseProvider}; search {profile.SearchProvider}; assets {profile.AssetsProvider}; " +
+            $"background jobs {profile.BackgroundJobsProvider} ({profile.HangfireStorage}); Redis {(profile.RedisConfigured ? "configured" : "not configured")}");
+        sb.AppendLine(CultureInfo.InvariantCulture,
+            $"- Instances known: {profile.KnownInstanceCount?.ToString(CultureInfo.InvariantCulture) ?? "unknown"}; " +
+            $"this one has {profile.Instance.ProcessorCount} processors, {CapacityService.ToMb(profile.Instance.MemoryLimitBytes)} MB memory limit, up {profile.Instance.Uptime:d\\.hh\\:mm}");
         sb.AppendLine(CultureInfo.InvariantCulture, $"- Modules: {profile.Modules.Installed} installed, {profile.Modules.Virto} by Virto, {profile.Modules.Own} own, {profile.Modules.Failed} failed");
         if (profile.Modules.OwnModuleIds.Count > 0)
         {

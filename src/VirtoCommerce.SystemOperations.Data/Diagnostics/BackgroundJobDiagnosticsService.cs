@@ -19,6 +19,9 @@ public class BackgroundJobDiagnosticsService(
     : IBackgroundJobDiagnosticsService
 {
     private const int MaxFailedJobsRead = 500;
+    private const int MaxExceptionMessageLength = 500;
+    // "{machine}:{process id}:{guid}"
+    private const int DefaultServerNameParts = 3;
 
     public virtual BackgroundJobCounts GetCounts()
     {
@@ -81,7 +84,7 @@ public class BackgroundJobDiagnosticsService(
                     JobId = x.Key,
                     Job = x.Value.Job != null ? $"{x.Value.Job.Type?.Name}.{x.Value.Job.Method?.Name}" : x.Value.InvocationData?.Type,
                     ExceptionType = x.Value.ExceptionType,
-                    ExceptionMessage = redactor.Redact(x.Value.ExceptionMessage).Truncate(500),
+                    ExceptionMessage = redactor.Redact(x.Value.ExceptionMessage).Truncate(MaxExceptionMessageLength),
                     FailedAt = x.Value.FailedAt,
                 })
                 .Where(x => since == null || x.FailedAt >= since)
@@ -112,7 +115,7 @@ public class BackgroundJobDiagnosticsService(
     {
         var parts = serverName?.Split(':');
 
-        return parts?.Length >= 3 ? $"{parts[0]}:{parts[1]}" : serverName;
+        return parts?.Length >= DefaultServerNameParts ? $"{parts[0]}:{parts[1]}" : serverName;
     }
 
     protected virtual IMonitoringApi GetMonitoringApi()

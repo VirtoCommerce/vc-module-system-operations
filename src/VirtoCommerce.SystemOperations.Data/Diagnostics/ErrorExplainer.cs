@@ -12,6 +12,7 @@ namespace VirtoCommerce.SystemOperations.Data.Diagnostics;
 public class ErrorExplainer(IModuleInventoryService moduleInventory) : IErrorExplainer
 {
     private const int MaxFrames = 40;
+    private const string FramePrefix = "at ";
     private const string High = "high";
     private const string Medium = "medium";
     private const string Low = "low";
@@ -48,12 +49,12 @@ public class ErrorExplainer(IModuleInventoryService moduleInventory) : IErrorExp
         foreach (var raw in stackTrace.Split('\n'))
         {
             var line = raw.Trim();
-            if (!line.StartsWith("at ", StringComparison.Ordinal))
+            if (!line.StartsWith(FramePrefix, StringComparison.Ordinal))
             {
                 continue;
             }
 
-            line = line[3..];
+            line = line[FramePrefix.Length..];
             var location = line.IndexOf(" in ", StringComparison.Ordinal);
             yield return location > 0 ? line[..location] : line;
         }

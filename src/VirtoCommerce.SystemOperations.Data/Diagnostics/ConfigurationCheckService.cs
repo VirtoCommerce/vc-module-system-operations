@@ -211,13 +211,11 @@ public class ConfigurationCheckService(
         };
     }
 
+    private static readonly string[] _severitiesByOrder = [FindingSeverities.Critical, FindingSeverities.Warning];
+
     public static int SeverityOrder(string severity)
     {
-        return severity switch
-        {
-            FindingSeverities.Critical => 0,
-            FindingSeverities.Warning => 1,
-            _ => 2,
-        };
+        var order = Array.IndexOf(_severitiesByOrder, severity);
+        return order >= 0 ? order : _severitiesByOrder.Length;
     }
 }

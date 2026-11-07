@@ -21,6 +21,8 @@ public class CapacityService(
     private const double SlowDatabaseMs = 500;
     private const int QueuedItemsPerProcessor = 10;
     private const int BacklogPerWorker = 50;
+    private const double Percent = 100;
+    private const long BytesPerMegabyte = 1024 * 1024;
 
     public virtual async Task<CapacityReport> MeasureAsync(TimeSpan sample, CancellationToken cancellationToken = default)
     {
@@ -40,7 +42,7 @@ public class CapacityService(
 
         process.Refresh();
         var elapsed = stopwatch.Elapsed;
-        var cpuPercent = (process.TotalProcessorTime - cpuBefore).TotalMilliseconds / (elapsed.TotalMilliseconds * Environment.ProcessorCount) * 100;
+        var cpuPercent = (process.TotalProcessorTime - cpuBefore).TotalMilliseconds / (elapsed.TotalMilliseconds * Environment.ProcessorCount) * Percent;
 
         var memoryInfo = GC.GetGCMemoryInfo();
         var uptime = timeProvider.GetUtcNow().UtcDateTime - process.StartTime.ToUniversalTime();
@@ -50,12 +52,12 @@ public class CapacityService(
             MachineName = Environment.MachineName,
             MeasuredAt = timeProvider.GetUtcNow().UtcDateTime,
             SampleSeconds = Math.Round(elapsed.TotalSeconds, 2),
-            CpuPercent = Math.Round(Math.Clamp(cpuPercent, 0, 100), 1),
+            CpuPercent = Math.Round(Math.Clamp(cpuPercent, 0, Percent), 1),
             ProcessorCount = Environment.ProcessorCount,
             WorkingSetBytes = process.WorkingSet64,
             ManagedHeapBytes = GC.GetTotalMemory(forceFullCollection: false),
             MemoryLimitBytes = memoryInfo.TotalAvailableMemoryBytes,
-            GcPausePercent = uptime.TotalMilliseconds > 0 ? Math.Round(GC.GetTotalPauseDuration().TotalMilliseconds / uptime.TotalMilliseconds * 100, 2) : 0,
+            GcPausePercent = uptime.TotalMilliseconds > 0 ? Math.Round(GC.GetTotalPauseDuration().TotalMilliseconds / uptime.TotalMilliseconds * Percent, 2) : 0,
             Gen2Collections = GC.CollectionCount(2),
             ThreadPoolThreads = ThreadPool.ThreadCount,
             ThreadPoolQueueLength = ThreadPool.PendingWorkItemCount,
@@ -63,7 +65,7 @@ public class CapacityService(
             Jobs = jobDiagnostics.GetCounts(),
             Dependencies = health.Checks,
         };
-        report.MemoryPercent = report.MemoryLimitBytes > 0 ? Math.Round(report.WorkingSetBytes * 100.0 / report.MemoryLimitBytes, 1) : 0;
+        report.MemoryPercent = report.MemoryLimitBytes > 0 ? Math.Round(report.WorkingSetBytes * Percent / report.MemoryLimitBytes, 1) : 0;
 
         Evaluate(report);
 
@@ -174,8 +176,8 @@ public class CapacityService(
         return new Finding { Id = id, Severity = severity, CauseClass = CauseClasses.Infrastructure, Title = title, Evidence = evidence, Fix = fix };
     }
 
-    private static long ToMb(long bytes)
+    internal static long ToMb(long bytes)
     {
-        return bytes / 1024 / 1024;
+        return bytes / BytesPerMegabyte;
     }
 }
