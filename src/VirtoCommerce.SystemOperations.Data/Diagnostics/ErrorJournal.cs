@@ -19,6 +19,8 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     private const int MaxMessageLength = 1000;
     private const int MaxStackTraceLength = 6000;
     private const int FingerprintLength = 12;
+    // How much more than the kept length is redacted, so a secret across the cut is still recognized.
+    private const int RedactedLengthFactor = 2;
 
     private readonly ConcurrentDictionary<string, ErrorGroup> _groups = new(StringComparer.Ordinal);
     // ConcurrentDictionary.Count takes every lock of the dictionary, too much for each logged error.
@@ -134,7 +136,7 @@ public class ErrorJournal(ISensitiveDataRedactor redactor, TimeProvider timeProv
     // secret cut in half at the end may not be recognized, and the margin is cut off after the redaction.
     private string Redact(string value, int maxLength)
     {
-        return redactor.Redact(value.Truncate(maxLength * 2)).Truncate(maxLength);
+        return redactor.Redact(value.Truncate(maxLength * RedactedLengthFactor)).Truncate(maxLength);
     }
 
     // An error with an exception is grouped by where it is thrown, as error trackers do: the same failure with other

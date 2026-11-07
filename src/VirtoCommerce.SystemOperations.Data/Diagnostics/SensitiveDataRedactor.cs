@@ -64,7 +64,7 @@ public partial class SensitiveDataRedactor : ISensitiveDataRedactor
     }
 
     // key=value, key: value, "key": "value", Key: "value" (an object logged by Serilog), Key="value", key='value'.
-    [GeneratedRegex(@"(?<key>password|pwd|accountkey|sharedaccesskey|secret|client_secret|apikey|api_key|api-key|access_token|refresh_token|token|key)(?<keyQuote>[""']?)(?<sep>\s*[=:]\s*)(?:(?<quote>[""'])(?:\\.|(?!\k<quote>)[^\\\r\n])+\k<quote>|(?!\*\*\*)[^;,\s""'&]+)",
+    [GeneratedRegex(@"(?<key>password|pwd|accountkey|sharedaccesskey|secret|client_secret|apikey|api_key|api-key|access_token|refresh_token|token|key)(?<keyQuote>[""']?)(?<sep>\s*[=:]\s*)(?:(?<quote>"")(?:\\.|[^""\\\r\n])+""|(?<quote>')(?:\\.|[^'\\\r\n])+'|(?!\*\*\*)[^;,\s""'&]+)",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, RegexTimeoutMs)]
     private static partial Regex SecretPairRegex();
 
