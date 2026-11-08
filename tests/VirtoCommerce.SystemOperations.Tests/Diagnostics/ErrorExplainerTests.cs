@@ -21,8 +21,11 @@ public class ErrorExplainerTests
 
     public ErrorExplainerTests()
     {
-        // The platform's assembly is loaded in a running platform; in the test run it is loaded on first use.
+        // The assemblies of the frames are loaded in a running platform; in the test run they are loaded on first use, and
+        // which other tests ran before must not decide the result.
         _ = typeof(VirtoCommerce.Platform.Core.Common.PlatformVersion).Assembly;
+        _ = typeof(ErrorExplainer).Assembly;
+        _ = typeof(VirtoCommerce.SystemOperations.MCP.SystemOperationsMcp).Assembly;
     }
 
     [Fact]
