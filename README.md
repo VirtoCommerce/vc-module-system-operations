@@ -80,6 +80,8 @@ For each user:
    Then run `/mcp`, select `virto` and choose **Authenticate**. Claude Desktop, claude.ai, ChatGPT and VS Code are in the MCP module's [Connect an AI agent](https://github.com/VirtoCommerce/vc-module-mcp#connect-an-ai-agent).
 2. Sign in with your back-office account. The agent works as you and sees only the tools your role allows.
 
+The whole setup, done and tested on a QA environment, with the settings a cloud environment needs, the sign-in without a browser for repeatable tests, and the scenarios with their timings: [IT role and System Operations agent](docs/it-role-mcp-setup.md).
+
 ### Use
 
 Ask in your own words, for example:
