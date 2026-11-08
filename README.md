@@ -8,7 +8,7 @@ The module registers as a Developer Tool tab and renders a self-contained web ap
 
 ## Compatibility
 
-The module targets platform **`3.1095.0`** and runs on that and any later release. The operations toolset for AI agents also needs the [MCP module](https://github.com/VirtoCommerce/vc-module-mcp); without it, every other operation works as before.
+The module targets platform **`3.1096.0`** and runs on that and any later release. The operations toolset for AI agents also needs the [MCP module](https://github.com/VirtoCommerce/vc-module-mcp); without it, every other operation works as before.
 
 **Modularity (plugin extensions via Module Federation) requires platform `3.1027` or later**, which is where the app-extensions manifest endpoint (`GET /api/apps/{appId}/manifest`) was introduced. On older platforms that endpoint returns 404; the module detects this, logs a single console warning suggesting an upgrade, and continues to work normally without extensions.
 
@@ -58,7 +58,7 @@ The module adds an operations toolset to the back-office MCP endpoint of the [MC
 
 For the administrator, once:
 
-1. **Install the modules.** System Operations and the [MCP module](https://github.com/VirtoCommerce/vc-module-mcp), on platform `3.1095.0` or later. The MCP dependency is optional: without the MCP module, System Operations works as before and the toolset is not served.
+1. **Install the modules.** System Operations and the [MCP module](https://github.com/VirtoCommerce/vc-module-mcp), on platform `3.1096.0` or later. The MCP dependency is optional: without the MCP module, System Operations works as before and the toolset is not served.
 2. **Open the endpoint for agents.** Add `https://<platform>/admin/mcp` to `Authorization:Resources` and register the agent in **Security → OAuth applications**, as the MCP module's [Set up the platform for agents](https://github.com/VirtoCommerce/vc-module-mcp#set-up-the-platform-for-agents) describes. Skip this step if agents already connect to `/admin/mcp`.
 3. **Grant the permissions.** Create a role, for example *Platform operator*, and assign it to the people who run the platform:
 

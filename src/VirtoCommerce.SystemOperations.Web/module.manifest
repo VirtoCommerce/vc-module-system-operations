@@ -4,7 +4,7 @@
   <version>3.1003.0</version>
   <version-tag></version-tag>
 
-  <platformVersion>3.1095.0</platformVersion>
+  <platformVersion>3.1096.0</platformVersion>
   <dependencies>
     <!-- Optional: with the MCP module installed, the operations toolset is served on its admin scope (/admin/mcp). -->
     <dependency id="VirtoCommerce.MCP" version="3.1000.0-alpha.51-vcst-6155-core-mcp-module" optional="true" />
