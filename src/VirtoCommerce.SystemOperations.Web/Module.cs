@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -16,13 +14,15 @@ using VirtoCommerce.SystemOperations.MCP;
 
 namespace VirtoCommerce.SystemOperations.Web
 {
-    public class Module : IModule
+    public class Module : IModule, IHasModuleService
     {
-        // The MCP module is an optional dependency: when it is installed, its assemblies are loaded and it initializes
-        // before this module.
-        private const string McpModuleAssemblyName = "VirtoCommerce.MCP.Web";
+        // The MCP module is an optional dependency: when it is installed, it initializes before this module. Its contracts
+        // (VirtoCommerce.MCP.Core and the MCP SDK) are packaged with this module (module.keep), so they load without it.
+        private const string McpModuleId = "VirtoCommerce.MCP";
 
         public ManifestModuleInfo ModuleInfo { get; set; }
+
+        public IModuleService ModuleService { get; set; }
 
         public void Initialize(IServiceCollection serviceCollection)
         {
@@ -47,9 +47,9 @@ namespace VirtoCommerce.SystemOperations.Web
             serviceCollection.AddTransient<ISupportCaseBuilder, SupportCaseBuilder>();
             serviceCollection.AddTransient<IPlatformMaintenanceService, PlatformMaintenanceService>();
 
-            if (IsMcpModuleLoaded())
+            if (ModuleService.IsInstalled(McpModuleId))
             {
-                AddMcp(serviceCollection);
+                serviceCollection.AddSystemOperationsMcp();
             }
         }
 
@@ -62,18 +62,6 @@ namespace VirtoCommerce.SystemOperations.Web
         public void Uninstall()
         {
             // Nothing to do.
-        }
-
-        private static bool IsMcpModuleLoaded()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies().Any(x => string.Equals(x.GetName().Name, McpModuleAssemblyName, StringComparison.OrdinalIgnoreCase));
-        }
-
-        // A method of its own, so the MCP types are resolved only when the MCP module is installed.
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void AddMcp(IServiceCollection serviceCollection)
-        {
-            serviceCollection.AddSystemOperationsMcp();
         }
     }
 }
