@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;
 using VirtoCommerce.MCP.Core;
 using VirtoCommerce.MCP.Core.Attributes;
+using VirtoCommerce.MCP.Core.Extensions;
 using VirtoCommerce.SystemOperations.Core.Diagnostics;
 using VirtoCommerce.SystemOperations.MCP;
 using VirtoCommerce.SystemOperations.MCP.Prompts;
@@ -20,7 +21,7 @@ namespace VirtoCommerce.SystemOperations.Tests.Mcp;
 [Trait("Category", "Unit")]
 public partial class ToolsetContractTests
 {
-    private static readonly Assembly McpAssembly = typeof(SystemOperationsMcp).Assembly;
+    private static readonly Assembly McpAssembly = typeof(McpAssemblyMarker).Assembly;
 
     private static readonly MethodInfo[] Tools = McpAssembly.GetTypes()
         .Where(x => x.GetCustomAttribute<McpServerToolTypeAttribute>() != null)
@@ -95,10 +96,10 @@ public partial class ToolsetContractTests
     }
 
     [Fact]
-    public void AddSystemOperationsMcp_RegistersEveryToolAndPrompt()
+    public void AddMcpCapabilities_RegistersEveryToolAndPrompt()
     {
         // Act
-        using var provider = new ServiceCollection().AddSystemOperationsMcp().BuildServiceProvider();
+        using var provider = new ServiceCollection().AddMcpCapabilities<McpAssemblyMarker>().BuildServiceProvider();
 
         // Assert
         Assert.Equal(Tools.Length, provider.GetServices<McpServerTool>().Count());
@@ -110,7 +111,7 @@ public partial class ToolsetContractTests
     public void Prompts_RequireTheDiagnosticsPermission()
     {
         // Act
-        using var provider = new ServiceCollection().AddSystemOperationsMcp().BuildServiceProvider();
+        using var provider = new ServiceCollection().AddMcpCapabilities<McpAssemblyMarker>().BuildServiceProvider();
 
         // Assert
         Assert.All(provider.GetServices<McpServerPrompt>(), prompt => Assert.Contains(
@@ -118,10 +119,11 @@ public partial class ToolsetContractTests
             prompt.Metadata.OfType<McpPermissionAttribute>().SelectMany(x => x.Permissions)));
     }
 
+    // The diagnostics models are returned as they are; the MCP module's shared options give them snake_case names.
     [Fact]
     public void SerializerOptions_WriteSnakeCase_AndSkipNulls()
     {
-        var json = JsonSerializer.Serialize(new Finding { Id = "redis-missing", CauseClass = CauseClasses.Configuration }, SystemOperationsMcp.SerializerOptions);
+        var json = JsonSerializer.Serialize(new Finding { Id = "redis-missing", CauseClass = CauseClasses.Configuration }, McpSerialization.Options);
 
         Assert.Equal("""{"id":"redis-missing","cause_class":"configuration"}""", json);
     }

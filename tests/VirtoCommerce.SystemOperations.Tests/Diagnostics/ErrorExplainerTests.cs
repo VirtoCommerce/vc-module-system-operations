@@ -25,7 +25,7 @@ public class ErrorExplainerTests
         // which other tests ran before must not decide the result.
         _ = typeof(VirtoCommerce.Platform.Core.Common.PlatformVersion).Assembly;
         _ = typeof(ErrorExplainer).Assembly;
-        _ = typeof(VirtoCommerce.SystemOperations.MCP.SystemOperationsMcp).Assembly;
+        _ = typeof(VirtoCommerce.SystemOperations.MCP.McpAssemblyMarker).Assembly;
     }
 
     [Fact]

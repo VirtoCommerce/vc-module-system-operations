@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using VirtoCommerce.MCP.Core.Extensions;
 using VirtoCommerce.Platform.Core.Logger;
 using VirtoCommerce.Platform.Core.Modularity;
 using VirtoCommerce.Platform.Core.Security;
@@ -49,7 +50,8 @@ namespace VirtoCommerce.SystemOperations.Web
 
             if (ModuleService.IsInstalled(McpModuleId))
             {
-                serviceCollection.AddSystemOperationsMcp();
+                // The operations toolset and its prompts, in the MCP module's admin scope.
+                serviceCollection.AddMcpCapabilities<McpAssemblyMarker>();
             }
         }
 
