@@ -118,7 +118,7 @@ Every answer names the instance it was measured on, because a call reaches one i
 | Orientation | `get_platform_health` | The platform's health checks (database, cache, Redis, modules, search and the checks modules add), with findings |
 | Orientation | `get_incident_timeline` | Instance starts (restarts, deployments), first occurrences of errors, failed jobs, in time order |
 | Finders | `search_errors` | Errors grouped by fingerprint, with counts in a window, trace ids and sources |
-| Finders | `list_modules` | Modules with origin (`virto` or `own`); `failed` with their errors |
+| Finders | `list_modules` | Modules with origin (`virto` or `own`); `failed` with their errors. Pages with `skip` and `take` |
 | Finders | `list_failed_jobs` | Job counts, job servers, queues and the latest failed jobs |
 | Analysis | `explain_error` | The stack mapped to the platform, Virto modules and the solution's own modules; the likely cause class with confidence and the next checks |
 | Analysis | `check_configuration` | Production-readiness rules with evidence and the fix |

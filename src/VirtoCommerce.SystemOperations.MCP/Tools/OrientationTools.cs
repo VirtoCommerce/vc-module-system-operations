@@ -49,11 +49,13 @@ public class OrientationTools(
     [McpServerTool(Name = "list_modules", ReadOnly = true, Destructive = false, Idempotent = true)]
     [Description("List the installed modules with version and origin: 'virto' for Virto Commerce's modules, 'own' for " +
         "the solution's customizations and third-party modules. Filter 'own' answers 'what did we customize', 'failed' " +
-        "returns the modules that did not load with their errors.")]
+        "returns the modules that did not load with their errors. Returns one page: when total_count is larger than " +
+        "the rows returned, call again with skip to read the rest.")]
     public async Task<object> ListModules(
         IMcpPageSizeResolver pageSizeResolver,
         [Description("all, own, virto or failed. Default all.")] string filter = ModuleFilters.All,
-        [Description("Number of rows to return. Omit it for the default page size.")] int? take = null)
+        [Description("Number of rows to skip.")] int skip = 0,
+        [Description("Number of rows to return. Omit it for the default page size; larger values are capped.")] int? take = null)
     {
         var modules = moduleInventory.GetModules(filter);
         var size = await pageSizeResolver.GetPageSizeAsync(take);
@@ -61,7 +63,7 @@ public class OrientationTools(
         return new
         {
             total_count = modules.Count,
-            modules = modules.Take(size).Select(x => new
+            modules = modules.Skip(Math.Max(skip, 0)).Take(size).Select(x => new
             {
                 id = x.Id,
                 version = x.Version,
