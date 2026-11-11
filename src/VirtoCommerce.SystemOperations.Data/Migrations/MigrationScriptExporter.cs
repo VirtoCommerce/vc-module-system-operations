@@ -290,7 +290,7 @@ public sealed class MigrationScriptExporter(IServiceProvider serviceProvider, IL
         return sb.ToString();
     }
 
-    private static List<(string Name, Type Type)> DiscoverContexts()
+    internal static List<(string Name, Type Type)> DiscoverContexts()
     {
         var contextTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(SafeGetTypes)

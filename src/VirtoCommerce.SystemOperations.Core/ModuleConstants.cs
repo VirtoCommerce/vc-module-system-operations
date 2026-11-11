@@ -8,7 +8,10 @@ public static class ModuleConstants
         {
             public const string Export = "systemoperations:migrations:export";
 
-            public static readonly string[] AllPermissions = [Export];
+            // Read the diagnostics of the platform: environment, health, errors, configuration, capacity, jobs.
+            public const string DiagnosticsRead = "systemoperations:diagnostics:read";
+
+            public static readonly string[] AllPermissions = [Export, DiagnosticsRead];
         }
     }
 }

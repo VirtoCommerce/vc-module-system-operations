@@ -6,6 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.13" />
+    <PackageReference Include="VirtoCommerce.Platform.Caching" Version="3.1096.0" />
+    <!-- Hangfire comes with the Background Jobs module; the module only reads its monitoring API when it is installed, so the assembly is not copied. -->
+    <PackageReference Include="Hangfire.Core" Version="1.8.23" ExcludeAssets="runtime" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.SystemOperations.Core\VirtoCommerce.SystemOperations.Core.csproj" />
