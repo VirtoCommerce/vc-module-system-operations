@@ -139,7 +139,7 @@ Every read tool needs `systemoperations:diagnostics:read`, so a user without it 
 | Errors | A Serilog sink added through `ILoggerConfigurationService` records errors, and warnings with an exception, of every logger | In memory, per instance, since its start: up to 500 fingerprints, the last 200 times of each |
 | Health | The platform's `HealthCheckService` | Read on each call |
 | Instances and jobs | The Hangfire monitoring API: each platform process that processes jobs is a server with a heartbeat. Hangfire comes with the Background Jobs module; without it, or with a job engine other than Hangfire and legacy Hangfire off, the job data and the instance count are reported as not available | Read on each call |
-| Capacity | .NET runtime counters of the process: CPU over a sample, working set against the GC memory limit (the container limit when there is one), GC pauses, thread pool | Read on each call |
+| Capacity | .NET runtime counters of the process: CPU over a sample, working set against the container's memory limit (the machine's memory without one), managed heap against the GC heap limit, GC pauses, thread pool | Read on each call |
 | Modules | `IModuleService` and the module folders; a module is Virto's when its id starts with `VirtoCommerce.` and Virto Commerce owns or authors it | Read on each call |
 | License | The platform's license provider: type and expiration date only | Read on each call |
 

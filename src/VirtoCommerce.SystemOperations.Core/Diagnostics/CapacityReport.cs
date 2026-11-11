@@ -21,9 +21,17 @@ public class CapacityReport
 
     public long ManagedHeapBytes { get; set; }
 
+    // The memory the process may use: the container's limit, or the memory of the machine without one.
     public long MemoryLimitBytes { get; set; }
 
+    // The working set in percent of MemoryLimitBytes.
     public double MemoryPercent { get; set; }
+
+    // The most the GC lets the managed heap grow to; in a container, 75% of its limit unless configured otherwise.
+    public long ManagedHeapLimitBytes { get; set; }
+
+    // The managed heap in percent of ManagedHeapLimitBytes.
+    public double ManagedHeapPercent { get; set; }
 
     // Time spent in garbage collection pauses since the process started, in percent of its lifetime.
     public double GcPausePercent { get; set; }

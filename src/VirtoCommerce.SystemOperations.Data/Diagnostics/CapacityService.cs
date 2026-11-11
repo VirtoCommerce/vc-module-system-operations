@@ -56,7 +56,8 @@ public class CapacityService(
             ProcessorCount = Environment.ProcessorCount,
             WorkingSetBytes = process.WorkingSet64,
             ManagedHeapBytes = GC.GetTotalMemory(forceFullCollection: false),
-            MemoryLimitBytes = memoryInfo.TotalAvailableMemoryBytes,
+            MemoryLimitBytes = GetContainerMemoryLimitBytes() ?? memoryInfo.TotalAvailableMemoryBytes,
+            ManagedHeapLimitBytes = memoryInfo.TotalAvailableMemoryBytes,
             GcPausePercent = uptime.TotalMilliseconds > 0 ? Math.Round(GC.GetTotalPauseDuration().TotalMilliseconds / uptime.TotalMilliseconds * Percent, 2) : 0,
             Gen2Collections = GC.CollectionCount(2),
             ThreadPoolThreads = ThreadPool.ThreadCount,
@@ -66,10 +67,17 @@ public class CapacityService(
             Dependencies = health.Checks,
         };
         report.MemoryPercent = report.MemoryLimitBytes > 0 ? Math.Round(report.WorkingSetBytes * Percent / report.MemoryLimitBytes, 1) : 0;
+        report.ManagedHeapPercent = report.ManagedHeapLimitBytes > 0 ? Math.Round(report.ManagedHeapBytes * Percent / report.ManagedHeapLimitBytes, 1) : 0;
 
         Evaluate(report);
 
         return report;
+    }
+
+    // The memory limit of the container, or null outside a container or without a limit.
+    protected virtual long? GetContainerMemoryLimitBytes()
+    {
+        return ContainerMemoryLimit.Read();
     }
 
     public static void Evaluate(CapacityReport report)
@@ -90,6 +98,15 @@ public class CapacityService(
                 "Memory is close to the limit",
                 $"Working set {ToMb(report.WorkingSetBytes)} MB of {ToMb(report.MemoryLimitBytes)} MB ({report.MemoryPercent}%); managed heap {ToMb(report.ManagedHeapBytes)} MB.",
                 "Give the instance more memory. If the managed heap keeps growing between measurements, look for a leak or an oversized cache before scaling."));
+            Recommend(report, CapacityRecommendations.ScaleUp);
+        }
+
+        if (report.ManagedHeapPercent >= HighMemoryPercent)
+        {
+            report.Findings.Add(Infrastructure("heap-high", FindingSeverities.Critical,
+                "The managed heap is close to its limit",
+                $"Managed heap {ToMb(report.ManagedHeapBytes)} MB of {ToMb(report.ManagedHeapLimitBytes)} MB ({report.ManagedHeapPercent}%); past the limit the process fails with OutOfMemoryException.",
+                "Look for a leak or an oversized cache first: compare the heap between measurements. Then give the instance more memory, which raises the heap limit with it."));
             Recommend(report, CapacityRecommendations.ScaleUp);
         }
 
